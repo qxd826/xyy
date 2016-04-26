@@ -1,34 +1,55 @@
 package com.example.xyy.xyyapplication.source.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.xyy.xyyapplication.R;
-import com.example.xyy.xyyapplication.source.constant.Constant;
+import com.example.xyy.xyyapplication.source.db.DBService;
+import com.example.xyy.xyyapplication.source.pojo.user.User;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by QXD on 2016/4/24.
  */
-public class LoginActivity extends Activity implements View.OnClickListener{
+public class LoginActivity extends Activity implements View.OnClickListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(LoginActivity.class);
     private Button loginBt;
     private EditText accountEt;
     private EditText pwdEt;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
         setTitle("登录");
-        //setTitleColor(getResources().getColor(R.color.red_color));
         initView();
+
+        User user = new User();
+        user.setAccount("qxd");
+        user.setPassword("123");
+        user.setGmtCreate(new Date().getTime());
+        user.setGmtModified(new Date().getTime());
+        user.setIsDeleted("N");
+        user.setMobile("15158116453");
+        user.setUserName("渠项栋");
+        user.setIsAdmin("0");
+        DBService dbService = DBService.getInstance(this);
+        dbService.insert(user);
+
+        dbService = DBService.getInstance(this);
+        List<User> userList = dbService.getUserList();
+        Log.i("[用户列表]", userList.toString());
     }
 
     @Override
@@ -38,21 +59,51 @@ public class LoginActivity extends Activity implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.login_button:
-                Toast.makeText(this,"this",Toast.LENGTH_LONG).show();
+                String account = accountEt.getText().toString();
+                String password = pwdEt.getText().toString();
+                if (!checkUser(account, password)) {
+                    Log.i("QXD","step 1");
+                    break;
+                }
+                Log.i("QXD","step2");
+                /*Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);*/
                 break;
         }
     }
 
-    private void initView(){
-        LOG.info(Constant.LOG_TAG, "initView");
-        loginBt = (Button)findViewById(R.id.login_button);
-        accountEt = (EditText)findViewById(R.id.account);
-        pwdEt = (EditText)findViewById(R.id.password);
+    //初始化视图组件
+    private void initView() {
+        loginBt = (Button) findViewById(R.id.login_button);
+        accountEt = (EditText) findViewById(R.id.account);
+        pwdEt = (EditText) findViewById(R.id.password);
 
         loginBt.setOnClickListener(this);
         accountEt.setOnClickListener(this);
         pwdEt.setOnClickListener(this);
+    }
+
+    //校验用户名密码
+    private Boolean checkUser(String account, String password) {
+        if (StringUtils.isEmpty(account) || StringUtils.isEmpty(password)) {
+            Toast.makeText(this, "用户名或密码为空", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        DBService dbService = DBService.getInstance(this);
+        User user = dbService.getUserByAccount(account);
+        Log.i("QXD",user.toString());
+        if (user == null) {
+            Toast.makeText(this, "当前用户不存在", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        String mPassword = user.getPassword();
+        if(!StringUtils.equalsIgnoreCase(password,mPassword)){
+            Log.e("QXD密码错误",password);
+            Toast.makeText(this, "用户密码错误", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
     }
 }
