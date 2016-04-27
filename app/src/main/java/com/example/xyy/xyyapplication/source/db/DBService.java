@@ -163,9 +163,10 @@ public class DBService {
                 Long gmtCreate = cursor.getLong(cursor.getColumnIndexOrThrow("gmt_create"));
                 Long gmtModified = cursor.getLong(cursor.getColumnIndexOrThrow("gmt_modified"));
                 String userName = cursor.getString(cursor.getColumnIndexOrThrow("user_name"));
-                String dbAccount = cursor.getString(cursor.getColumnIndexOrThrow("password"));
+                String dbAccount = cursor.getString(cursor.getColumnIndexOrThrow("account"));
                 String mobile = cursor.getString(cursor.getColumnIndexOrThrow("mobile"));
                 String isAdmin = cursor.getString(cursor.getColumnIndexOrThrow("is_admin"));
+                String password = cursor.getString(cursor.getColumnIndexOrThrow("password"));
 
                 user.setId(id);
                 user.setIsDeleted(isDeleted);
@@ -175,6 +176,7 @@ public class DBService {
                 user.setAccount(dbAccount);
                 user.setMobile(mobile);
                 user.setIsAdmin(isAdmin);
+                user.setPassword(password);
             }
             cursor.close();
         } catch (Exception e) {

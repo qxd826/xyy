@@ -19,6 +19,7 @@ android {
     }
     packagingOptions{
         exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
     }
 }
 
@@ -29,4 +30,5 @@ dependencies {
     compile 'javax.annotation:javax.annotation-api:1.2'
     compile 'org.projectlombok:lombok:1.16.6'
     compile 'org.apache.commons:commons-lang3:3.4'
+    compile 'com.jakewharton:butterknife:7.0.1'
 }

@@ -61,15 +61,15 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login_button:
-                String account = accountEt.getText().toString();
+/*                String account = accountEt.getText().toString();
                 String password = pwdEt.getText().toString();
                 if (!checkUser(account, password)) {
                     Log.i("QXD","step 1");
                     break;
                 }
-                Log.i("QXD","step2");
-                /*Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);*/
+                Log.i("QXD","step2");*/
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
                 break;
         }
     }
