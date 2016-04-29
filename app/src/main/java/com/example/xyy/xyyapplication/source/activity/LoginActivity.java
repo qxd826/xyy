@@ -1,6 +1,7 @@
 package com.example.xyy.xyyapplication.source.activity;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +11,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.xyy.xyyapplication.R;
+import com.example.xyy.xyyapplication.source.application.MApplication;
+import com.example.xyy.xyyapplication.source.common.ApplicationContextUtil;
+import com.example.xyy.xyyapplication.source.common.DebugLog;
 import com.example.xyy.xyyapplication.source.db.DBService;
 import com.example.xyy.xyyapplication.source.pojo.user.User;
 
@@ -33,9 +37,12 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
         setTitle("登录");
+        if (hasLoginUser()) {
+            startMainActivity();
+        }
         initView();
 
-/*        User user = new User();
+        User user = new User();
         user.setAccount("qxd");
         user.setPassword("123");
         user.setGmtCreate(new Date().getTime());
@@ -49,7 +56,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
         dbService = DBService.getInstance(this);
         List<User> userList = dbService.getUserList();
-        Log.i("[用户列表]", userList.toString());*/
+        Log.i("[用户列表]", userList.toString());
     }
 
     @Override
@@ -61,15 +68,12 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login_button:
-/*                String account = accountEt.getText().toString();
+                String account = accountEt.getText().toString();
                 String password = pwdEt.getText().toString();
                 if (!checkUser(account, password)) {
-                    Log.i("QXD","step 1");
                     break;
                 }
-                Log.i("QXD","step2");*/
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
+                startMainActivity();
                 break;
         }
     }
@@ -93,17 +97,38 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         }
         DBService dbService = DBService.getInstance(this);
         User user = dbService.getUserByAccount(account);
-        Log.i("QXD",user.toString());
+        Log.i("QXD", user.toString());
         if (user == null) {
             Toast.makeText(this, "当前用户不存在", Toast.LENGTH_LONG).show();
             return false;
         }
         String mPassword = user.getPassword();
-        if(!StringUtils.equalsIgnoreCase(password,mPassword)){
-            Log.e("QXD密码错误",password);
+        if (!StringUtils.equalsIgnoreCase(password, mPassword)) {
+            Log.e("QXD密码错误", password);
             Toast.makeText(this, "用户密码错误", Toast.LENGTH_LONG).show();
             return false;
         }
+        ApplicationContextUtil.setCurrentLoginUser(this, user);
         return true;
+    }
+
+    //跳转主页面
+    private void startMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    //当前是否有登录用户
+    private Boolean hasLoginUser() {
+        MApplication application = ApplicationContextUtil.getApplication(this);
+        if (application == null) {
+            DebugLog.e("获取application对象失败......");
+            return false;
+        }
+        if (application.getIsLogin() != null && application.getIsLogin() && application.getUser() != null) {
+            DebugLog.i("当前登录账户:" + application.getUser().toString());
+            return true;
+        }
+        return false;
     }
 }

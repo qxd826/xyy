@@ -3,16 +3,18 @@
     package="com.example.xyy.xyyapplication">
 
     <application
+        android:name="com.example.xyy.xyyapplication.source.application.MApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <!--主页面-->
         <activity
             android:name=".source.activity.MainActivity"
             android:label="@string/app_name" >
         </activity>
+        <!--登录-->
         <activity
-
             android:name=".source.activity.LoginActivity"
             android:configChanges="keyboardHidden|orientation|locale"
             android:label="@string/login_name"

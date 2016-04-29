@@ -30,7 +30,8 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp">
+                android:layout_height="50dp"
+                android:id="@+id/person_item">
 
                 <ImageView
                     android:id="@+id/person_info_image"
@@ -64,11 +65,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/grey_color"
-                android:paddingLeft="3dp"
-                android:paddingRight="3dp" />
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp" />
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp">
+                android:layout_height="50dp"
+                android:id="@+id/user_list_item">
 
                 <ImageView
                     android:id="@+id/user_list_image"
@@ -101,11 +103,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/grey_color"
-                android:paddingLeft="3dp"
-                android:paddingRight="3dp" />
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp" />
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp">
+                android:layout_height="50dp"
+                android:id="@+id/setting_item">
 
                 <ImageView
                     android:id="@+id/setting_image"
@@ -138,8 +141,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/grey_color"
-                android:paddingLeft="3dp"
-                android:paddingRight="3dp" />
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
