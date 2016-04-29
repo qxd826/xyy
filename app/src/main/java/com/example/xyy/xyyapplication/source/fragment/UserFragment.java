@@ -1,21 +1,21 @@
 package com.example.xyy.xyyapplication.source.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.adapter.user.UserListAdapter;
-import com.example.xyy.xyyapplication.source.common.DebugLog;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
 
 /**
  * Created by admin on 16/4/28.
@@ -25,8 +25,10 @@ public class UserFragment extends Fragment {
 
     @Bind(R.id.user_title)
     TextView userTitle;
-    @Bind(R.id.user_list)
+/*    @Bind(R.id.user_list)
     ListView userList;
+    @Bind(R.id.user_button)
+    Button userButton;*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,7 +41,7 @@ public class UserFragment extends Fragment {
         Log.d(TAG, "UserFragment-----onCreateView");
         View view = inflater.inflate(R.layout.user_fragment, container, false);
         ButterKnife.bind(this, view);
-        initView();
+        //initView();
         return view;
     }
 
@@ -55,9 +57,9 @@ public class UserFragment extends Fragment {
         ButterKnife.unbind(this);
     }
 
-    private void initView(){
+/*    private void initView() {
         //设置适配器
         UserListAdapter userListAdapter = new UserListAdapter(getContext());
         userList.setAdapter(userListAdapter);
-    }
+    }*/
 }

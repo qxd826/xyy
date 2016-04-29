@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="red_color">#FF0000</color>
-    <color name="white_color">#5FFF</color>
+    <color name="white_color">#FFFFFF</color>
+    <color name="blue_color">#0099FF</color>
+    <color name="green_color">#458B00</color>
+    <color name="yellow_color">#FFA500</color>
+    <color name="alpha_00">#00000000</color>
+    <color name="grey_color">#CCCCCC</color>
 </resources>
