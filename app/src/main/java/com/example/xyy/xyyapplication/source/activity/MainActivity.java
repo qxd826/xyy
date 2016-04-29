@@ -5,14 +5,21 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.example.xyy.xyyapplication.R;
+import com.example.xyy.xyyapplication.source.fragment.CustomerFragment;
 import com.example.xyy.xyyapplication.source.fragment.GoodsFragment;
 import com.example.xyy.xyyapplication.source.fragment.SupplyFragment;
+import com.example.xyy.xyyapplication.source.fragment.UserFragment;
 import com.example.xyy.xyyapplication.source.fragmentAdapter.MFragmentAdapter;
 
 import java.util.ArrayList;
@@ -20,7 +27,7 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends FragmentActivity implements View.OnClickListener{
+public class MainActivity extends FragmentActivity implements View.OnClickListener {
     private static final String TAG = "MainActivity";
 
     @Bind(R.id.btn_one)
@@ -35,11 +42,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     LinearLayout llTabs;
     @Bind(R.id.viewpager)
     ViewPager viewpager;
+    @Bind(R.id.select_icon)
+    ImageView selectIcon;
 
     private ArrayList<Fragment> fragmentsList;
 
     private int currIndex = 0;
-    private int bottomLineWidth;
+    private int selectIconWidth;
     private int offset = 0;
     private int position_one;
     private int position_two;
@@ -53,19 +62,24 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        initWidth();
         initClick();
         initViewPager();
     }
 
     public void initViewPager() {
         fragmentsList = new ArrayList<>();
-        Fragment fragmentOne = new SupplyFragment();
-        Fragment fragmentTwo = new GoodsFragment();
+        Fragment goodsFragment = new GoodsFragment();
+        Fragment supplyFragment = new SupplyFragment();
+        Fragment customerFragment = new CustomerFragment();
+        Fragment userFragment = new UserFragment();
 
-        fragmentsList.add(fragmentOne);
-        fragmentsList.add(fragmentTwo);
+        fragmentsList.add(goodsFragment);
+        fragmentsList.add(supplyFragment);
+        fragmentsList.add(customerFragment);
+        fragmentsList.add(userFragment);
 
-        MFragmentAdapter mFragmentAdapter = new MFragmentAdapter(getSupportFragmentManager(),fragmentsList);
+        MFragmentAdapter mFragmentAdapter = new MFragmentAdapter(getSupportFragmentManager(), fragmentsList);
         viewpager.setAdapter(mFragmentAdapter);
         viewpager.setCurrentItem(0);
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -77,7 +91,49 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
             @Override
             public void onPageSelected(int position) {
-
+                Animation animation = null;
+                switch (position) {
+                    case 0:
+                        if (currIndex == 1) {
+                            animation = new TranslateAnimation(position_one, 0, 0, 0);
+                        } else if (currIndex == 2) {
+                            animation = new TranslateAnimation(position_two, 0, 0, 0);
+                        } else if (currIndex == 3) {
+                            animation = new TranslateAnimation(position_three, 0, 0, 0);
+                        }
+                        break;
+                    case 1:
+                        if (currIndex == 0) {
+                            animation = new TranslateAnimation(0, position_one, 0, 0);
+                        } else if (currIndex == 2) {
+                            animation = new TranslateAnimation(position_two, position_one, 0, 0);
+                        } else if (currIndex == 3) {
+                            animation = new TranslateAnimation(position_three, position_one, 0, 0);
+                        }
+                        break;
+                    case 2:
+                        if (currIndex == 0) {
+                            animation = new TranslateAnimation(0, position_two, 0, 0);
+                        } else if (currIndex == 1) {
+                            animation = new TranslateAnimation(position_one, position_two, 0, 0);
+                        } else if (currIndex == 3) {
+                            animation = new TranslateAnimation(position_three, position_two, 0, 0);
+                        }
+                        break;
+                    case 3:
+                        if (currIndex == 0) {
+                            animation = new TranslateAnimation(0, position_three, 0, 0);
+                        } else if (currIndex == 1) {
+                            animation = new TranslateAnimation(position_one, position_three, 0, 0);
+                        } else if (currIndex == 2) {
+                            animation = new TranslateAnimation(position_two, position_three, 0, 0);
+                        }
+                        break;
+                }
+                currIndex = position;
+                animation.setFillAfter(true);
+                animation.setDuration(300);
+                selectIcon.startAnimation(animation);
             }
 
             @Override
@@ -87,26 +143,22 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         });
     }
 
-    private void initClick(){
+    private void initClick() {
         btnOne.setOnClickListener(this);
         btnTwo.setOnClickListener(this);
         btnThree.setOnClickListener(this);
         btnFour.setOnClickListener(this);
     }
 
-    private void InitWidth() {
-/*        ivBottomLine = (ImageView) findViewById(R.id.iv_bottom_line);
-        bottomLineWidth = ivBottomLine.getLayoutParams().width;
-        Log.d(TAG, "cursor imageview width=" + bottomLineWidth);
+    private void initWidth() {
+        selectIconWidth = selectIcon.getLayoutParams().width;
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         int screenW = dm.widthPixels;
-        offset = (int) ((screenW / 4.0 - bottomLineWidth) / 2);
-        Log.i("MainActivity", "offset=" + offset);
-
+        offset = (int) ((screenW / 4.0 - selectIconWidth) / 2);
         position_one = (int) (screenW / 4.0);
         position_two = position_one * 2;
-        position_three = position_one * 3;*/
+        position_three = position_one * 3;
     }
 
     @Override
@@ -114,14 +166,31 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         switch (v.getId()) {
             case R.id.btn_one:
                 viewpager.setCurrentItem(0);
+                Log.i(TAG,"我选择了0");
                 break;
             case R.id.btn_two:
                 viewpager.setCurrentItem(1);
+                Log.i(TAG, "我选择了1");
                 break;
             case R.id.btn_three:
+                viewpager.setCurrentItem(2);
+                Log.i(TAG, "我选择了2");
                 break;
             case R.id.btn_four:
+                viewpager.setCurrentItem(3);
+                Log.i(TAG, "我选择了3");
                 break;
         }
+    }
+    @Override
+    protected void onDestroy() {
+        Log.i(TAG,"mainActivity destroy......");
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.i(TAG,"mainActivity stop......");
+        super.onStop();
     }
 }

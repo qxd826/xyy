@@ -52,32 +52,26 @@
             />
 
     </LinearLayout>
-    <!-- 导航和视图的分割线 -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="#f00"
-        android:layout_above="@id/ll_tabs"
-        />
     <!-- VIewPager 主要是加载内容的 -->
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_above="@id/ll_tabs"
-        android:layout_marginBottom="2dp"
+        android:layout_marginBottom="4dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-<!--
-    <linearlayout
+    <!-- 导航和视图的分割线 -->
+    <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:layout_gravity="bottom"
-        android:orientation="vertical"
-        >
-        <imageview
-            android:id="@+id/iv_bottom_line"
-            android:layout_width="40dp"
-            android:layout_height="2dp"
-            android:src="#fff">
-        </imageview>
-    </linearlayout>-->
+        android:layout_marginBottom="1dp"
+        android:background="#f00"
+        android:layout_above="@id/ll_tabs"
+        />
+    <ImageView
+        android:id="@+id/select_icon"
+        android:layout_above="@+id/ll_tabs"
+        android:layout_height="1dp"
+        android:layout_width="40dp"
+        android:layout_marginLeft="20dp"
+        android:background="@color/red_color"/>
 </RelativeLayout>

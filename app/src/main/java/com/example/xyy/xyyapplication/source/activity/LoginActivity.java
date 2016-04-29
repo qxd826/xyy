@@ -35,7 +35,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         setTitle("登录");
         initView();
 
-        User user = new User();
+/*        User user = new User();
         user.setAccount("qxd");
         user.setPassword("123");
         user.setGmtCreate(new Date().getTime());
@@ -49,7 +49,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
         dbService = DBService.getInstance(this);
         List<User> userList = dbService.getUserList();
-        Log.i("[用户列表]", userList.toString());
+        Log.i("[用户列表]", userList.toString());*/
     }
 
     @Override
