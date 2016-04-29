@@ -25,7 +25,7 @@ public class CustomerFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         Log.d(TAG, "CustomerFragment-----onCreateView");
-        View view = inflater.inflate(R.layout.goods_fragment, container, false);
+        View view = inflater.inflate(R.layout.customer_fragment, container, false);
         return view;
 
     }

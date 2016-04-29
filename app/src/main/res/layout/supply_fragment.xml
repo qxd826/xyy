@@ -3,9 +3,18 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <TextView
-        android:layout_height="100dp"
+        android:id="@+id/supply_title"
         android:layout_width="match_parent"
-        android:text="i am supply"/>
+        android:layout_height="40dp"
+        android:text="供应商"
+        android:gravity="center"
+        android:textColor="@color/red_color"
+        android:textSize="16sp"
+        android:background="@color/material_blue_grey_800"/>
+    <ListView
+        android:id="@+id/supply_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </ListView>
 </LinearLayout>

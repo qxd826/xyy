@@ -73,5 +73,5 @@
         android:layout_height="1dp"
         android:layout_width="40dp"
         android:layout_marginLeft="20dp"
-        android:background="@color/red_color"/>
+        android:background="@color/material_blue_grey_800"/>
 </RelativeLayout>

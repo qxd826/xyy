@@ -109,9 +109,9 @@ public class DBService {
         this.open();
         List<User> userList = new ArrayList<>();
         try {
-        String sql = "select * from " + DBConstant.TABLE_USER + " where is_deleted ='N'";
-        Cursor cursor = sqlitedb.rawQuery(sql, null);
-        for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
+            String sql = "select * from " + DBConstant.TABLE_USER + " where is_deleted ='N'";
+            Cursor cursor = sqlitedb.rawQuery(sql, null);
+            for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
                 Integer id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
                 String isDeleted = cursor.getString(cursor.getColumnIndexOrThrow("is_deleted"));
                 Long gmtCreate = cursor.getLong(cursor.getColumnIndexOrThrow("gmt_create"));
@@ -133,8 +133,8 @@ public class DBService {
                 user.setMobile(mobile);
                 user.setIsAdmin(isAdmin);
                 userList.add(user);
-                cursor.close();
-        }
+            }
+            cursor.close();
         } catch (Exception e) {
             Log.e(TAG, "获取用户列表失败:" + e.toString());
             e.printStackTrace();
@@ -155,7 +155,7 @@ public class DBService {
         User user = new User();
         try {
             String sql = "select * from " + DBConstant.TABLE_USER + " where is_deleted = 'N' and account = '" + StringUtils.upperCase(account) + "' limit 1;";
-            Log.i("QXD",sql);
+            Log.i("QXD", sql);
             Cursor cursor = sqlitedb.rawQuery(sql, null);
             for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
                 Integer id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
