@@ -20,11 +20,13 @@ public class DBHelper extends SQLiteOpenHelper {
         //初始化数据库（只会做一次，在程序安装的时候）
         Log.i(TAG, "数据库初始化");
         db.execSQL(DBConstant.CREATE_USER_SQL);
+        db.execSQL(DBConstant.CREATE_USER_LOGIN_LOG_SQL);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + DBConstant.TABLE_USER);
+        db.execSQL("DROP TABLE IF EXISTS " + DBConstant.TABLE_USER_LOGIN_LOG);
         onCreate(db);
     }
 }

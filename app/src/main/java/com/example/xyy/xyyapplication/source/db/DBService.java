@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.example.xyy.xyyapplication.source.common.DebugLog;
 import com.example.xyy.xyyapplication.source.pojo.user.User;
+import com.example.xyy.xyyapplication.source.pojo.userLogin.UserLoginLog;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -95,8 +96,14 @@ public class DBService {
         values.put("password", user.getPassword());
         values.put("mobile", user.getMobile());
         values.put("is_admin", user.getIsAdmin());
-        Long i = sqlitedb.replaceOrThrow(DBConstant.TABLE_USER, null, values);
-        this.close();
+        Long i = 0l;
+        try {
+            i = sqlitedb.replaceOrThrow(DBConstant.TABLE_USER, null, values);
+        } catch (Exception e) {
+            Log.e(TAG, "添加用户失败:" + e.toString());
+        } finally {
+            this.close();
+        }
         return i;
     }
 
@@ -138,9 +145,9 @@ public class DBService {
             cursor.close();
         } catch (Exception e) {
             Log.e(TAG, "获取用户列表失败:" + e.toString());
-            e.printStackTrace();
+        } finally {
+            this.close();
         }
-        this.close();
         return userList;
     }
 
@@ -182,10 +189,10 @@ public class DBService {
             cursor.close();
         } catch (Exception e) {
             Log.e(TAG, "获取用户信息失败:" + e.toString());
-            e.printStackTrace();
             return null;
+        } finally {
+            this.close();
         }
-        this.close();
         return user;
     }
 
@@ -220,5 +227,61 @@ public class DBService {
             this.close();
         }
         return i;
+    }
+
+    /**
+     * 添加登录记录
+     *
+     * @param userLoginLog
+     * @return
+     */
+    public Long insertUserLoginLog(UserLoginLog userLoginLog) {
+        Log.i(TAG, "添加用户登录记录:" + userLoginLog.toString());
+        this.open();
+        ContentValues values = new ContentValues();
+        values.put("_id", userLoginLog.getId());
+        values.put("is_deleted", userLoginLog.getIsDeleted());
+        values.put("gmt_create", userLoginLog.getGmtCreate());
+        values.put("gmt_modified", userLoginLog.getGmtModified());
+        values.put("account", StringUtils.upperCase(userLoginLog.getAccount()));
+        values.put("password", userLoginLog.getPassword());
+        Long i = 0l;
+        try {
+            i = sqlitedb.replaceOrThrow(DBConstant.TABLE_USER_LOGIN_LOG, null, values);
+        } catch (Exception e) {
+            Log.e(TAG, "添加用户登录记录失败:" + e.toString());
+        } finally {
+            this.close();
+        }
+        return i;
+    }
+
+    /**
+     * 获取最后一个登录用户
+     * @return
+     */
+    public User getLastLoginUser() {
+        Log.i(TAG, "获取最后的登录用户");
+        this.open();
+        User user = null;
+        String sql = " select account, password from user_login_log order by gmt_create desc limit 1;";
+        try {
+            Cursor cursor = sqlitedb.rawQuery(sql, null);
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                String account = cursor.getString(cursor.getColumnIndexOrThrow("account"));
+                String password = cursor.getString(cursor.getColumnIndexOrThrow("password"));
+                user = new User();
+                user.setAccount(account);
+                user.setPassword(password);
+                break;
+            }
+            cursor.close();
+        } catch (Exception e) {
+            Log.e(TAG, "获取最后的登录用户失败:" + e.toString());
+        } finally {
+            this.close();
+        }
+        return user;
     }
 }

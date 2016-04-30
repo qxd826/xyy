@@ -14,8 +14,10 @@ import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.application.MApplication;
 import com.example.xyy.xyyapplication.source.common.ApplicationContextUtil;
 import com.example.xyy.xyyapplication.source.common.DebugLog;
+import com.example.xyy.xyyapplication.source.constant.Constant;
 import com.example.xyy.xyyapplication.source.db.DBService;
 import com.example.xyy.xyyapplication.source.pojo.user.User;
+import com.example.xyy.xyyapplication.source.pojo.userLogin.UserLoginLog;
 
 
 import org.apache.commons.lang3.StringUtils;
@@ -37,7 +39,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
         setTitle("登录");
-        if (hasLoginUser()) {
+        if(hasLastLoginUser()){
             startMainActivity();
         }
         initView();
@@ -97,19 +99,33 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         }
         DBService dbService = DBService.getInstance(this);
         User user = dbService.getUserByAccount(account);
-        Log.i("QXD", user.toString());
         if (user == null) {
             Toast.makeText(this, "当前用户不存在", Toast.LENGTH_LONG).show();
             return false;
         }
         String mPassword = user.getPassword();
         if (!StringUtils.equalsIgnoreCase(password, mPassword)) {
-            Log.e("QXD密码错误", password);
             Toast.makeText(this, "用户密码错误", Toast.LENGTH_LONG).show();
             return false;
         }
+
+        //设置当前登录用户全局值
         MApplication.currentLoginUser = user;
         MApplication.isLogin = true;
+        if (StringUtils.equals(Constant.IS_ADMIN, user.getIsAdmin())) {
+            MApplication.isAdmin = true;
+        } else {
+            MApplication.isAdmin = false;
+        }
+
+        //插入登录记录
+        UserLoginLog userLoginLog = new UserLoginLog();
+        userLoginLog.setGmtCreate(new Date().getTime());
+        userLoginLog.setGmtModified(new Date().getTime());
+        userLoginLog.setIsDeleted("N");
+        userLoginLog.setPassword(user.getPassword());
+        userLoginLog.setAccount(user.getAccount());
+        dbService.insertUserLoginLog(userLoginLog);
         return true;
     }
 
@@ -119,8 +135,22 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         startActivity(intent);
     }
 
-    //当前是否有登录用户
-    private Boolean hasLoginUser() {
-        return MApplication.isLogin;
+    //获取最后的登录用户
+    private Boolean hasLastLoginUser() {
+        DBService dbService = DBService.getInstance(this);
+        User user = dbService.getLastLoginUser();
+        if (user == null || StringUtils.isEmpty(user.getAccount())) {
+            return false;
+        } else {
+            User loginUser = dbService.getUserByAccount(user.getAccount());
+            MApplication.currentLoginUser = loginUser;
+            MApplication.isLogin = true;
+            if (StringUtils.equals(Constant.IS_ADMIN, loginUser.getIsAdmin())) {
+                MApplication.isAdmin = true;
+            } else {
+                MApplication.isAdmin = false;
+            }
+        }
+        return true;
     }
 }

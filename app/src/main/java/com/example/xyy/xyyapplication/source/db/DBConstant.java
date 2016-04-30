@@ -14,6 +14,7 @@ public class DBConstant {
 
     //用户表
     public static final String TABLE_USER = "user";
+    public static final String TABLE_USER_LOGIN_LOG = "user_login_log";
 
     //创建用户表
     public static final String CREATE_USER_SQL = "CREATE TABLE IF NOT EXISTS user("
@@ -26,6 +27,15 @@ public class DBConstant {
             + " password varchar(20) not null, "
             + " is_admin char(1) not null default '0', "  //1是管理员,0是非管理员
             + " mobile varchar(20) default '');";
+
+    //创建登录记录表
+    public static final String CREATE_USER_LOGIN_LOG_SQL = "CREATE TABLE IF NOT EXISTS user_login_log("
+            + " _id integer primary key autoincrement, "
+            + " is_deleted char(1) not null, "
+            + " gmt_create integer not null, "
+            + " gmt_modified integer not null, "
+            + " password varchar(20) not null, "
+            + " account varchar(20) not null);";
 
 
 /*    *//* 离线消息 *//*
