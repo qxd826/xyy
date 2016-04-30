@@ -8,4 +8,8 @@ public class Constant {
 
     //activity传值用
     public static final String USER_NAME = "user_name";
+
+    //INTENT CODE
+    public static final int SUCCESS_CODE = 1;
+    public static final int FALSE_CODE = 0;
 }

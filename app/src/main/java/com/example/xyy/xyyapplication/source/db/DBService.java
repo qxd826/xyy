@@ -187,4 +187,46 @@ public class DBService {
         this.close();
         return user;
     }
+
+    /**
+     * @param user
+     * @return
+     */
+    public Long upDateUser(User user) {
+        Log.i(TAG, "添加用户:" + user.toString());
+        if (user.getId() == null || user.getId() < 1) {
+            return 0l;
+        }
+        this.open();
+        ContentValues values = new ContentValues();
+        values.put("_id", user.getId());
+        if (!StringUtils.isEmpty(user.getIsDeleted())) {
+            values.put("is_deleted", user.getIsDeleted());
+        }
+        if (null != user.getGmtCreate()) {
+            values.put("gmt_create", user.getGmtCreate());
+        }
+        if (null != user.getGmtModified()) {
+            values.put("gmt_modified", user.getGmtModified());
+        }
+        if(!StringUtils.isEmpty(user.getUserName())){
+            values.put("user_name", user.getUserName());
+        }
+        if(!StringUtils.isEmpty(user.getAccount())){
+            values.put("account", StringUtils.upperCase(user.getAccount()));
+        }
+        if(!StringUtils.isEmpty(user.getPassword())){
+            values.put("password", user.getPassword());
+        }
+        if(!StringUtils.isEmpty(user.getMobile())){
+            values.put("mobile", user.getMobile());
+        }
+        if(!StringUtils.isEmpty(user.getIsAdmin())){
+            values.put("is_admin", user.getIsAdmin());
+        }
+
+        Long i = sqlitedb.replaceOrThrow(DBConstant.TABLE_USER, null, values);
+        this.close();
+        return i;
+    }
 }
