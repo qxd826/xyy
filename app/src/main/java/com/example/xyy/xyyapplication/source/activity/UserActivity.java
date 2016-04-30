@@ -3,8 +3,8 @@ package com.example.xyy.xyyapplication.source.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -23,8 +23,6 @@ import butterknife.ButterKnife;
  * Created by admin on 16/4/29.
  */
 public class UserActivity extends Activity implements View.OnClickListener {
-    private String currentUserName;
-    private String currentUserMobile;
 
     @Bind(R.id.user_name_text_id)
     TextView userNameTextId;
@@ -34,6 +32,8 @@ public class UserActivity extends Activity implements View.OnClickListener {
     TextView userMobileTextId;
     @Bind(R.id.user_mobile_item)
     RelativeLayout userMobileItem;
+    @Bind(R.id.personal_back_btn)
+    ImageButton personalBackBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +51,7 @@ public class UserActivity extends Activity implements View.OnClickListener {
     }
 
     @Override
-    protected void onPause(){
+    protected void onPause() {
         DebugLog.i("UserActivity onPause......");
         super.onPause();
     }
@@ -75,11 +75,9 @@ public class UserActivity extends Activity implements View.OnClickListener {
             String mobile = currentUser.getMobile();
             if (!StringUtils.isEmpty(userName)) {
                 userNameTextId.setText(userName);
-                currentUserName = userName;
             }
             if (null != currentUser.getMobile()) {
                 userMobileTextId.setText(mobile);
-                currentUserMobile = mobile;
             }
         }
         userNameItem.setOnClickListener(this);
@@ -93,7 +91,10 @@ public class UserActivity extends Activity implements View.OnClickListener {
                 changeUserName();
                 break;
             case R.id.user_mobile_item:
-
+                changeMobile();
+                break;
+            case R.id.personal_back_btn:
+                finish();
                 break;
         }
     }
@@ -107,17 +108,26 @@ public class UserActivity extends Activity implements View.OnClickListener {
 
     //修改电话号
     private void changeMobile() {
-
+        Intent intent = new Intent(this, UserMobileChangeActivity.class);
+        intent.putExtra(Constant.USER_MOBILE, userMobileTextId.getText());
+        startActivityForResult(intent, R.string.user_mobile);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        switch (requestCode){
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
             case R.string.user_name:
-                if(resultCode == 1){
+                if (resultCode == 1) {
                     Bundle bundle = data.getExtras();
-                    String userName = bundle.getString("user_change_name");
+                    String userName = bundle.getString(Constant.USER_NAME);
                     userNameTextId.setText(userName);
+                }
+                break;
+            case R.string.user_mobile:
+                if (resultCode == 1) {
+                    Bundle bundle = data.getExtras();
+                    String userMobile = bundle.getString(Constant.USER_MOBILE);
+                    userMobileTextId.setText(userMobile);
                 }
                 break;
         }

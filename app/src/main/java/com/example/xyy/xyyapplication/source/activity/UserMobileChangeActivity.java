@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.xyy.xyyapplication.R;
@@ -25,27 +26,28 @@ import butterknife.ButterKnife;
 /**
  * Created by admin on 16/4/30.
  */
-public class UserNameChangeActivity extends Activity implements View.OnClickListener {
+public class UserMobileChangeActivity extends Activity implements View.OnClickListener {
 
-    @Bind(R.id.user_name_change_back_btn)
-    ImageButton userNameChangeBackBtn;
-    @Bind(R.id.user_name_chang_save_btn)
-    Button userNameSaveBtn;
-    @Bind(R.id.user_name_change_edit)
-    EditText userNameChangeEdit;
-
+    @Bind(R.id.user_mobile_change_back_btn)
+    ImageButton userMobileChangeBackBtn;
+    @Bind(R.id.user_mobile_chang_save_btn)
+    Button userMobileChangSaveBtn;
+    @Bind(R.id.user_mobile_change_text)
+    TextView userMobileChangeText;
+    @Bind(R.id.user_mobile_change_edit)
+    EditText userMobileChangeEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.user_name_change);
+        setContentView(R.layout.user_mobile_change);
         ButterKnife.bind(this);
 
         //设置姓名
         Bundle bundle = getIntent().getExtras();
-        String userName = bundle.getString(Constant.USER_NAME);
-        if (!StringUtils.isEmpty(userName)) {
-            userNameChangeEdit.setText(userName);
+        String userMobile = bundle.getString(Constant.USER_MOBILE);
+        if (!StringUtils.isEmpty(userMobile)) {
+            userMobileChangeEdit.setText(userMobile);
         }
         initView();
     }
@@ -53,12 +55,12 @@ public class UserNameChangeActivity extends Activity implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.user_name_chang_save_btn:
+            case R.id.user_mobile_chang_save_btn:
                 saveUserName();
                 finish();
                 super.onDestroy();
                 break;
-            case R.id.user_name_change_back_btn:
+            case R.id.user_mobile_change_back_btn:
                 //将当前activity移出栈顶 并销毁
                 finish();
                 super.onDestroy();
@@ -68,8 +70,8 @@ public class UserNameChangeActivity extends Activity implements View.OnClickList
 
     //初始化监听事件
     private void initView() {
-        userNameSaveBtn.setOnClickListener(this);
-        userNameChangeBackBtn.setOnClickListener(this);
+        userMobileChangSaveBtn.setOnClickListener(this);
+        userMobileChangeBackBtn.setOnClickListener(this);
     }
 
     //保存修改后的名字
@@ -80,17 +82,17 @@ public class UserNameChangeActivity extends Activity implements View.OnClickList
             Toast.makeText(this, "当前登录用户为空", Toast.LENGTH_LONG).show();
             return;
         }
-        String tempUserName = userNameChangeEdit.getText().toString();
-        if (StringUtils.equals(currentUser.getUserName(), tempUserName)) {
+        String tempUserMobile = userMobileChangeEdit.getText().toString();
+        if (StringUtils.equals(currentUser.getMobile(), tempUserMobile)) {
             Toast.makeText(this, "修改成功", Toast.LENGTH_LONG).show();
             return;
         }
-        currentUser.setUserName(tempUserName);
+        currentUser.setMobile(tempUserMobile);
         DBService dbService = DBService.getInstance(this);
         if (dbService.upDateUser(currentUser) > 0) {
-            Intent userNameIntent = new Intent();
-            userNameIntent.putExtra(Constant.USER_NAME, tempUserName);
-            setResult(Constant.SUCCESS_CODE, userNameIntent);
+            Intent userMobileIntent = new Intent();
+            userMobileIntent.putExtra(Constant.USER_MOBILE, tempUserMobile);
+            setResult(Constant.SUCCESS_CODE, userMobileIntent);
         } else {
             DebugLog.e("更新用户信息失败 user:" + currentUser.toString());
             Toast.makeText(this, "更新用户信息失败", Toast.LENGTH_LONG).show();
