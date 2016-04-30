@@ -108,7 +108,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             Toast.makeText(this, "用户密码错误", Toast.LENGTH_LONG).show();
             return false;
         }
-        ApplicationContextUtil.setCurrentLoginUser(this, user);
+        MApplication.currentLoginUser = user;
+        MApplication.isLogin = true;
         return true;
     }
 
@@ -120,15 +121,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     //当前是否有登录用户
     private Boolean hasLoginUser() {
-        MApplication application = ApplicationContextUtil.getApplication(this);
-        if (application == null) {
-            DebugLog.e("获取application对象失败......");
-            return false;
-        }
-        if (application.getIsLogin() != null && application.getIsLogin() && application.getUser() != null) {
-            DebugLog.i("当前登录账户:" + application.getUser().toString());
-            return true;
-        }
-        return false;
+        return MApplication.isLogin;
     }
 }

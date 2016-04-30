@@ -76,7 +76,7 @@ public class UserMobileChangeActivity extends Activity implements View.OnClickLi
 
     //保存修改后的名字
     private void saveUserName() {
-        User currentUser = ApplicationContextUtil.getCurrentLoginUser(this);
+        User currentUser = ApplicationContextUtil.getCurrentLoginUser();
         if (currentUser == null || currentUser.getId() == null) {
             DebugLog.e("当前登录用户为空");
             Toast.makeText(this, "当前登录用户为空", Toast.LENGTH_LONG).show();
@@ -90,6 +90,7 @@ public class UserMobileChangeActivity extends Activity implements View.OnClickLi
         currentUser.setMobile(tempUserMobile);
         DBService dbService = DBService.getInstance(this);
         if (dbService.upDateUser(currentUser) > 0) {
+            Toast.makeText(this, "修改成功", Toast.LENGTH_LONG).show();
             Intent userMobileIntent = new Intent();
             userMobileIntent.putExtra(Constant.USER_MOBILE, tempUserMobile);
             setResult(Constant.SUCCESS_CODE, userMobileIntent);

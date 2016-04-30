@@ -75,7 +75,7 @@ public class UserActivity extends Activity implements View.OnClickListener {
     }
 
     private void initView() {
-        User currentUser = ApplicationContextUtil.getCurrentLoginUser(this);
+        User currentUser = ApplicationContextUtil.getCurrentLoginUser();
         if (null != currentUser) {
             String userName = currentUser.getUserName();
             String mobile = currentUser.getMobile();

@@ -49,6 +49,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private int currIndex = 0;
     private int selectIconWidth;
+    private int selectIconHeight;
     private int offset = 0;
     private int position_one;
     private int position_two;
@@ -152,9 +153,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private void initWidth() {
         selectIconWidth = selectIcon.getLayoutParams().width;
+        selectIconHeight = selectIcon.getLayoutParams().height;
+        //获取屏幕宽度
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         int screenW = dm.widthPixels;
+
         offset = (int) ((screenW / 4.0 - selectIconWidth) / 2);
         position_one = (int) (screenW / 4.0);
         position_two = position_one * 2;

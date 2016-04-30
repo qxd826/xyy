@@ -13,4 +13,8 @@ public class Constant {
     //INTENT CODE
     public static final int SUCCESS_CODE = 1;
     public static final int FALSE_CODE = 0;
+
+    //是否是管理员
+    public static final String IS_ADMIN = "1";
+    public static final String NOT_ADMIN = "0";
 }

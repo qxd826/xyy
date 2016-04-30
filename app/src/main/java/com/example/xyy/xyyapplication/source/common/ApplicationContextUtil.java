@@ -1,8 +1,14 @@
 package com.example.xyy.xyyapplication.source.common;
 
 import android.app.Activity;
+
 import com.example.xyy.xyyapplication.source.application.MApplication;
+import com.example.xyy.xyyapplication.source.constant.Constant;
 import com.example.xyy.xyyapplication.source.pojo.user.User;
+
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Map;
 
 /**
  * Created by admin on 16/4/30.
@@ -21,26 +27,24 @@ public class ApplicationContextUtil {
     }
 
     //存入当前登录账户
-    public static void setCurrentLoginUser(Activity activity, User user) {
+    public static void setCurrentLoginUser(User user) {
         try {
-            MApplication application = (MApplication) activity.getApplication();
-            if(application != null){
-                application.setIsLogin(true);
-                application.setUser(user);
-                return;
+            MApplication.currentLoginUser = user;
+            MApplication.isLogin = true;
+            if (StringUtils.equals(user.getIsAdmin(), Constant.IS_ADMIN)) {
+                MApplication.isAdmin = true;
+            } else {
+                MApplication.isAdmin = false;
             }
         } catch (Exception e) {
             DebugLog.e("获取application对象失败......e:" + e.toString());
-            return;
         }
     }
+
     //获取当前登录账号
-    public static User getCurrentLoginUser(Activity activity){
+    public static User getCurrentLoginUser() {
         try {
-            MApplication application = (MApplication) activity.getApplication();
-            if(application != null){
-                return application.getUser();
-            }
+            return MApplication.currentLoginUser;
         } catch (Exception e) {
             DebugLog.e("获取application对象失败......e:" + e.toString());
         }

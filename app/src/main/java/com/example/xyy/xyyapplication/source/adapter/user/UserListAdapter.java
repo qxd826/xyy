@@ -18,6 +18,7 @@ import com.example.xyy.xyyapplication.source.pojo.user.User;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,17 +27,22 @@ import java.util.List;
  */
 public class UserListAdapter extends BaseAdapter {
     private Context mContext;
-    private List<User> mUserList;
-    private ViewHolder viewHolder;
+    private List<User> mUserList = new ArrayList<User>();
+    private Boolean mIsAdmin;
 
     public UserListAdapter(Context context) {
         mContext = context;
-        initUserList();
     }
 
     public UserListAdapter(Context context, List<User> userList) {
         mContext = context;
         mUserList = userList;
+    }
+
+    public UserListAdapter(Context context, List<User> userList, Boolean isAdmin) {
+        mContext = context;
+        mUserList = userList;
+        mIsAdmin = isAdmin;
     }
 
     @Override
@@ -77,6 +83,12 @@ public class UserListAdapter extends BaseAdapter {
         createDate.setTime(mUserList.get(position).getGmtCreate());
         mViewHolder.createTime.setText(DateUtil.convertDateToYMDHM(createDate));
 
+        if (!mIsAdmin) {
+            mViewHolder.delButton.setVisibility(View.GONE);
+        } else {
+            mViewHolder.delButton.setVisibility(View.VISIBLE);
+        }
+
         mViewHolder.delButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,13 +96,6 @@ public class UserListAdapter extends BaseAdapter {
             }
         });
         return convertView;
-    }
-
-    //初始化用户列表
-    private void initUserList() {
-        DBService dbService = DBService.getInstance(mContext);
-        mUserList = dbService.getUserList();
-        DebugLog.i("userList:" + mUserList);
     }
 
     //viewHolder对象

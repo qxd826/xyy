@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.activity.UserActivity;
+import com.example.xyy.xyyapplication.source.activity.userList.UserListActivity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -31,10 +32,6 @@ public class UserFragment extends Fragment {
     RelativeLayout userListItem;
     @Bind(R.id.setting_item)
     RelativeLayout settingItem;
-/*    @Bind(R.id.user_list)
-    ListView userList;
-    @Bind(R.id.user_button)
-    Button userButton;*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,13 +61,18 @@ public class UserFragment extends Fragment {
     }
 
     private void initView() {
-/*        //设置适配器
-        UserListAdapter userListAdapter = new UserListAdapter(getContext());
-        userList.setAdapter(userListAdapter);*/
         personItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), UserActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        userListItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), UserListActivity.class);
                 startActivity(intent);
             }
         });

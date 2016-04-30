@@ -62,16 +62,16 @@
     <!-- 导航和视图的分割线 -->
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginBottom="1dp"
+        android:layout_height="1dp"
+        android:layout_marginBottom="2dp"
         android:background="#f00"
         android:layout_above="@id/ll_tabs"
         />
     <ImageView
         android:id="@+id/select_icon"
         android:layout_above="@+id/ll_tabs"
-        android:layout_height="1dp"
+        android:layout_height="2dp"
         android:layout_width="40dp"
         android:layout_marginLeft="20dp"
-        android:background="@color/material_blue_grey_800"/>
+        android:background="@color/material_blue_grey_800" />
 </RelativeLayout>

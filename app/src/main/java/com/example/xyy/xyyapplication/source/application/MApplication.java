@@ -11,25 +11,15 @@ import lombok.Data;
  */
 public class MApplication extends Application {
     //是否有用户登录状态
-    private Boolean isLogin = false;
+    public static Boolean isLogin = false;
     //当前登录用户
-    private User user = null;
+    public static User currentLoginUser = null;
+    //当前是否是管理员登录
+    public static Boolean isAdmin = false;
+
     @Override
     public void onCreate() {
         // TODO Auto-generated method stub
         super.onCreate();
-    }
-
-    public Boolean getIsLogin(){
-        return isLogin;
-    }
-    public void setIsLogin(Boolean mIsLogin){
-        this.isLogin = mIsLogin;
-    }
-    public User getUser(){
-        return user;
-    }
-    public void setUser(User mUser){
-        this.user = mUser;
     }
 }

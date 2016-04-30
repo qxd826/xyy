@@ -53,7 +53,8 @@
             android:layout_marginRight="100dp"
             android:background="@null"
             android:hint="请输入密码"
-            android:textColorHint="#ffff00" />
+            android:textColorHint="#ffff00"
+            android:inputType="textPassword"/>
 
         <Button
             android:id="@+id/login_button"
