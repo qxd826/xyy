@@ -34,4 +34,17 @@ public class ApplicationContextUtil {
             return;
         }
     }
+    //获取当前登录账号
+    public static User getCurrentLoginUser(Activity activity){
+        try {
+            MApplication application = (MApplication) activity.getApplication();
+            if(application != null){
+                return application.getUser();
+            }
+        } catch (Exception e) {
+            DebugLog.e("获取application对象失败......e:" + e.toString());
+        }
+        return null;
+    }
 }
+

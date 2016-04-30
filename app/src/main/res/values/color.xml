@@ -7,4 +7,5 @@
     <color name="yellow_color">#FFA500</color>
     <color name="alpha_00">#00000000</color>
     <color name="grey_color">#CCCCCC</color>
+    <color name="black_color">#000000</color>
 </resources>

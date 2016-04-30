@@ -5,4 +5,7 @@ package com.example.xyy.xyyapplication.source.constant;
  */
 public class Constant {
     public static final String LOG_TAG = "xyy";
+
+    //activity传值用
+    public static final String USER_NAME = "user_name";
 }
