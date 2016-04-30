@@ -36,7 +36,7 @@
 
         <!--用户名修改-->
         <activity
-            android:name=".source.activity.UserNameChangeActivity"
+            android:name=".source.activity.userChangeActivity.UserNameChangeActivity"
             android:configChanges="keyboardHidden|orientation|locale"
             android:label="@string/user_name"
             android:screenOrientation="portrait"
@@ -44,9 +44,17 @@
         </activity>
         <!--用户电话修改-->
         <activity
-            android:name=".source.activity.UserMobileChangeActivity"
+            android:name=".source.activity.userChangeActivity.UserMobileChangeActivity"
             android:configChanges="keyboardHidden|orientation|locale"
-            android:label="@string/user_name"
+            android:label="@string/user_mobile"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <!--用户密码修改-->
+        <activity
+            android:name=".source.activity.userChangeActivity.UserPasswordChangeActivity"
+            android:configChanges="keyboardHidden|orientation|locale"
+            android:label="@string/user_mobile"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" >
         </activity>

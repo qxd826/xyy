@@ -42,7 +42,7 @@
             android:layout_alignTop="@+id/password"
             android:layout_marginLeft="50dp"
             android:gravity="center"
-            android:text="密码：" />
+            android:text="密码:" />
 
         <EditText
             android:id="@+id/password"

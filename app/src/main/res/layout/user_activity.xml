@@ -145,6 +145,7 @@
         android:background="@color/grey_color" />
 
     <Button
+        android:id="@+id/user_change_pwd_btn"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginLeft="50dp"

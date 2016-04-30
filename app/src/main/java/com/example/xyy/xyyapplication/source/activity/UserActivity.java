@@ -4,11 +4,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.xyy.xyyapplication.R;
+import com.example.xyy.xyyapplication.source.activity.userChangeActivity.UserMobileChangeActivity;
+import com.example.xyy.xyyapplication.source.activity.userChangeActivity.UserNameChangeActivity;
+import com.example.xyy.xyyapplication.source.activity.userChangeActivity.UserPasswordChangeActivity;
 import com.example.xyy.xyyapplication.source.common.ApplicationContextUtil;
 import com.example.xyy.xyyapplication.source.common.DebugLog;
 import com.example.xyy.xyyapplication.source.constant.Constant;
@@ -34,6 +38,8 @@ public class UserActivity extends Activity implements View.OnClickListener {
     RelativeLayout userMobileItem;
     @Bind(R.id.personal_back_btn)
     ImageButton personalBackBtn;
+    @Bind(R.id.user_change_pwd_btn)
+    Button userChangePwdBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +88,8 @@ public class UserActivity extends Activity implements View.OnClickListener {
         }
         userNameItem.setOnClickListener(this);
         userMobileItem.setOnClickListener(this);
+        personalBackBtn.setOnClickListener(this);
+        userChangePwdBtn.setOnClickListener(this);
     }
 
     @Override
@@ -92,6 +100,9 @@ public class UserActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.user_mobile_item:
                 changeMobile();
+                break;
+            case R.id.user_change_pwd_btn:
+                changePassword();
                 break;
             case R.id.personal_back_btn:
                 finish();
@@ -111,6 +122,12 @@ public class UserActivity extends Activity implements View.OnClickListener {
         Intent intent = new Intent(this, UserMobileChangeActivity.class);
         intent.putExtra(Constant.USER_MOBILE, userMobileTextId.getText());
         startActivityForResult(intent, R.string.user_mobile);
+    }
+
+    //修改密码
+    private void changePassword(){
+        Intent intent = new Intent(this, UserPasswordChangeActivity.class);
+        startActivity(intent);
     }
 
     @Override
