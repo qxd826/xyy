@@ -63,6 +63,7 @@ public class UserListActivity extends Activity implements View.OnClickListener {
             addUser.setVisibility(View.GONE);
         }
         addUser.setOnClickListener(this);
+        userListBackBtn.setOnClickListener(this);
     }
 
     @Override

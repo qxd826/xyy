@@ -22,4 +22,10 @@ public class Constant {
     public static final String ADD_USER_TYPE = "add_user_type";
     public static final int ADD_NORMAL_USER = 0;
     public static final int ADD_ADMIN_USER = 1;
+
+    //添加供应商
+    public static final int ADD_SUPPLY_SUCCESS = 1;
+
+    //Intent code
+    public static final int ADD_SUPPLY_CODE = 10;
 }

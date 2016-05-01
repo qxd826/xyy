@@ -1,5 +1,6 @@
 package com.example.xyy.xyyapplication.source.activity;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,13 +18,19 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.example.xyy.xyyapplication.R;
+import com.example.xyy.xyyapplication.source.adapter.user.UserListAdapter;
+import com.example.xyy.xyyapplication.source.constant.Constant;
+import com.example.xyy.xyyapplication.source.db.DBService;
 import com.example.xyy.xyyapplication.source.fragment.CustomerFragment;
 import com.example.xyy.xyyapplication.source.fragment.GoodsFragment;
 import com.example.xyy.xyyapplication.source.fragment.SupplyFragment;
 import com.example.xyy.xyyapplication.source.fragment.UserFragment;
 import com.example.xyy.xyyapplication.source.fragmentAdapter.MFragmentAdapter;
+import com.example.xyy.xyyapplication.source.pojo.supply.Supply;
+import com.example.xyy.xyyapplication.source.pojo.user.User;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -209,4 +216,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
         return super.onKeyDown(keyCode, event);
     }
+
+
+
 }

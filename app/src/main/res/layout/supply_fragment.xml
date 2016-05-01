@@ -1,17 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TextView
-        android:id="@+id/supply_title"
+    android:layout_height="match_parent"
+    android:background="@color/grey_color"
+    android:orientation="vertical">
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:text="供应商"
-        android:gravity="center"
-        android:textColor="@color/red_color"
-        android:textSize="16sp"
-        android:background="@color/material_blue_grey_800"/>
+        android:layout_height="60dp">
+
+        <TextView
+            android:id="@+id/supply_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/blue_color"
+            android:gravity="center"
+            android:text="供应商"
+            android:textColor="@color/white_color"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/add_supply"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/alpha_00"
+            android:text="添加"
+            android:textColor="@color/white_color"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
     <ListView
         android:id="@+id/supply_list"
         android:layout_width="match_parent"

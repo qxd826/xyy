@@ -21,12 +21,16 @@ public class DBHelper extends SQLiteOpenHelper {
         Log.i(TAG, "数据库初始化");
         db.execSQL(DBConstant.CREATE_USER_SQL);
         db.execSQL(DBConstant.CREATE_USER_LOGIN_LOG_SQL);
+        db.execSQL(DBConstant.CREATE_SUPPLY_SQL);
+        db.execSQL(DBConstant.CREATE_CUSTOMER_SQL);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + DBConstant.TABLE_USER);
         db.execSQL("DROP TABLE IF EXISTS " + DBConstant.TABLE_USER_LOGIN_LOG);
+        db.execSQL("DROP TABLE IF EXISTS " + DBConstant.TABLE_SUPPLY);
+        db.execSQL("DROP TABLE IF EXISTS " + DBConstant.TABLE_CUSTOMER);
         onCreate(db);
     }
 }

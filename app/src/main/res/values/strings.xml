@@ -8,6 +8,7 @@
     <string name="user_list">用户列表</string>
     <string name="add_user">添加用户</string>
     <string name="setting">系统设置</string>
+    <string name="add_supply">添加供应商</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -16,4 +17,6 @@
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
+
+    <string name="supply">供应商</string>
 </resources>

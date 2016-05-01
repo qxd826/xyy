@@ -19,7 +19,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="One"
+            android:text="商品"
             android:background="#009eff"
             android:textColor="#fff"
             />
@@ -28,7 +28,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Two"
+            android:text="供应商"
             android:background="#009e00"
             android:textColor="#fff"
             />
@@ -37,7 +37,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Three"
+            android:text="客户"
             android:background="#009eff"
             android:textColor="#fff"
             />
@@ -46,7 +46,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Four"
+            android:text="用户"
             android:background="#009e00"
             android:textColor="#fff"
             />

@@ -8,6 +8,8 @@ import android.util.Log;
 
 import com.example.xyy.xyyapplication.source.common.DebugLog;
 import com.example.xyy.xyyapplication.source.constant.Constant;
+import com.example.xyy.xyyapplication.source.pojo.customer.Customer;
+import com.example.xyy.xyyapplication.source.pojo.supply.Supply;
 import com.example.xyy.xyyapplication.source.pojo.user.User;
 import com.example.xyy.xyyapplication.source.pojo.userLogin.UserLoginLog;
 
@@ -115,7 +117,7 @@ public class DBService {
     public int delUserById(int id) {
         Log.i(TAG, "删除用户:" + id);
         this.open();
-        String where = "_id = "+ id;
+        String where = "_id = " + id;
         int i = 0;
         try {
             i = sqlitedb.delete(DBConstant.TABLE_USER, where, null);
@@ -297,6 +299,7 @@ public class DBService {
 
     /**
      * 获取最后一个登录用户
+     *
      * @return
      */
     public User getLastLoginUser() {
@@ -326,6 +329,7 @@ public class DBService {
 
     /**
      * 获取管理员账号
+     *
      * @return
      */
     public User getAdminUser() {
@@ -351,5 +355,184 @@ public class DBService {
             this.close();
         }
         return user;
+    }
+
+
+    /**
+     * 插入供应商信息
+     *
+     * @param supply 供应商
+     * @return
+     */
+    public Long insertSupply(Supply supply) {
+        Log.i(TAG, "添加供应商:" + supply.toString());
+        this.open();
+        ContentValues values = new ContentValues();
+        values.put("_id", supply.getId());
+        values.put("is_deleted", supply.getIsDeleted());
+        values.put("gmt_create", supply.getGmtCreate());
+        values.put("gmt_modified", supply.getGmtModified());
+        values.put("supply_name", supply.getSupplyName());
+        values.put("supply_mobile", supply.getSupplyMobile());
+        values.put("supply_type", supply.getSupplyType());
+        Long i = 0l;
+        try {
+            i = sqlitedb.replaceOrThrow(DBConstant.TABLE_SUPPLY, null, values);
+        } catch (Exception e) {
+            Log.e(TAG, "添加供应商失败:" + e.toString());
+        } finally {
+            this.close();
+        }
+        return i;
+    }
+
+    /**
+     * 删除供应商
+     *
+     * @param id 供应商id
+     * @return
+     */
+    public int delSupplyById(int id) {
+        Log.i(TAG, "删除供应商:" + id);
+        this.open();
+        String where = "_id = " + id;
+        int i = 0;
+        try {
+            i = sqlitedb.delete(DBConstant.TABLE_SUPPLY, where, null);
+        } catch (Exception e) {
+            Log.e(TAG, "删除供应商失败:" + e.toString());
+        } finally {
+            this.close();
+        }
+        return i;
+    }
+
+    /**
+     * 获取所有供应商列表
+     *
+     * @return
+     */
+    public List<Supply> getSupplyList(String supplyType) {
+        Log.i(TAG, "获取用户列表");
+        this.open();
+        List<Supply> supplyList = new ArrayList<>();
+        try {
+            String sql = "select * from " + DBConstant.TABLE_SUPPLY + " where is_deleted ='N' and supply_type = '" + supplyType + "'";
+            Cursor cursor = sqlitedb.rawQuery(sql, null);
+            for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
+                Integer id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
+                String isDeleted = cursor.getString(cursor.getColumnIndexOrThrow("is_deleted"));
+                Long gmtCreate = cursor.getLong(cursor.getColumnIndexOrThrow("gmt_create"));
+                Long gmtModified = cursor.getLong(cursor.getColumnIndexOrThrow("gmt_modified"));
+                String supplyName = cursor.getString(cursor.getColumnIndexOrThrow("supply_name"));
+                String supplyMobile = cursor.getString(cursor.getColumnIndexOrThrow("supply_mobile"));
+                String type = cursor.getString(cursor.getColumnIndexOrThrow("supply_type"));
+
+                Supply supply = new Supply();
+                supply.setId(id);
+                supply.setIsDeleted(isDeleted);
+                supply.setGmtCreate(gmtCreate);
+                supply.setGmtModified(gmtModified);
+                supply.setSupplyName(supplyName);
+                supply.setSupplyMobile(supplyMobile);
+                supply.setSupplyType(type);
+                supplyList.add(supply);
+            }
+            cursor.close();
+        } catch (Exception e) {
+            Log.e(TAG, "获取用户列表失败:" + e.toString());
+        } finally {
+            this.close();
+        }
+        return supplyList;
+    }
+
+    /**
+     * 插入客户信息
+     *
+     * @param customer 客户
+     * @return
+     */
+    public Long insertCustomer(Customer customer) {
+        Log.i(TAG, "添加客户:" + customer.toString());
+        this.open();
+        ContentValues values = new ContentValues();
+        values.put("_id", customer.getId());
+        values.put("is_deleted", customer.getIsDeleted());
+        values.put("gmt_create", customer.getGmtCreate());
+        values.put("gmt_modified", customer.getGmtModified());
+        values.put("customer_name", customer.getCustomerName());
+        values.put("customer_mobile", customer.getCustomerMobile());
+        values.put("customer_type", customer.getCustomerType());
+        Long i = 0l;
+        try {
+            i = sqlitedb.replaceOrThrow(DBConstant.TABLE_CUSTOMER, null, values);
+        } catch (Exception e) {
+            Log.e(TAG, "添加客户失败:" + e.toString());
+        } finally {
+            this.close();
+        }
+        return i;
+    }
+
+    /**
+     * 删除客户
+     *
+     * @param id 客户id
+     * @return
+     */
+    public int delCustomerById(int id) {
+        Log.i(TAG, "删除客户:" + id);
+        this.open();
+        String where = "_id = " + id;
+        int i = 0;
+        try {
+            i = sqlitedb.delete(DBConstant.TABLE_CUSTOMER, where, null);
+        } catch (Exception e) {
+            Log.e(TAG, "删除客户失败:" + e.toString());
+        } finally {
+            this.close();
+        }
+        return i;
+    }
+
+    /**
+     * 获取所有客户列表
+     *
+     * @return
+     */
+    public List<Customer> getCustomerList(String customerType) {
+        Log.i(TAG, "获取用户列表");
+        this.open();
+        List<Customer> customerList = new ArrayList<>();
+        try {
+            String sql = "select * from " + DBConstant.TABLE_CUSTOMER + " where is_deleted ='N' and customer_type = '" + customerType + "'";
+            Cursor cursor = sqlitedb.rawQuery(sql, null);
+            for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
+                Integer id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
+                String isDeleted = cursor.getString(cursor.getColumnIndexOrThrow("is_deleted"));
+                Long gmtCreate = cursor.getLong(cursor.getColumnIndexOrThrow("gmt_create"));
+                Long gmtModified = cursor.getLong(cursor.getColumnIndexOrThrow("gmt_modified"));
+                String customerName = cursor.getString(cursor.getColumnIndexOrThrow("customer_name"));
+                String customerMobile = cursor.getString(cursor.getColumnIndexOrThrow("customer_mobile"));
+                String type = cursor.getString(cursor.getColumnIndexOrThrow("customer_type"));
+
+                Customer customer = new Customer();
+                customer.setId(id);
+                customer.setIsDeleted(isDeleted);
+                customer.setGmtCreate(gmtCreate);
+                customer.setGmtModified(gmtModified);
+                customer.setCustomerMobile(customerName);
+                customer.setCustomerMobile(customerMobile);
+                customer.setCustomerType(type);
+                customerList.add(customer);
+            }
+            cursor.close();
+        } catch (Exception e) {
+            Log.e(TAG, "获取用户列表失败:" + e.toString());
+        } finally {
+            this.close();
+        }
+        return customerList;
     }
 }

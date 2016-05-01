@@ -12,14 +12,16 @@ public class DBConstant {
     public static final String DATABASE_NAME = "xyy.db";
     public static final int DATABASE_VERSION = 1;
 
-    //用户表
+    //表
     public static final String TABLE_USER = "user";
     public static final String TABLE_USER_LOGIN_LOG = "user_login_log";
+    public static final String TABLE_SUPPLY = "supply";
+    public static final String TABLE_CUSTOMER = "customer";
 
     //创建用户表
     public static final String CREATE_USER_SQL = "CREATE TABLE IF NOT EXISTS user("
             + " _id integer primary key autoincrement, "
-            + " is_deleted char(1) not null, "
+            + " is_deleted char(1) not null default 'N', "
             + " gmt_create integer not null, "
             + " gmt_modified integer not null, "
             + " user_name varchar(20) default '', "
@@ -36,6 +38,26 @@ public class DBConstant {
             + " gmt_modified integer not null, "
             + " password varchar(20) not null, "
             + " account varchar(20) not null);";
+
+    //创建供应商表
+    public static final String CREATE_SUPPLY_SQL = "CREATE TABLE IF NOT EXISTS supply("
+            + " _id integer primary key autoincrement, "
+            + " is_deleted char(1) not null default 'N', "
+            + " gmt_create integer not null, "
+            + " gmt_modified integer not null, "
+            + " supply_name varchar(20) not null, "
+            + " supply_mobile varchar(20) not null, "
+            + " supply_type char(1) not null default '1'); ";
+
+    //创建客户表
+    public static final String CREATE_CUSTOMER_SQL = "CREATE TABLE IF NOT EXISTS customer("
+            + " _id integer primary key autoincrement, "
+            + " is_deleted char(1) not null default 'N', "
+            + " gmt_create integer not null, "
+            + " gmt_modified integer not null, "
+            + " customer_name varchar(20) not null, "
+            + " customer_mobile varchar(20) not null, "
+            + " customer_type char(1) not null default '1'); ";
 
 
 /*    *//* 离线消息 *//*

@@ -10,7 +10,6 @@ import android.widget.ImageButton;
 import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.activity.LoginActivity;
 import com.example.xyy.xyyapplication.source.application.MApplication;
-import com.example.xyy.xyyapplication.source.common.ApplicationContextUtil;
 import com.example.xyy.xyyapplication.source.common.DebugLog;
 import com.example.xyy.xyyapplication.source.db.DBService;
 
