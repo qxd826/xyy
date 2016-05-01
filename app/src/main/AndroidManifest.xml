@@ -11,6 +11,9 @@
         <!--主页面-->
         <activity
             android:name=".source.activity.MainActivity"
+            android:configChanges="keyboardHidden|orientation|locale"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:label="@string/app_name" >
         </activity>
         <!--登录-->

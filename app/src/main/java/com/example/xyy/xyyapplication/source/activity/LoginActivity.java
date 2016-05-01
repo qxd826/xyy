@@ -142,6 +142,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private void startMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        finish();
+        onDestroy();
     }
 
     //获取最后的登录用户
