@@ -13,7 +13,6 @@ import com.example.xyy.xyyapplication.source.common.DebugLog;
 import com.example.xyy.xyyapplication.source.constant.Constant;
 import com.example.xyy.xyyapplication.source.db.DBService;
 import com.example.xyy.xyyapplication.source.pojo.supply.Supply;
-import com.example.xyy.xyyapplication.source.pojo.user.User;
 
 import org.apache.commons.lang3.StringUtils;
 

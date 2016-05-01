@@ -13,7 +13,6 @@ import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.common.DateUtil;
 import com.example.xyy.xyyapplication.source.db.DBService;
 import com.example.xyy.xyyapplication.source.pojo.supply.Supply;
-import com.example.xyy.xyyapplication.source.pojo.user.User;
 
 import java.util.ArrayList;
 import java.util.Date;
