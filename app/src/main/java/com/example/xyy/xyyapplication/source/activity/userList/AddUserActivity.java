@@ -96,6 +96,11 @@ public class AddUserActivity extends Activity implements View.OnClickListener {
         user.setGmtCreate(new Date().getTime());
         user.setGmtModified(new Date().getTime());
         if (mAddUserType == 1) {
+            User adminUser = dbService.getAdminUser();
+            if (null != adminUser) {
+                Toast.makeText(this, "管理员账号已存在", Toast.LENGTH_LONG).show();
+                return false;
+            }
             user.setIsAdmin("1");
         } else {
             user.setIsAdmin("0");

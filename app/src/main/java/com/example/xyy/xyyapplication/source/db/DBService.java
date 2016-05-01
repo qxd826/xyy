@@ -277,6 +277,25 @@ public class DBService {
     }
 
     /**
+     * 删除登录记录
+     *
+     * @return
+     */
+    public int clearUserLoginLog() {
+        Log.i(TAG, "清空登录记录:");
+        this.open();
+        int i = 0;
+        try {
+            i = sqlitedb.delete(DBConstant.TABLE_USER_LOGIN_LOG, null, null);
+        } catch (Exception e) {
+            Log.e(TAG, "清空登录记录失败:" + e.toString());
+        } finally {
+            this.close();
+        }
+        return i;
+    }
+
+    /**
      * 获取最后一个登录用户
      * @return
      */
@@ -313,7 +332,7 @@ public class DBService {
         Log.i(TAG, "获取管理员账号");
         this.open();
         User user = null;
-        String sql = " select account, password from user_login_log where is_admin = '1' order by gmt_create desc limit 1;";
+        String sql = " select account, password from user where is_admin = '1' order by gmt_create desc limit 1;";
         try {
             Cursor cursor = sqlitedb.rawQuery(sql, null);
             cursor.moveToFirst();

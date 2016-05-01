@@ -81,11 +81,11 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         loginButton.setOnClickListener(this);
         loginAccount.setOnClickListener(this);
         loginPassword.setOnClickListener(this);
+        addAdminUser.setOnClickListener(this);
         if (hasAdminUser()) {
             addAdminUser.setVisibility(View.GONE);
         } else {
             addAdminUser.setVisibility(View.VISIBLE);
-            addAdminUser.setOnClickListener(this);
         }
     }
 

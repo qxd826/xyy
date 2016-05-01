@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.activity.UserActivity;
+import com.example.xyy.xyyapplication.source.activity.set.SettingActivity;
 import com.example.xyy.xyyapplication.source.activity.userList.UserListActivity;
 
 import butterknife.Bind;
@@ -73,6 +74,13 @@ public class UserFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), UserListActivity.class);
+                startActivity(intent);
+            }
+        });
+        settingItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), SettingActivity.class);
                 startActivity(intent);
             }
         });
