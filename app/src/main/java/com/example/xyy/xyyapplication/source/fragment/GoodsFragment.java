@@ -19,6 +19,7 @@ import com.example.xyy.xyyapplication.source.common.DebugLog;
 import com.example.xyy.xyyapplication.source.constant.Constant;
 import com.example.xyy.xyyapplication.source.db.DBService;
 import com.example.xyy.xyyapplication.source.pojo.goods.Goods;
+import com.example.xyy.xyyapplication.source.qrcode.QRMainActivity;
 
 import java.util.List;
 
@@ -87,7 +88,12 @@ public class GoodsFragment extends Fragment {
         saoYiSaoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "暂未开启", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getContext(), QRMainActivity.class);
+                try {
+                    startActivity(intent);
+                } catch (Exception e) {
+                    DebugLog.e("e" + e.toString());
+                }
             }
         });
         initGoodsList();

@@ -12,7 +12,7 @@
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="20dp"
         android:textSize="14sp"
-        android:textColor="@color/button_material_dark"/>
+        android:textColor="@color/black_color"/>
     <TextView
         android:id="@+id/create_time"
         android:layout_width="wrap_content"
@@ -22,7 +22,7 @@
         android:layout_alignLeft="@+id/supply_name"
         android:singleLine="true"
         android:textSize="14sp"
-        android:textColor="@color/button_material_dark"/>
+        android:textColor="@color/black_color"/>
     <TextView
         android:id="@+id/supply_mobile"
         android:layout_height="25dp"

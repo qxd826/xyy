@@ -138,7 +138,7 @@ public class DBService {
     public List<User> getUserList() {
         Log.i(TAG, "获取用户列表");
         this.open();
-        List<User> userList = new ArrayList<>();
+        List<User> userList = new ArrayList<User>();
         try {
             String sql = "select * from " + DBConstant.TABLE_USER + " where is_deleted ='N' and is_admin = '0'";
             Cursor cursor = sqlitedb.rawQuery(sql, null);
@@ -416,7 +416,7 @@ public class DBService {
     public List<Supply> getSupplyList(String supplyType) {
         Log.i(TAG, "获取用户列表");
         this.open();
-        List<Supply> supplyList = new ArrayList<>();
+        List<Supply> supplyList = new ArrayList<Supply>();
         try {
             String sql = "select * from " + DBConstant.TABLE_SUPPLY + " where is_deleted ='N' and supply_type = '" + supplyType + "'";
             Cursor cursor = sqlitedb.rawQuery(sql, null);
@@ -505,7 +505,7 @@ public class DBService {
     public List<Customer> getCustomerList(String customerType) {
         Log.i(TAG, "获取用户列表");
         this.open();
-        List<Customer> customerList = new ArrayList<>();
+        List<Customer> customerList = new ArrayList<Customer>();
         try {
             String sql = "select * from " + DBConstant.TABLE_CUSTOMER + " where is_deleted ='N' and customer_type = '" + customerType + "'";
             Cursor cursor = sqlitedb.rawQuery(sql, null);
@@ -594,7 +594,7 @@ public class DBService {
     public List<Goods> getGoodsList(String goodsType) {
         Log.i(TAG, "获取商品列表");
         this.open();
-        List<Goods> goodsList = new ArrayList<>();
+        List<Goods> goodsList = new ArrayList<Goods>();
         try {
             String sql = "select * from " + DBConstant.TABLE_GOODS + " where is_deleted ='N' and goods_type = '" + goodsType + "'";
             Cursor cursor = sqlitedb.rawQuery(sql, null);

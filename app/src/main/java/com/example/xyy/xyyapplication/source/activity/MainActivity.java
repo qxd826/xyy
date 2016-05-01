@@ -1,6 +1,5 @@
 package com.example.xyy.xyyapplication.source.activity;
 
-import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,25 +17,19 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.example.xyy.xyyapplication.R;
-import com.example.xyy.xyyapplication.source.adapter.user.UserListAdapter;
-import com.example.xyy.xyyapplication.source.constant.Constant;
-import com.example.xyy.xyyapplication.source.db.DBService;
 import com.example.xyy.xyyapplication.source.fragment.CustomerFragment;
 import com.example.xyy.xyyapplication.source.fragment.GoodsFragment;
 import com.example.xyy.xyyapplication.source.fragment.SupplyFragment;
 import com.example.xyy.xyyapplication.source.fragment.UserFragment;
 import com.example.xyy.xyyapplication.source.fragmentAdapter.MFragmentAdapter;
-import com.example.xyy.xyyapplication.source.pojo.supply.Supply;
-import com.example.xyy.xyyapplication.source.pojo.user.User;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "QRMainActivity";
 
     @Bind(R.id.btn_one)
     Button btnOne;
@@ -78,7 +71,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     public void initViewPager() {
-        fragmentsList = new ArrayList<>();
+        fragmentsList = new ArrayList<Fragment>();
         Fragment goodsFragment = new GoodsFragment();
         Fragment supplyFragment = new SupplyFragment();
         Fragment customerFragment = new CustomerFragment();

@@ -2,6 +2,33 @@
 <project version="4">
   <component name="Encoding" native2AsciiForPropertiesFiles="true" defaultCharsetForPropertiesFiles="UTF-8">
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/activity/LoginActivity.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/qrcode/MipcaActivityCapture.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/qrcode/QRMainActivity.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/camera/AutoFocusCallback.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/camera/CameraConfigurationManager.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/camera/CameraManager.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/camera/FlashlightManager.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/camera/PlanarYUVLuminanceSource.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/camera/PreviewCallback.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/decoding/CaptureActivityHandler.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/decoding/DecodeFormatManager.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/decoding/DecodeHandler.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/decoding/DecodeThread.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/decoding/FinishListener.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/decoding/InactivityTimer.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/decoding/Intents.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/view/ViewfinderResultPointCallback.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/view/ViewfinderView.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-hdpi" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/qrcode_activity_title.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/mm_title_back_focused.9.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/mm_title_back_normal.9.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/mm_title_back_pressed.9.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/mmtitle_bg_alpha.9.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/raw/beep.ogg" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/raw/realm_properties" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/values/ids.xml" charset="GBK" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

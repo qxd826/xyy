@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-
 import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.activity.LoginActivity;
 import com.example.xyy.xyyapplication.source.application.MApplication;

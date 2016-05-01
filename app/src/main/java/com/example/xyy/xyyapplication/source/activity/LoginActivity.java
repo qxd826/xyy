@@ -31,7 +31,6 @@ import butterknife.ButterKnife;
  */
 public class LoginActivity extends Activity implements View.OnClickListener {
 
-
     @Bind(R.id.login_account)
     EditText loginAccount;
     @Bind(R.id.login_password)

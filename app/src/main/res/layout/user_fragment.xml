@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/grey_color"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -31,6 +32,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:background="@color/white_color"
                 android:id="@+id/person_item">
 
                 <ImageView
@@ -46,6 +48,7 @@
                     android:layout_alignBottom="@+id/person_info_image"
                     android:layout_alignTop="@id/person_info_image"
                     android:layout_toRightOf="@+id/person_info_image"
+                    android:textColor="@color/black_color"
                     android:gravity="center"
                     android:text="个人信息"
                     android:textSize="14sp" />
@@ -70,6 +73,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:background="@color/white_color"
                 android:id="@+id/user_list_item">
 
                 <ImageView
@@ -77,6 +81,7 @@
                     android:layout_width="30dp"
                     android:layout_height="match_parent"
                     android:layout_margin="10dp"
+                    android:textColor="@color/black_color"
                     android:background="@mipmap/user_list" />
 
                 <TextView
@@ -86,6 +91,7 @@
                     android:layout_alignTop="@id/user_list_image"
                     android:layout_toRightOf="@+id/user_list_image"
                     android:gravity="center"
+                    android:textColor="@color/black_color"
                     android:text="用户列表"
                     android:textSize="14sp" />
 
@@ -108,6 +114,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:background="@color/white_color"
                 android:id="@+id/setting_item">
 
                 <ImageView
@@ -124,6 +131,7 @@
                     android:layout_alignTop="@id/setting_image"
                     android:layout_toRightOf="@+id/setting_image"
                     android:gravity="center"
+                    android:textColor="@color/black_color"
                     android:text="系统设置"
                     android:textSize="14sp" />
 
