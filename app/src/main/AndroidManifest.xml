@@ -54,7 +54,7 @@
         <activity
             android:name=".source.activity.userChangeActivity.UserPasswordChangeActivity"
             android:configChanges="keyboardHidden|orientation|locale"
-            android:label="@string/user_mobile"
+            android:label="@string/user_password"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" >
         </activity>
@@ -62,7 +62,15 @@
         <activity
             android:name=".source.activity.userList.UserListActivity"
             android:configChanges="keyboardHidden|orientation|locale"
-            android:label="@string/user_mobile"
+            android:label="@string/user_list"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <!--添加用户-->
+        <activity
+            android:name=".source.activity.userList.AddUserActivity"
+            android:configChanges="keyboardHidden|orientation|locale"
+            android:label="@string/add_user"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" >
         </activity>

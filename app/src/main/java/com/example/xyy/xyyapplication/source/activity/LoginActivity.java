@@ -1,7 +1,6 @@
 package com.example.xyy.xyyapplication.source.activity;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,54 +10,46 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.xyy.xyyapplication.R;
+import com.example.xyy.xyyapplication.source.activity.userList.AddUserActivity;
 import com.example.xyy.xyyapplication.source.application.MApplication;
-import com.example.xyy.xyyapplication.source.common.ApplicationContextUtil;
-import com.example.xyy.xyyapplication.source.common.DebugLog;
 import com.example.xyy.xyyapplication.source.constant.Constant;
 import com.example.xyy.xyyapplication.source.db.DBService;
 import com.example.xyy.xyyapplication.source.pojo.user.User;
 import com.example.xyy.xyyapplication.source.pojo.userLogin.UserLoginLog;
-
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by QXD on 2016/4/24.
  */
 public class LoginActivity extends Activity implements View.OnClickListener {
 
-    private Button loginBt;
-    private EditText accountEt;
-    private EditText pwdEt;
+
+    @Bind(R.id.login_account)
+    EditText loginAccount;
+    @Bind(R.id.login_password)
+    EditText loginPassword;
+    @Bind(R.id.login_button)
+    Button loginButton;
+    @Bind(R.id.add_admin_user)
+    Button addAdminUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
+        ButterKnife.bind(this);
         setTitle("登录");
-        if(hasLastLoginUser()){
+        if (hasLastLoginUser()) {
             startMainActivity();
         }
         initView();
-
-        User user = new User();
-        user.setAccount("qxd");
-        user.setPassword("123");
-        user.setGmtCreate(new Date().getTime());
-        user.setGmtModified(new Date().getTime());
-        user.setIsDeleted("N");
-        user.setMobile("15158116453");
-        user.setUserName("渠项栋");
-        user.setIsAdmin("0");
-        DBService dbService = DBService.getInstance(this);
-        dbService.insert(user);
-
-        dbService = DBService.getInstance(this);
-        List<User> userList = dbService.getUserList();
-        Log.i("[用户列表]", userList.toString());
     }
 
     @Override
@@ -70,25 +61,43 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login_button:
-                String account = accountEt.getText().toString();
-                String password = pwdEt.getText().toString();
+                String account = loginAccount.getText().toString();
+                String password = loginPassword.getText().toString();
                 if (!checkUser(account, password)) {
                     break;
                 }
                 startMainActivity();
+                break;
+            case R.id.add_admin_user:
+                Intent intent = new Intent(this, AddUserActivity.class);
+                intent.putExtra(Constant.ADD_USER_TYPE, Constant.ADD_ADMIN_USER);
+                startActivityForResult(intent, R.string.add_user);
                 break;
         }
     }
 
     //初始化视图组件
     private void initView() {
-        loginBt = (Button) findViewById(R.id.login_button);
-        accountEt = (EditText) findViewById(R.id.account);
-        pwdEt = (EditText) findViewById(R.id.password);
+        loginButton.setOnClickListener(this);
+        loginAccount.setOnClickListener(this);
+        loginPassword.setOnClickListener(this);
+        if (hasAdminUser()) {
+            addAdminUser.setVisibility(View.GONE);
+        } else {
+            addAdminUser.setVisibility(View.VISIBLE);
+            addAdminUser.setOnClickListener(this);
+        }
+    }
 
-        loginBt.setOnClickListener(this);
-        accountEt.setOnClickListener(this);
-        pwdEt.setOnClickListener(this);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case R.string.add_user:
+                if (resultCode == 1) {
+                    addAdminUser.setVisibility(View.GONE);
+                }
+                break;
+        }
     }
 
     //校验用户名密码
@@ -152,5 +161,15 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             }
         }
         return true;
+    }
+
+    //是否有管理员账号
+    private Boolean hasAdminUser() {
+        DBService dbService = DBService.getInstance(this);
+        User user = dbService.getAdminUser();
+        if (null != user) {
+            return true;
+        }
+        return false;
     }
 }

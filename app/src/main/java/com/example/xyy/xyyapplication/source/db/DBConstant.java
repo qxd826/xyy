@@ -22,7 +22,7 @@ public class DBConstant {
             + " is_deleted char(1) not null, "
             + " gmt_create integer not null, "
             + " gmt_modified integer not null, "
-            + " user_name varchar(20) not null, "
+            + " user_name varchar(20) default '', "
             + " account varchar(20) not null, "
             + " password varchar(20) not null, "
             + " is_admin char(1) not null default '0', "  //1是管理员,0是非管理员

@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.common.DateUtil;
+import com.example.xyy.xyyapplication.source.db.DBService;
 import com.example.xyy.xyyapplication.source.pojo.user.User;
 
 import java.util.ArrayList;
@@ -87,7 +88,12 @@ public class UserListAdapter extends BaseAdapter {
         mViewHolder.delButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "I am delete " + position, Toast.LENGTH_LONG).show();
+                DBService dbService = DBService.getInstance(mContext);
+                if(dbService.delUserById(mUserList.get(position).getId()) > 0){
+                    Toast.makeText(mContext,"删除成功",Toast.LENGTH_LONG).show();
+                    mUserList.remove(position);
+                    notifyDataSetChanged();
+                }
             }
         });
         return convertView;
@@ -99,5 +105,15 @@ public class UserListAdapter extends BaseAdapter {
         public TextView createTime;
         public TextView mobile;
         public Button delButton;
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+    }
+
+    public void setMUserList(List<User> userList){
+        this.mUserList = userList;
+        notifyDataSetChanged();
     }
 }

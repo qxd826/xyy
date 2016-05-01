@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.example.xyy.xyyapplication.source.common.DebugLog;
+import com.example.xyy.xyyapplication.source.constant.Constant;
 import com.example.xyy.xyyapplication.source.pojo.user.User;
 import com.example.xyy.xyyapplication.source.pojo.userLogin.UserLoginLog;
 
@@ -108,6 +109,25 @@ public class DBService {
     }
 
     /**
+     * @param id 用户
+     * @return
+     */
+    public int delUserById(int id) {
+        Log.i(TAG, "删除用户:" + id);
+        this.open();
+        String where = "_id = "+ id;
+        int i = 0;
+        try {
+            i = sqlitedb.delete(DBConstant.TABLE_USER, where, null);
+        } catch (Exception e) {
+            Log.e(TAG, "删除用户失败:" + e.toString());
+        } finally {
+            this.close();
+        }
+        return i;
+    }
+
+    /**
      * 获取所有用户列表
      *
      * @return
@@ -117,7 +137,7 @@ public class DBService {
         this.open();
         List<User> userList = new ArrayList<>();
         try {
-            String sql = "select * from " + DBConstant.TABLE_USER + " where is_deleted ='N'";
+            String sql = "select * from " + DBConstant.TABLE_USER + " where is_deleted ='N' and is_admin = '0'";
             Cursor cursor = sqlitedb.rawQuery(sql, null);
             for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
                 Integer id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
@@ -265,6 +285,35 @@ public class DBService {
         this.open();
         User user = null;
         String sql = " select account, password from user_login_log order by gmt_create desc limit 1;";
+        try {
+            Cursor cursor = sqlitedb.rawQuery(sql, null);
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                String account = cursor.getString(cursor.getColumnIndexOrThrow("account"));
+                String password = cursor.getString(cursor.getColumnIndexOrThrow("password"));
+                user = new User();
+                user.setAccount(account);
+                user.setPassword(password);
+                break;
+            }
+            cursor.close();
+        } catch (Exception e) {
+            Log.e(TAG, "获取最后的登录用户失败:" + e.toString());
+        } finally {
+            this.close();
+        }
+        return user;
+    }
+
+    /**
+     * 获取管理员账号
+     * @return
+     */
+    public User getAdminUser() {
+        Log.i(TAG, "获取管理员账号");
+        this.open();
+        User user = null;
+        String sql = " select account, password from user_login_log where is_admin = '1' order by gmt_create desc limit 1;";
         try {
             Cursor cursor = sqlitedb.rawQuery(sql, null);
             cursor.moveToFirst();

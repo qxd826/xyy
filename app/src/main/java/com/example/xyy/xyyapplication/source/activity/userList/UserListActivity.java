@@ -1,6 +1,7 @@
 package com.example.xyy.xyyapplication.source.activity.userList;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +13,7 @@ import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.adapter.user.UserListAdapter;
 import com.example.xyy.xyyapplication.source.application.MApplication;
 import com.example.xyy.xyyapplication.source.common.DebugLog;
+import com.example.xyy.xyyapplication.source.constant.Constant;
 import com.example.xyy.xyyapplication.source.db.DBService;
 import com.example.xyy.xyyapplication.source.pojo.user.User;
 
@@ -47,6 +49,8 @@ public class UserListActivity extends Activity implements View.OnClickListener {
         DBService dbService = DBService.getInstance(this);
         List<User> mUserList = dbService.getUserList();
         if (mUserList == null || mUserList.size() < 1) {
+            userListText.setVisibility(View.GONE);
+        }else{
             userListText.setVisibility(View.VISIBLE);
         }
         UserListAdapter userListAdapter = new UserListAdapter(this, mUserList, MApplication.isAdmin);
@@ -58,6 +62,7 @@ public class UserListActivity extends Activity implements View.OnClickListener {
         } else {
             addUser.setVisibility(View.GONE);
         }
+        addUser.setOnClickListener(this);
     }
 
     @Override
@@ -67,7 +72,29 @@ public class UserListActivity extends Activity implements View.OnClickListener {
                 finish();
                 break;
             case R.id.add_user:
+                Intent intent = new Intent(this, AddUserActivity.class);
+                intent.putExtra(Constant.ADD_USER_TYPE, Constant.ADD_NORMAL_USER);
+                startActivityForResult(intent, R.string.add_user);
+                break;
+        }
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case R.string.add_user:
+                if (resultCode == 0) {
+                    //设置用户列表
+                    DBService dbService = DBService.getInstance(this);
+                    List<User> mUserList = dbService.getUserList();
+                    if(mUserList!= null && mUserList.size() > 0){
+                        if(userListText.getVisibility() == View.GONE){
+                            userListText.setVisibility(View.VISIBLE);
+                        }
+                    }
+                    UserListAdapter mAdapter = (UserListAdapter)userList.getAdapter();
+                    mAdapter.setMUserList(mUserList);
+                }
                 break;
         }
     }

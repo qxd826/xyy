@@ -17,4 +17,9 @@ public class Constant {
     //是否是管理员
     public static final String IS_ADMIN = "1";
     public static final String NOT_ADMIN = "0";
+
+    //添加用户类型
+    public static final String ADD_USER_TYPE = "add_user_type";
+    public static final int ADD_NORMAL_USER = 0;
+    public static final int ADD_ADMIN_USER = 1;
 }
