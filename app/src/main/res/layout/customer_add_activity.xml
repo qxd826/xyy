@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@color/grey_color"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/blue_color">
+
+        <ImageButton
+            android:id="@+id/add_customer_back"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/alpha_00"
+            android:padding="10dp"
+            android:src="@mipmap/back_btn" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/alpha_00"
+            android:gravity="center"
+            android:text="添加供应商"
+            android:textColor="@color/white_color"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/add_customer_save"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/alpha_00"
+            android:text="确认"
+            android:textColor="@color/white_color"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="@color/grey_color"
+        android:gravity="center_vertical"
+        android:textColor="@color/white_color" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white_color">
+
+        <TextView
+            android:id="@+id/add_customer_name_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:text="名称"
+            android:textColor="@color/black_color"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/add_customer_name_edit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/add_customer_name_text"
+            android:background="@null" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:background="@color/grey_color" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white_color">
+
+        <TextView
+            android:id="@+id/add_customer_mobile_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:text="电话"
+            android:textColor="@color/black_color"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/add_customer_mobile_edit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/add_customer_mobile_text"
+            android:background="@null"
+            android:inputType="number|phone" />
+    </RelativeLayout>
+</LinearLayout>
