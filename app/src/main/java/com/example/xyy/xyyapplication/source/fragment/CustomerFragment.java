@@ -44,22 +44,28 @@ public class CustomerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "CustomerFragment-----onCreate");
+        Log.i(TAG, "CustomerFragment-----onCreate");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG, "CustomerFragment-----onCreateView");
+        Log.i(TAG, "CustomerFragment-----onCreateView");
         View view = inflater.inflate(R.layout.customer_fragment, container, false);
         ButterKnife.bind(this, view);
-        initView();
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        Log.i(TAG, "CustomerFragment-----onActivityCreated");
+        super.onActivityCreated(savedInstanceState);
+        initView();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "CustomerFragment-----onDestroy");
+        Log.i(TAG, "CustomerFragment-----onDestroy");
     }
 
     @Override

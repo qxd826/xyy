@@ -17,6 +17,7 @@ public class DBConstant {
     public static final String TABLE_USER_LOGIN_LOG = "user_login_log";
     public static final String TABLE_SUPPLY = "supply";
     public static final String TABLE_CUSTOMER = "customer";
+    public static final String TABLE_GOODS = "goods";
 
     //创建用户表
     public static final String CREATE_USER_SQL = "CREATE TABLE IF NOT EXISTS user("
@@ -58,6 +59,16 @@ public class DBConstant {
             + " customer_name varchar(20) not null, "
             + " customer_mobile varchar(20) not null, "
             + " customer_type char(1) not null default '1'); ";
+
+    //创建商品表
+    public static final String CREATE_GOODS_SQL = "CREATE TABLE IF NOT EXISTS goods("
+            + " _id integer primary key autoincrement, "
+            + " is_deleted char(1) not null default 'N', "
+            + " gmt_create integer not null, "
+            + " gmt_modified integer not null, "
+            + " goods_name varchar(20) not null, "
+            + " goods_num integer not null default 0, "
+            + " goods_type char(1) not null default '1'); ";
 
 
 /*    *//* 离线消息 *//*

@@ -26,8 +26,10 @@ public class Constant {
     //添加供应商
     public static final int ADD_SUPPLY_SUCCESS = 1;
     public static final int ADD_CUSTOMER_SUCCESS = 1;
+    public static final int ADD_GOODS_SUCCESS = 1;
 
     //Intent code
     public static final int ADD_SUPPLY_CODE = 10;
     public static final int ADD_CUSTOMER_CODE = 11;
+    public static final int ADD_GOODS_CODE = 12;
 }

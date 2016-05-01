@@ -20,7 +20,6 @@
         <activity
             android:name=".source.activity.LoginActivity"
             android:configChanges="keyboardHidden|orientation|locale"
-            android:label="@string/login_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" >
             <intent-filter>
@@ -93,11 +92,19 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" >
         </activity>
-        <!--添加供应商-->
+        <!--添加客户-->
         <activity
             android:name=".source.activity.customer.AddCustomerActivity"
             android:configChanges="keyboardHidden|orientation|locale"
             android:label="@string/add_customer"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <!--添加商品-->
+        <activity
+            android:name=".source.activity.goods.AddGoodsActivity"
+            android:configChanges="keyboardHidden|orientation|locale"
+            android:label="@string/add_goods"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" >
         </activity>

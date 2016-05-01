@@ -10,6 +10,7 @@
     <string name="setting">系统设置</string>
     <string name="add_supply">添加供应商</string>
     <string name="add_customer">添加客户</string>
+    <string name="add_goods">添加商品</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

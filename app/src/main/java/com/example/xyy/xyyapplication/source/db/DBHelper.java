@@ -23,6 +23,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(DBConstant.CREATE_USER_LOGIN_LOG_SQL);
         db.execSQL(DBConstant.CREATE_SUPPLY_SQL);
         db.execSQL(DBConstant.CREATE_CUSTOMER_SQL);
+        db.execSQL(DBConstant.CREATE_GOODS_SQL);
     }
 
     @Override
@@ -31,6 +32,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DBConstant.TABLE_USER_LOGIN_LOG);
         db.execSQL("DROP TABLE IF EXISTS " + DBConstant.TABLE_SUPPLY);
         db.execSQL("DROP TABLE IF EXISTS " + DBConstant.TABLE_CUSTOMER);
+        db.execSQL("DROP TABLE IF EXISTS " + DBConstant.TABLE_GOODS);
         onCreate(db);
     }
 }

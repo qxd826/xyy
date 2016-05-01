@@ -41,22 +41,28 @@ public class SupplyFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "SupplyFragment-----onCreate");
+        Log.i(TAG, "SupplyFragment-----onCreate");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG, "SupplyFragment-----onCreateView");
+        Log.i(TAG, "SupplyFragment-----onCreateView");
         View view = inflater.inflate(R.layout.supply_fragment, container, false);
         ButterKnife.bind(this, view);
-        initView();
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        Log.i(TAG, "SupplyFragment-----onActivityCreated");
+        super.onActivityCreated(savedInstanceState);
+        initView();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "SupplyFragment-----onDestroy");
+        Log.i(TAG, "SupplyFragment-----onDestroy");
     }
 
     @Override
@@ -84,7 +90,11 @@ public class SupplyFragment extends Fragment {
         DBService dbService = DBService.getInstance(getContext());
         List<Supply> mSupplyList = dbService.getSupplyList("1");
         SupplyListAdapter supplyListAdapter = new SupplyListAdapter(getContext(), mSupplyList, MApplication.isAdmin);
-        supplyList.setAdapter(supplyListAdapter);
+        try {
+            supplyList.setAdapter(supplyListAdapter);
+        }catch (Exception e){
+            DebugLog.e(e.toString());
+        }
     }
 
     public void reFreshList() {

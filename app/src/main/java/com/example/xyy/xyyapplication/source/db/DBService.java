@@ -9,6 +9,7 @@ import android.util.Log;
 import com.example.xyy.xyyapplication.source.common.DebugLog;
 import com.example.xyy.xyyapplication.source.constant.Constant;
 import com.example.xyy.xyyapplication.source.pojo.customer.Customer;
+import com.example.xyy.xyyapplication.source.pojo.goods.Goods;
 import com.example.xyy.xyyapplication.source.pojo.supply.Supply;
 import com.example.xyy.xyyapplication.source.pojo.user.User;
 import com.example.xyy.xyyapplication.source.pojo.userLogin.UserLoginLog;
@@ -522,7 +523,7 @@ public class DBService {
                 customer.setIsDeleted(isDeleted);
                 customer.setGmtCreate(gmtCreate);
                 customer.setGmtModified(gmtModified);
-                customer.setCustomerMobile(customerName);
+                customer.setCustomerName(customerName);
                 customer.setCustomerMobile(customerMobile);
                 customer.setCustomerType(type);
                 customerList.add(customer);
@@ -534,5 +535,95 @@ public class DBService {
             this.close();
         }
         return customerList;
+    }
+
+    /**
+     * 插入商品信息
+     *
+     * @param goods 客户
+     * @return
+     */
+    public Long insertGoods(Goods goods) {
+        Log.i(TAG, "添加商品:" + goods.toString());
+        this.open();
+        ContentValues values = new ContentValues();
+        values.put("_id", goods.getId());
+        values.put("is_deleted", goods.getIsDeleted());
+        values.put("gmt_create", goods.getGmtCreate());
+        values.put("gmt_modified", goods.getGmtModified());
+        values.put("goods_name", goods.getGoodsName());
+        values.put("goods_num", goods.getGoodsNum());
+        values.put("goods_type", goods.getGoodsType());
+        Long i = 0l;
+        try {
+            i = sqlitedb.replaceOrThrow(DBConstant.TABLE_GOODS, null, values);
+        } catch (Exception e) {
+            Log.e(TAG, "添加客户失败:" + e.toString());
+        } finally {
+            this.close();
+        }
+        return i;
+    }
+
+    /**
+     * 删除商品
+     *
+     * @param id 客户id
+     * @return
+     */
+    public int delGoodsById(int id) {
+        Log.i(TAG, "删除商品:" + id);
+        this.open();
+        String where = "_id = " + id;
+        int i = 0;
+        try {
+            i = sqlitedb.delete(DBConstant.TABLE_GOODS, where, null);
+        } catch (Exception e) {
+            Log.e(TAG, "删除商品失败:" + e.toString());
+        } finally {
+            this.close();
+        }
+        return i;
+    }
+
+    /**
+     * 获取所有商品列表
+     *
+     * @return
+     */
+    public List<Goods> getGoodsList(String goodsType) {
+        Log.i(TAG, "获取商品列表");
+        this.open();
+        List<Goods> goodsList = new ArrayList<>();
+        try {
+            String sql = "select * from " + DBConstant.TABLE_GOODS + " where is_deleted ='N' and goods_type = '" + goodsType + "'";
+            Cursor cursor = sqlitedb.rawQuery(sql, null);
+            for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
+                Integer id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
+                String isDeleted = cursor.getString(cursor.getColumnIndexOrThrow("is_deleted"));
+                Long gmtCreate = cursor.getLong(cursor.getColumnIndexOrThrow("gmt_create"));
+                Long gmtModified = cursor.getLong(cursor.getColumnIndexOrThrow("gmt_modified"));
+                String goodsName = cursor.getString(cursor.getColumnIndexOrThrow("goods_name"));
+                int goodsNum = cursor.getInt(cursor.getColumnIndexOrThrow("goods_num"));
+                String type = cursor.getString(cursor.getColumnIndexOrThrow("goods_type"));
+
+                Goods goods = new Goods();
+                goods.setId(id);
+                goods.setIsDeleted(isDeleted);
+                goods.setGmtCreate(gmtCreate);
+                goods.setGmtModified(gmtModified);
+                goods.setGoodsName(goodsName);
+                goods.setGoodsNum(goodsNum);
+                goods.setGoodsType(type);
+                goodsList.add(goods);
+            }
+            cursor.close();
+        } catch (Exception e) {
+            Log.e(TAG, "获取商品列表失败:" + e.toString());
+        } finally {
+            this.close();
+        }
+        Log.i(TAG, "获取商品列表 result:" + goodsList);
+        return goodsList;
     }
 }
