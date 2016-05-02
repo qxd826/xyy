@@ -17,7 +17,7 @@
             android:gravity="center"
             android:text="供应商"
             android:textColor="@color/white_color"
-            android:textSize="18sp" />
+            android:textSize="22sp" />
 
         <Button
             android:id="@+id/add_supply"

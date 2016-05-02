@@ -8,8 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.RelativeLayout;
 
 import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.activity.goods.AddGoodsActivity;
@@ -30,7 +32,6 @@ import butterknife.ButterKnife;
  * Created by admin on 16/4/27.
  */
 public class GoodsFragment extends Fragment {
-
     private static final String TAG = "GoodsFragment";
 
     @Bind(R.id.sao_yi_sao_btn)
@@ -39,6 +40,14 @@ public class GoodsFragment extends Fragment {
     Button addGoodsBtn;
     @Bind(R.id.goods_list)
     ListView goodsList;
+    @Bind(R.id.add_goods_icon)
+    ImageButton addGoodsIcon;
+    @Bind(R.id.add_goods_two_btn)
+    RelativeLayout addGoodsTwoBtn;
+    @Bind(R.id.search_edit)
+    EditText searchEdit;
+    @Bind(R.id.search_btn)
+    ImageButton searchBtn;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,17 +61,17 @@ public class GoodsFragment extends Fragment {
         View view = inflater.inflate(R.layout.goods_fragment, container, false);
         ButterKnife.bind(this, view);
         return view;
-
     }
+
     @Override
-     public void onActivityCreated(Bundle savedInstanceState){
+    public void onActivityCreated(Bundle savedInstanceState) {
         Log.i(TAG, "GoodsFragment-----onActivityCreated");
         super.onActivityCreated(savedInstanceState);
         initView();
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         Log.i(TAG, "GoodsFragment-----onResume");
         super.onResume();
         initGoodsList();
@@ -81,6 +90,7 @@ public class GoodsFragment extends Fragment {
     }
 
     private void initView() {
+        searchEdit.clearFocus();
         addGoodsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,6 +110,16 @@ public class GoodsFragment extends Fragment {
                     startActivityForResult(intent, Constant.ADD_GOODS_CODE);
                 } catch (Exception e) {
                     DebugLog.e("e" + e.toString());
+                }
+            }
+        });
+        addGoodsIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (addGoodsTwoBtn.getVisibility() == View.VISIBLE) {
+                    addGoodsTwoBtn.setVisibility(View.GONE);
+                } else {
+                    addGoodsTwoBtn.setVisibility(View.VISIBLE);
                 }
             }
         });

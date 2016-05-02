@@ -60,7 +60,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG,"mainActivity onCreate......");
+        Log.i(TAG, "mainActivity onCreate......");
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
@@ -173,7 +173,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         switch (v.getId()) {
             case R.id.btn_one:
                 viewpager.setCurrentItem(0);
-                Log.i(TAG,"我选择了0");
+                Log.i(TAG, "我选择了0");
                 break;
             case R.id.btn_two:
                 viewpager.setCurrentItem(1);
@@ -189,15 +189,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
         }
     }
+
     @Override
     protected void onDestroy() {
-        Log.i(TAG,"mainActivity destroy......");
+        Log.i(TAG, "mainActivity destroy......");
         super.onDestroy();
     }
 
     @Override
     protected void onStop() {
-        Log.i(TAG,"mainActivity stop......");
+        Log.i(TAG, "mainActivity stop......");
         super.onStop();
     }
 
@@ -210,7 +211,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
         return super.onKeyDown(keyCode, event);
     }
-
 
 
 }

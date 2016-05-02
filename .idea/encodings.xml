@@ -22,11 +22,22 @@
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-hdpi" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/layout/qrcode_activity_title.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/add_goods_icon.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/goods_list_bg.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/line_bg.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/mm_title_back_focused.9.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/mm_title_back_normal.9.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/mm_title_back_pressed.9.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/mmtitle_bg_alpha.9.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/search_bg.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/search_icon_btn.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/add_goods_icon.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/line_bg.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/search_bg.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/search_icon_btn.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/add_goods_icon.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/search_bg.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/search_icon_btn.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/raw/beep.ogg" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/raw/realm_properties" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/values/ids.xml" charset="GBK" />

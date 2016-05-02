@@ -62,9 +62,9 @@
     <!-- 导航和视图的分割线 -->
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="2dp"
         android:layout_marginBottom="2dp"
-        android:background="#f00"
+        android:background="@mipmap/line_bg"
         android:layout_above="@id/ll_tabs"
         />
     <ImageView
