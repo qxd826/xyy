@@ -82,7 +82,7 @@ public class GoodsListAdapter extends BaseAdapter{
             @Override
             public void onClick(View v) {
                 DBService dbService = DBService.getInstance(mContext);
-                if(dbService.delCustomerById(mGoodsList.get(position).getId()) > 0){
+                if(dbService.delGoodsById(mGoodsList.get(position).getId()) > 0){
                     Toast.makeText(mContext, "删除成功", Toast.LENGTH_LONG).show();
                     mGoodsList.remove(position);
                     notifyDataSetChanged();

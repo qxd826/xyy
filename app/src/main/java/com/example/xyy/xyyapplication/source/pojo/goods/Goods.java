@@ -15,5 +15,6 @@ public class Goods {
     private Long gmtModified;
     private String goodsName;
     private Integer goodsNum;
+    private String goodsCode;
     private String goodsType;
 }

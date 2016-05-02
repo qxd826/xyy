@@ -55,10 +55,17 @@ public class GoodsFragment extends Fragment {
 
     }
     @Override
-    public void onActivityCreated(Bundle savedInstanceState){
+     public void onActivityCreated(Bundle savedInstanceState){
         Log.i(TAG, "GoodsFragment-----onActivityCreated");
         super.onActivityCreated(savedInstanceState);
         initView();
+    }
+
+    @Override
+    public void onResume(){
+        Log.i(TAG, "GoodsFragment-----onResume");
+        super.onResume();
+        initGoodsList();
     }
 
     @Override
@@ -90,13 +97,12 @@ public class GoodsFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), QRMainActivity.class);
                 try {
-                    startActivity(intent);
+                    startActivityForResult(intent, Constant.ADD_GOODS_CODE);
                 } catch (Exception e) {
                     DebugLog.e("e" + e.toString());
                 }
             }
         });
-        initGoodsList();
     }
 
     private void initGoodsList() {

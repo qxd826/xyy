@@ -13,6 +13,7 @@ import com.example.xyy.xyyapplication.source.pojo.goods.Goods;
 import com.example.xyy.xyyapplication.source.pojo.supply.Supply;
 import com.example.xyy.xyyapplication.source.pojo.user.User;
 import com.example.xyy.xyyapplication.source.pojo.userLogin.UserLoginLog;
+import com.example.xyy.xyyapplication.source.zxing.decoding.Intents;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -553,6 +554,7 @@ public class DBService {
         values.put("gmt_modified", goods.getGmtModified());
         values.put("goods_name", goods.getGoodsName());
         values.put("goods_num", goods.getGoodsNum());
+        values.put("goods_code", goods.getGoodsCode());
         values.put("goods_type", goods.getGoodsType());
         Long i = 0l;
         try {
@@ -625,5 +627,79 @@ public class DBService {
         }
         Log.i(TAG, "获取商品列表 result:" + goodsList);
         return goodsList;
+    }
+    /**
+     * 根据商品编号获取商品信息
+     *
+     * @param goodsCode
+     * @return
+     */
+    public Goods getGoodsByCode(String goodsCode) {
+        Log.i(TAG, "获取用户列表");
+        this.open();
+        Goods goods = new Goods();
+        try {
+            String sql = "select * from " + DBConstant.TABLE_GOODS + " where is_deleted = 'N' and goods_code = '" + goodsCode + "' limit 1;";
+            Log.i("QXD", sql);
+            Cursor cursor = sqlitedb.rawQuery(sql, null);
+            for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
+                Integer id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
+                String isDeleted = cursor.getString(cursor.getColumnIndexOrThrow("is_deleted"));
+                Long gmtCreate = cursor.getLong(cursor.getColumnIndexOrThrow("gmt_create"));
+                Long gmtModified = cursor.getLong(cursor.getColumnIndexOrThrow("gmt_modified"));
+                String goodsName = cursor.getString(cursor.getColumnIndexOrThrow("goods_name"));
+                String mGoodsCode = cursor.getString(cursor.getColumnIndexOrThrow("goods_code"));
+                Integer goodsNum = cursor.getInt(cursor.getColumnIndexOrThrow("goods_num"));
+                String goodsType = cursor.getString(cursor.getColumnIndexOrThrow("goods_type"));
+
+                goods.setId(id);
+                goods.setIsDeleted(isDeleted);
+                goods.setGmtCreate(gmtCreate);
+                goods.setGmtModified(gmtModified);
+                goods.setGoodsCode(mGoodsCode);
+                goods.setGoodsName(goodsName);
+                goods.setGoodsNum(goodsNum);
+                goods.setGoodsType(goodsType);
+            }
+            cursor.close();
+        } catch (Exception e) {
+            Log.e(TAG, "获取用户信息失败:" + e.toString());
+            return null;
+        } finally {
+            this.close();
+        }
+        return goods;
+    }
+
+    /**
+     * 更新商品信息
+     *
+     * @param goods
+     * @return
+     */
+    public Long upGoods(Goods goods) {
+        Log.i(TAG, "更新商品:" + goods.toString());
+        if (goods.getId() == null || goods.getId() < 1) {
+            return 0l;
+        }
+        this.open();
+        ContentValues values = new ContentValues();
+        values.put("_id", goods.getId());
+        values.put("is_deleted", goods.getIsDeleted());
+        values.put("gmt_create", goods.getGmtCreate());
+        values.put("gmt_modified", goods.getGmtModified());
+        values.put("goods_name", goods.getGoodsName());
+        values.put("goods_code", goods.getGoodsCode());
+        values.put("goods_num", goods.getGoodsNum());
+        values.put("goods_type", goods.getGoodsType());
+        Long i = 0l;
+        try {
+            i = sqlitedb.replaceOrThrow(DBConstant.TABLE_GOODS, null, values);
+        } catch (Exception e) {
+            DebugLog.e(TAG,"更新商品信息失败. e:" + e.toString() + " values:" + values.toString());
+        } finally {
+            this.close();
+        }
+        return i;
     }
 }

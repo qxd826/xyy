@@ -3,21 +3,21 @@
   <component name="Encoding" native2AsciiForPropertiesFiles="true" defaultCharsetForPropertiesFiles="UTF-8">
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/activity/LoginActivity.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/qrcode/MipcaActivityCapture.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/qrcode/QRMainActivity.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/camera/AutoFocusCallback.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/camera/CameraConfigurationManager.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/camera/CameraManager.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/camera/FlashlightManager.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/camera/PlanarYUVLuminanceSource.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/camera/PreviewCallback.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/decoding/CaptureActivityHandler.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/decoding/DecodeFormatManager.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/decoding/DecodeHandler.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/decoding/DecodeThread.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/decoding/FinishListener.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/decoding/InactivityTimer.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/decoding/Intents.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/view/ViewfinderResultPointCallback.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/qrcode/QRMainActivity.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/camera/AutoFocusCallback.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/camera/CameraConfigurationManager.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/camera/CameraManager.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/camera/FlashlightManager.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/camera/PlanarYUVLuminanceSource.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/camera/PreviewCallback.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/decoding/CaptureActivityHandler.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/decoding/DecodeFormatManager.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/decoding/DecodeHandler.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/decoding/DecodeThread.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/decoding/FinishListener.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/decoding/InactivityTimer.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/decoding/Intents.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/view/ViewfinderResultPointCallback.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/example/xyy/xyyapplication/source/zxing/view/ViewfinderView.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-hdpi" charset="GBK" />

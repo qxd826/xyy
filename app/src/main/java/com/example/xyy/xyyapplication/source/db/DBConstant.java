@@ -67,6 +67,7 @@ public class DBConstant {
             + " gmt_create integer not null, "
             + " gmt_modified integer not null, "
             + " goods_name varchar(20) not null, "
+            + " goods_code varchar(30) not null, "
             + " goods_num integer not null default 0, "
             + " goods_type char(1) not null default '1'); ";
 
