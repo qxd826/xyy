@@ -63,7 +63,7 @@ public class QRMainActivity extends Activity implements OnClickListener {
     @Bind(R.id.edit_goods_save_btn)
     Button editGoodsSaveBtn;
     @Bind(R.id.edit_goods_layout)
-    LinearLayout editGoodsLayout;
+    RelativeLayout editGoodsLayout;
 
     private TextView mTextView;
     private ImageView mImageView;
