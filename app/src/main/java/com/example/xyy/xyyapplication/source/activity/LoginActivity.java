@@ -30,6 +30,8 @@ import butterknife.ButterKnife;
  * Created by QXD on 2016/4/24.
  */
 public class LoginActivity extends Activity implements View.OnClickListener {
+    private final String TAG = "LoginActivity";
+    private DBService dbService;
 
     @Bind(R.id.login_account)
     EditText loginAccount;
@@ -54,7 +56,23 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     @Override
     protected void onResume() {
+        if(dbService == null){
+            dbService = DBService.getInstance(this);
+        }
         super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.i(TAG, "LoginActivity destroy......");
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onStop() {
+        dbService = null;
+        Log.i(TAG, "LoginActivity stop......");
+        super.onStop();
     }
 
     @Override
@@ -106,7 +124,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             Toast.makeText(this, "用户名或密码为空", Toast.LENGTH_LONG).show();
             return false;
         }
-        DBService dbService = DBService.getInstance(this);
+        dbService = DBService.getInstance(this);
         User user = dbService.getUserByAccount(account);
         if (user == null) {
             Toast.makeText(this, "当前用户不存在", Toast.LENGTH_LONG).show();
@@ -148,7 +166,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     //获取最后的登录用户
     private Boolean hasLastLoginUser() {
-        DBService dbService = DBService.getInstance(this);
+        dbService = DBService.getInstance(this);
         User user = dbService.getLastLoginUser();
         if (user == null || StringUtils.isEmpty(user.getAccount())) {
             return false;
@@ -167,7 +185,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     //是否有管理员账号
     private Boolean hasAdminUser() {
-        DBService dbService = DBService.getInstance(this);
+        dbService = DBService.getInstance(this);
         User user = dbService.getAdminUser();
         if (null != user) {
             return true;

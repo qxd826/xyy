@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -74,7 +75,16 @@ public class GoodsFragment extends Fragment {
     public void onResume() {
         Log.i(TAG, "GoodsFragment-----onResume");
         super.onResume();
+        searchEdit.clearFocus();
         initGoodsList();
+    }
+
+    @Override
+    public void onPause() {
+        Log.i(TAG, "GoodsFragment-----onPause");
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(searchEdit.getWindowToken(), 0);
+        super.onPause();
     }
 
     @Override

@@ -29,7 +29,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
-    private static final String TAG = "QRMainActivity";
+    private static final String TAG = "MainActivity";
 
     @Bind(R.id.btn_one)
     Button btnOne;

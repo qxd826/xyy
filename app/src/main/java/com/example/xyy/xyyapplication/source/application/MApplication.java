@@ -16,6 +16,8 @@ public class MApplication extends Application {
     public static User currentLoginUser = null;
     //当前是否是管理员登录
     public static Boolean isAdmin = false;
+    //数据库锁
+    public static Object SQL_LOCK = new Object();
 
     @Override
     public void onCreate() {
