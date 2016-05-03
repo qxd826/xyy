@@ -83,7 +83,16 @@ public class GoodsFragment extends Fragment {
     public void onResume() {
         Log.i(TAG, "GoodsFragment-----onResume");
         super.onResume();
+        searchEdit.clearFocus();
         initGoodsList();
+    }
+
+    @Override
+    public void onPause() {
+        Log.i(TAG, "GoodsFragment-----onPause");
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(searchEdit.getWindowToken(), 0);
+        super.onPause();
     }
 
     @Override
