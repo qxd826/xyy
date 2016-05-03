@@ -33,12 +33,20 @@
         android:layout_height="40dp"
         android:layout_width="match_parent"
         android:background="@mipmap/search_bg">
+        <ImageButton
+            android:id="@+id/search_clear_btn"
+            android:layout_height="match_parent"
+            android:layout_width="50dp"
+            android:layout_alignParentLeft="true"
+            android:background="@color/alpha_00"
+            android:visibility="gone"
+            android:src="@mipmap/search_clear_btn"/>
         <EditText
             android:id="@+id/search_edit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="2dp"
-            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/search_clear_btn"
             android:layout_alignParentRight="true"
             android:layout_marginRight="50dp"
             android:background="@null"

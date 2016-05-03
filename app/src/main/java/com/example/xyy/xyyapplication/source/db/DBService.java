@@ -635,7 +635,7 @@ public class DBService {
      * @return
      */
     public Goods getGoodsByCode(String goodsCode) {
-        Log.i(TAG, "获取用户列表");
+        Log.i(TAG, "获取商品列表");
         this.open();
         Goods goods = new Goods();
         try {
@@ -663,12 +663,57 @@ public class DBService {
             }
             cursor.close();
         } catch (Exception e) {
-            Log.e(TAG, "获取用户信息失败:" + e.toString());
+            Log.e(TAG, "获取商品信息失败:" + e.toString());
             return null;
         } finally {
             this.close();
         }
         return goods;
+    }
+    /**
+     * 根据商品编号获取商品信息
+     *
+     * @param key
+     * @return
+     */
+    public List<Goods> searchGoods(String key) {
+        Log.i(TAG, "搜索商品列表");
+        this.open();
+        List<Goods> goodsList = new ArrayList<>();
+        try {
+            String sql = "select * from " + DBConstant.TABLE_GOODS +
+                    " where is_deleted = 'N' and (goods_code like '%" + key + "%' or goods_name like '%" + key + "%');";
+            Log.i("QXD", sql);
+            Cursor cursor = sqlitedb.rawQuery(sql, null);
+            for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
+                Goods goods = new Goods();
+                Integer id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
+                String isDeleted = cursor.getString(cursor.getColumnIndexOrThrow("is_deleted"));
+                Long gmtCreate = cursor.getLong(cursor.getColumnIndexOrThrow("gmt_create"));
+                Long gmtModified = cursor.getLong(cursor.getColumnIndexOrThrow("gmt_modified"));
+                String goodsName = cursor.getString(cursor.getColumnIndexOrThrow("goods_name"));
+                String mGoodsCode = cursor.getString(cursor.getColumnIndexOrThrow("goods_code"));
+                Integer goodsNum = cursor.getInt(cursor.getColumnIndexOrThrow("goods_num"));
+                String goodsType = cursor.getString(cursor.getColumnIndexOrThrow("goods_type"));
+
+                goods.setId(id);
+                goods.setIsDeleted(isDeleted);
+                goods.setGmtCreate(gmtCreate);
+                goods.setGmtModified(gmtModified);
+                goods.setGoodsCode(mGoodsCode);
+                goods.setGoodsName(goodsName);
+                goods.setGoodsNum(goodsNum);
+                goods.setGoodsType(goodsType);
+                goodsList.add(goods);
+            }
+            cursor.close();
+        } catch (Exception e) {
+            Log.e(TAG, "搜索商品信息失败:" + e.toString());
+            return null;
+        } finally {
+            this.close();
+        }
+        return goodsList;
     }
 
     /**

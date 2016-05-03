@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentTop="true"
-        android:text="扫描添加商品" />
+        android:text="扫描商品" />
 
     <TextView
         android:id="@+id/goods_code_result"

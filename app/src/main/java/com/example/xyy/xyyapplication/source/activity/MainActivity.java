@@ -1,5 +1,7 @@
 package com.example.xyy.xyyapplication.source.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,6 +17,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.fragment.CustomerFragment;
@@ -205,8 +208,25 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            // Do something.
-            System.exit(0);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("提示"); //设置标题
+            builder.setMessage("是否确认退出?"); //设置内容
+            builder.setIcon(R.mipmap.ic_launcher);//设置图标，图片id即可
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() { //设置确定按钮
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss(); //关闭dialog
+                    System.exit(0);
+                }
+            });
+            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() { //设置取消按钮
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            //参数都设置完成了，创建并显示出来
+            builder.create().show();
             return true;
         }
         return super.onKeyDown(keyCode, event);
