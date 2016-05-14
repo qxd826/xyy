@@ -544,7 +544,7 @@ public class DBService {
      * @param goods 客户
      * @return
      */
-    public Long insertGoods(Goods goods) {
+    public Long insertGoods(Goods goods,Supply supply) {
         Log.i(TAG, "添加商品:" + goods.toString());
         this.open();
         ContentValues values = new ContentValues();

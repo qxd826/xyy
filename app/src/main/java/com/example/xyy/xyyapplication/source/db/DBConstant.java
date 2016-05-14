@@ -18,6 +18,7 @@ public class DBConstant {
     public static final String TABLE_SUPPLY = "supply";
     public static final String TABLE_CUSTOMER = "customer";
     public static final String TABLE_GOODS = "goods";
+    public static final String TABLE_GOODS_LOG = "goods_log";
 
     //创建用户表
     public static final String CREATE_USER_SQL = "CREATE TABLE IF NOT EXISTS user("
@@ -71,18 +72,24 @@ public class DBConstant {
             + " goods_num integer not null default 0, "
             + " goods_type char(1) not null default '1'); ";
 
-
-/*    *//* 离线消息 *//*
-    private static final String OFFLINE_MESSAGE_TABLE_CREATE_SQL = " CREATE TABLE IF NOT EXISTS offline_message ("
+    //创建商品进出库流水表
+    /**
+     * action_type 0 :入库
+     * action_type 1 :出库
+     *
+     * */
+    public static final String CREATE_GOODS_LOG_SQL = "CREATE TABLE IF NOT EXISTS goods_log("
             + " _id integer primary key autoincrement, "
-            + " touid integer not null, "
-            + " fromuid integer not null, "
-            + " fromname text not null default '', "
-            + " fromsex integer not null default 0, "
-            + " roomid integer not null, "
-            + " type integer default 0, " ////2chat 3.gift 4.big daoju 5.yanhua caisheng // 10 推广奖励， 11 系统通知   12 获奖通知
-            + " has_read integer default 0, "//0 未读 1 已读
-            + " content text not null default '', "
-            + " created_at integer not null default 0); " +
-            "create index index_idx on offline_message(touid,fromuid);";		//索引*/
+            + " is_deleted char(1) not null default 'N', "
+            + " gmt_create integer not null, "
+            + " gmt_modified integer not null, "
+            + " create_id integer not null default 0, "
+            + " goods_name varchar(20) not null, "
+            + " goods_code varchar(30) not null, "
+            + " num integer not null default 0, "
+            + " customer_id integer not null default 0, "
+            + " customer_name varchar(20), "
+            + " supply_id integer not null default 0, "
+            + " supply_name varchar(20), "
+            + " action_type char(1) not null default '0'); ";
 }
