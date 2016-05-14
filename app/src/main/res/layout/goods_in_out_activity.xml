@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey_color"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/blue_color">
+
+        <ImageButton
+            android:id="@+id/in_out_back"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/alpha_00"
+            android:padding="10dp"
+            android:src="@mipmap/back_btn" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/alpha_00"
+            android:gravity="center"
+            android:text="出入库明细"
+            android:textColor="@color/white_color"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="@color/grey_color"
+        android:gravity="center_vertical"
+        android:textColor="@color/white_color" />
+
+    <ListView
+        android:id="@+id/goods_in_out_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </ListView>
+</LinearLayout>

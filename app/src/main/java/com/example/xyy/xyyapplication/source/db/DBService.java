@@ -11,6 +11,7 @@ import com.example.xyy.xyyapplication.source.common.DebugLog;
 import com.example.xyy.xyyapplication.source.constant.Constant;
 import com.example.xyy.xyyapplication.source.pojo.customer.Customer;
 import com.example.xyy.xyyapplication.source.pojo.goods.Goods;
+import com.example.xyy.xyyapplication.source.pojo.goods.GoodsLog;
 import com.example.xyy.xyyapplication.source.pojo.supply.Supply;
 import com.example.xyy.xyyapplication.source.pojo.user.User;
 import com.example.xyy.xyyapplication.source.pojo.userLogin.UserLoginLog;
@@ -892,7 +893,58 @@ public class DBService {
         return i > 0 && j > 0 ? 1 : 0;
     }
 
+    /**
+     * 获取商品出入库明细列表
+     *
+     * @return
+     */
+    public List<GoodsLog> getGoodsLogList(String mGoodsCode) {
+        Log.i(TAG, "获取商品出入库明细列表");
+        this.open();
+        List<GoodsLog> goodsLogList = new ArrayList<GoodsLog>();
+        try {
+            String sql = "select * from " + DBConstant.TABLE_GOODS_LOG + " where is_deleted ='N' and goods_code = '" + mGoodsCode + "' order by _id desc";
+            Cursor cursor = sqlitedb.rawQuery(sql, null);
+            for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
+                Integer id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
+                String isDeleted = cursor.getString(cursor.getColumnIndexOrThrow("is_deleted"));
+                Long gmtCreate = cursor.getLong(cursor.getColumnIndexOrThrow("gmt_create"));
+                Long gmtModified = cursor.getLong(cursor.getColumnIndexOrThrow("gmt_modified"));
+                Integer createId = cursor.getInt(cursor.getColumnIndexOrThrow("create_id"));
+                String goodsName = cursor.getString(cursor.getColumnIndexOrThrow("goods_name"));
+                int num = cursor.getInt(cursor.getColumnIndexOrThrow("num"));
+                String goodsCode = cursor.getString(cursor.getColumnIndexOrThrow("goods_code"));
+                int customerId = cursor.getInt(cursor.getColumnIndexOrThrow("customer_id"));
+                String customerName = cursor.getString(cursor.getColumnIndexOrThrow("customer_name"));
+                int supplyId = cursor.getInt(cursor.getColumnIndexOrThrow("supply_id"));
+                String supplyName = cursor.getString(cursor.getColumnIndexOrThrow("supply_name"));
+                String actionType = cursor.getString(cursor.getColumnIndexOrThrow("action_type"));
 
+                GoodsLog goodsLog = new GoodsLog();
+                goodsLog.setId(id);
+                goodsLog.setIsDeleted(isDeleted);
+                goodsLog.setGmtCreate(gmtCreate);
+                goodsLog.setGmtModified(gmtModified);
+                goodsLog.setCreateId(createId);
+                goodsLog.setNum(num);
+                goodsLog.setCustomerId(customerId);
+                goodsLog.setCustomerName(customerName);
+                goodsLog.setSupplyId(supplyId);
+                goodsLog.setSupplyName(supplyName);
+                goodsLog.setActionType(actionType);
+                goodsLog.setGoodsName(goodsName);
+                goodsLog.setGoodsCode(goodsCode);
+                goodsLogList.add(goodsLog);
+            }
+            cursor.close();
+        } catch (Exception e) {
+            Log.e(TAG, "获取商品出入库列表失败:" + e.toString());
+        } finally {
+            this.close();
+        }
+        Log.i(TAG, "获取商品出入库列表 result:" + goodsLogList);
+        return goodsLogList;
+    }
     /**
      * 插入商品流水
      *

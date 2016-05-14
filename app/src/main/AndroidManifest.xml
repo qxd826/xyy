@@ -120,6 +120,13 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden">
         </activity>
+        <!--商品出入库明细-->
+        <activity
+            android:name=".source.activity.goods.InOutGoodsDetailActivity"
+            android:configChanges="keyboardHidden|orientation|locale"
+            android:label="@string/goods_in_out__detail"
+            android:screenOrientation="portrait">
+        </activity>
         <!--qrcode-->
         <activity
             android:name="com.example.xyy.xyyapplication.source.qrcode.QRMainActivity"

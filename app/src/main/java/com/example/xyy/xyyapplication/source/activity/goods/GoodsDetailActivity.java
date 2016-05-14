@@ -117,6 +117,9 @@ public class GoodsDetailActivity extends Activity implements View.OnClickListene
                 outGoods();
                 break;
             case R.id.in_out_detail_btn:
+                Intent intent = new Intent(this,InOutGoodsDetailActivity.class);
+                intent.putExtra(Constant.GOODS_CODE, mGoodsCode);
+                startActivity(intent);
                 break;
             case R.id.goods_detail_back:
                 finish();
@@ -228,7 +231,6 @@ public class GoodsDetailActivity extends Activity implements View.OnClickListene
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 currentCustomer = mCustomerList.get(position);
-                Toast.makeText(GoodsDetailActivity.this, "你选择了:" + mCustomerList.get(position).getId(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -236,6 +238,5 @@ public class GoodsDetailActivity extends Activity implements View.OnClickListene
 
             }
         });
-
     }
 }
