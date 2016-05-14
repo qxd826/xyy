@@ -66,7 +66,7 @@ public class GoodsListAdapter extends BaseAdapter{
             mViewHolder.goodsName = (TextView) convertView.findViewById(R.id.goods_name);
             mViewHolder.createTime = (TextView) convertView.findViewById(R.id.create_time);
             mViewHolder.goodsNum = (TextView) convertView.findViewById(R.id.goods_num);
-            mViewHolder.delButton = (Button) convertView.findViewById(R.id.del_button);
+            mViewHolder.delButton = (TextView) convertView.findViewById(R.id.del_button);
             convertView.setTag(mViewHolder);
         } else {
             mViewHolder = (ViewHolder) convertView.getTag();
@@ -97,7 +97,7 @@ public class GoodsListAdapter extends BaseAdapter{
         public TextView goodsName;
         public TextView createTime;
         public TextView goodsNum;
-        public Button delButton;
+        public TextView delButton;
     }
 
     @Override
@@ -106,6 +106,11 @@ public class GoodsListAdapter extends BaseAdapter{
     }
 
     public void setMGoodsList(List<Goods> goodsList){
+        this.mGoodsList = goodsList;
+        notifyDataSetChanged();
+    }
+
+    public void getMGoodsList(List<Goods> goodsList){
         this.mGoodsList = goodsList;
         notifyDataSetChanged();
     }

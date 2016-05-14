@@ -112,6 +112,14 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden">
         </activity>
+        <!--商品详情-->
+        <activity
+            android:name=".source.activity.goods.GoodsDetailActivity"
+            android:configChanges="keyboardHidden|orientation|locale"
+            android:label="@string/goods_detail"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden">
+        </activity>
         <!--qrcode-->
         <activity
             android:name="com.example.xyy.xyyapplication.source.qrcode.QRMainActivity"

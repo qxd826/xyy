@@ -11,6 +11,8 @@
     <string name="add_supply">添加供应商</string>
     <string name="add_customer">添加客户</string>
     <string name="add_goods">添加商品</string>
+    <string name="goods_detail">商品详情</string>
+    <string name="goods_id">商品Id</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -21,5 +23,5 @@
     <string name="title_section3">Section 3</string>
 
     <string name="supply">供应商</string>
-    <string name="scan_text">将二维码放入框内, 即可自动扫描</string>
+    <string name="scan_text">将条形码放入框内, 即可自动扫描</string>
 </resources>

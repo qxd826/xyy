@@ -214,8 +214,7 @@ public class QRMainActivity extends Activity implements OnClickListener {
         goods.setGmtCreate(new Date().getTime());
         goods.setGmtModified(new Date().getTime());
 
-        if (dbService.insertGoods(goods) > 0) {
-            //setResult(Constant.ADD_GOODS_SUCCESS);
+        if (dbService.insertGoods(goods,null) > 0) {
             Toast.makeText(this, "添加成功", Toast.LENGTH_LONG).show();
         }
         return;
@@ -248,8 +247,7 @@ public class QRMainActivity extends Activity implements OnClickListener {
         goods.setGoodsCode(goodsCode);
         goods.setGmtModified(new Date().getTime());
 
-        if (dbService.upGoods(goods) > 0) {
-            //setResult(Constant.ADD_GOODS_SUCCESS);
+        if (dbService.upDateGoods(goods) > 0) {
             Toast.makeText(this, "修改成功", Toast.LENGTH_LONG).show();
         }
         return;

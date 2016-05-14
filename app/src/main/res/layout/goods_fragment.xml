@@ -60,42 +60,31 @@
             android:src="@mipmap/search_icon_btn"/>
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/add_goods_two_btn"
+    <LinearLayout
+        android:id="@+id/add_goods_three_btn"
         android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="40dp">
+        android:layout_height="40dp"
+        android:orientation="horizontal">
         <Button
             android:id="@+id/sao_yi_sao_btn"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@+id/line2"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="5dp"
             android:background="@mipmap/bg_title"
             android:text="扫一扫"
+            android:layout_weight="1"
             android:textColor="@color/white_color"
             android:textSize="14sp" />
-        <View
-            android:id="@+id/line2"
-            android:layout_height="match_parent"
-            android:layout_width="20dp"
-            android:layout_centerHorizontal="true"
-            android:background="@color/alpha_00"/>
         <Button
             android:id="@+id/add_goods_btn"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_toRightOf="@+id/line2"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="20dp"
             android:background="@mipmap/bg_title"
-            android:text="添加"
+            android:text="添加商品"
+            android:layout_weight="1"
             android:textColor="@color/white_color"
             android:textSize="14sp" />
-    </RelativeLayout>
+    </LinearLayout>
 
     <ListView
         android:id="@+id/goods_list"

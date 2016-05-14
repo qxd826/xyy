@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -14,9 +13,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.xyy.xyyapplication.R;
-import com.example.xyy.xyyapplication.source.adapter.supply.GoodsSupplySpinnerAdapter;
-import com.example.xyy.xyyapplication.source.adapter.supply.SupplyListAdapter;
-import com.example.xyy.xyyapplication.source.application.MApplication;
+import com.example.xyy.xyyapplication.source.adapter.supply.SupplySpinnerAdapter;
 import com.example.xyy.xyyapplication.source.common.DebugLog;
 import com.example.xyy.xyyapplication.source.constant.Constant;
 import com.example.xyy.xyyapplication.source.db.DBService;
@@ -54,7 +51,7 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        DebugLog.i("AddSupplyActivity onCreate ......");
+        DebugLog.i("AddGoodsActivity onCreate ......");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.goods_add_activity);
         ButterKnife.bind(this);
@@ -74,8 +71,9 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener {
                 finish();
                 break;
             case R.id.add_goods_save:
-                saveGoods();
-                finish();
+                if(saveGoods()){
+                    finish();
+                }
                 break;
         }
     }
@@ -91,16 +89,19 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener {
 
         DBService dbService = DBService.getInstance(this);
         mSupplyList = dbService.getSupplyList("1");
-        GoodsSupplySpinnerAdapter goodsSupplySpinnerAdapter = new GoodsSupplySpinnerAdapter(this, mSupplyList);
+        SupplySpinnerAdapter goodsSupplySpinnerAdapter = new SupplySpinnerAdapter(this, mSupplyList);
         addGoodsSupplySpinner.setAdapter(goodsSupplySpinnerAdapter);
         addGoodsSupplySpinner.setGravity(Gravity.CENTER);
         addGoodsSupplySpinner.setSelection(0, true);
+        if(mSupplyList.size() != 0){
+            currentSupply = mSupplyList.get(0);
+        }
         addGoodsSupplySpinner.setPrompt("请选择供应商");
         addGoodsSupplySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 currentSupply = mSupplyList.get(position);
-                Toast.makeText(AddGoodsActivity.this, "你选择了:" + mSupplyList.get(position).getId(), Toast.LENGTH_LONG).show();
+                Toast.makeText(AddGoodsActivity.this, "你选择了:" + mSupplyList.get(position).getId(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -110,27 +111,33 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener {
         });
     }
 
-    private void saveGoods() {
+    private boolean saveGoods() {
         String goodsName = addGoodsNameEdit.getText().toString();
         if (StringUtils.isEmpty(goodsName)) {
             Toast.makeText(this, "商品名称为空", Toast.LENGTH_LONG).show();
-            return;
+            return false;
         }
         int goodsNum = Integer.valueOf(addGoodsNumberEdit.getText().toString());
         if (goodsNum <= 0) {
             Toast.makeText(this, "商品数量不能小于0", Toast.LENGTH_LONG).show();
-            return;
+            return false;
         }
         String goodsCode = addGoodsCodeEdit.getText().toString();
         if (StringUtils.isEmpty(goodsCode)) {
             Toast.makeText(this, "商品编号为空", Toast.LENGTH_LONG).show();
-            return;
+            return false;
         }
         if (currentSupply == null) {
             Toast.makeText(this, "供应商为空", Toast.LENGTH_LONG).show();
-            return;
+            return false;
         }
         DBService dbService = DBService.getInstance(this);
+        Goods searchGoods = dbService.getGoodsByCode(goodsCode);
+        if(null != searchGoods.getId()){
+            Toast.makeText(this, "当前编号商品已存在", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
         Goods goods = new Goods();
         goods.setGoodsName(goodsName);
         goods.setGoodsNum(goodsNum);
@@ -142,7 +149,8 @@ public class AddGoodsActivity extends Activity implements View.OnClickListener {
         if (dbService.insertGoods(goods, currentSupply) > 0) {
             setResult(Constant.ADD_GOODS_SUCCESS);
             Toast.makeText(this, "添加成功", Toast.LENGTH_LONG).show();
+            return true;
         }
-        return;
+        return false;
     }
 }

@@ -1,43 +1,41 @@
-package com.example.xyy.xyyapplication.source.adapter.supply;
+package com.example.xyy.xyyapplication.source.adapter.customer;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.example.xyy.xyyapplication.R;
-import com.example.xyy.xyyapplication.source.pojo.supply.Supply;
+import com.example.xyy.xyyapplication.source.pojo.customer.Customer;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
  * Created by QXD on 2016/5/14.
  */
-public class GoodsSupplySpinnerAdapter extends BaseAdapter {
-    private List<Supply> mSupplyList = new ArrayList<Supply>();
+public class CustomerSpinnerAdapter extends BaseAdapter {
+    private List<Customer> mCustomerList = new ArrayList<Customer>();
     private Context mContext;
 
-    public GoodsSupplySpinnerAdapter(Context context) {
+    public CustomerSpinnerAdapter(Context context) {
         mContext = context;
     }
 
-    public GoodsSupplySpinnerAdapter(Context context, List<Supply> supplyList) {
+    public CustomerSpinnerAdapter(Context context, List<Customer> customerList) {
         mContext = context;
-        mSupplyList = supplyList;
+        mCustomerList = customerList;
     }
     @Override
     public int getCount() {
-        return mSupplyList.size();
+        return mCustomerList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mSupplyList.get(position);
+        return mCustomerList.get(position);
     }
 
     @Override
@@ -50,27 +48,27 @@ public class GoodsSupplySpinnerAdapter extends BaseAdapter {
         ViewHolder mViewHolder;
         if (convertView == null) {
             LayoutInflater layoutInflater = LayoutInflater.from(mContext);
-            convertView = layoutInflater.inflate(R.layout.goods_supply_spinner_item, null);
+            convertView = layoutInflater.inflate(R.layout.spinner_item, null);
             mViewHolder = new ViewHolder();
-            mViewHolder.supplyName = (TextView) convertView.findViewById(R.id.goods_supply_spinner_item_text);
+            mViewHolder.customerName = (TextView) convertView.findViewById(R.id.spinner_item_text);
             convertView.setTag(mViewHolder);
         } else {
             mViewHolder = (ViewHolder) convertView.getTag();
         }
-        mViewHolder.supplyName.setText(mSupplyList.get(position).getSupplyName());
+        mViewHolder.customerName.setText(mCustomerList.get(position).getCustomerName());
         return convertView;
     }
 
     //viewHolder对象
     private final class ViewHolder {
-        public TextView supplyName;
+        public TextView customerName;
     }
-    public void setMSupplyList(List<Supply> supplyList){
-        this.mSupplyList = supplyList;
+    public void setMSupplyList(List<Customer> customerList){
+        this.mCustomerList = customerList;
         super.notifyDataSetChanged();
     }
 
-    public List<Supply> getSupplyList(){
-        return mSupplyList;
+    public List<Customer> getSupplyList(){
+        return mCustomerList;
     }
 }

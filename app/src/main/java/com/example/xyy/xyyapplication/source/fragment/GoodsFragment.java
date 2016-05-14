@@ -11,14 +11,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.activity.goods.AddGoodsActivity;
+import com.example.xyy.xyyapplication.source.activity.goods.GoodsDetailActivity;
 import com.example.xyy.xyyapplication.source.adapter.goods.GoodsListAdapter;
 import com.example.xyy.xyyapplication.source.application.MApplication;
 import com.example.xyy.xyyapplication.source.common.DebugLog;
@@ -28,8 +31,6 @@ import com.example.xyy.xyyapplication.source.pojo.goods.Goods;
 import com.example.xyy.xyyapplication.source.qrcode.QRMainActivity;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
@@ -49,8 +50,8 @@ public class GoodsFragment extends Fragment {
     ListView goodsList;
     @Bind(R.id.add_goods_icon)
     ImageButton addGoodsIcon;
-    @Bind(R.id.add_goods_two_btn)
-    RelativeLayout addGoodsTwoBtn;
+    @Bind(R.id.add_goods_three_btn)
+    LinearLayout addGoodsThreeBtn;
     @Bind(R.id.search_edit)
     EditText searchEdit;
     @Bind(R.id.search_btn)
@@ -134,10 +135,10 @@ public class GoodsFragment extends Fragment {
         addGoodsIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (addGoodsTwoBtn.getVisibility() == View.VISIBLE) {
-                    addGoodsTwoBtn.setVisibility(View.GONE);
+                if (addGoodsThreeBtn.getVisibility() == View.VISIBLE) {
+                    addGoodsThreeBtn.setVisibility(View.GONE);
                 } else {
-                    addGoodsTwoBtn.setVisibility(View.VISIBLE);
+                    addGoodsThreeBtn.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -202,8 +203,18 @@ public class GoodsFragment extends Fragment {
 
             }
         });
+        goodsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Goods goods = (Goods) goodsList.getAdapter().getItem(position);
+                Intent intent = new Intent(getActivity(), GoodsDetailActivity.class);
+                intent.putExtra(Constant.GOODS_CODE, goods.getGoodsCode());
+                startActivity(intent);
+            }
+        });
     }
 
+    //初始化商品列表
     private void initGoodsList() {
         DBService dbService = DBService.getInstance(getContext());
         List<Goods> mGoodsList = dbService.getGoodsList("1");
@@ -215,6 +226,7 @@ public class GoodsFragment extends Fragment {
         }
     }
 
+    //刷新商品列表
     public void reFreshList() {
         DBService dbService = DBService.getInstance(getContext());
         List<Goods> mGoodsList = dbService.getGoodsList("1");
@@ -227,8 +239,8 @@ public class GoodsFragment extends Fragment {
         switch (requestCode) {
             case Constant.ADD_GOODS_CODE:
                 reFreshList();
-                if (addGoodsTwoBtn.getVisibility() == View.VISIBLE) {
-                    addGoodsTwoBtn.setVisibility(View.GONE);
+                if (addGoodsThreeBtn.getVisibility() == View.VISIBLE) {
+                    addGoodsThreeBtn.setVisibility(View.GONE);
                 }
                 break;
         }

@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.example.xyy.xyyapplication.source.application.MApplication;
 import com.example.xyy.xyyapplication.source.common.DebugLog;
 import com.example.xyy.xyyapplication.source.constant.Constant;
 import com.example.xyy.xyyapplication.source.pojo.customer.Customer;
@@ -18,6 +19,7 @@ import com.example.xyy.xyyapplication.source.zxing.decoding.Intents;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -76,13 +78,18 @@ public class DBService {
     }
 
     /**
-     * 结束提交事物
+     * 提交事物
      */
-    public void endTransaction() {
+    public void commitTransaction() {
         sqlitedb.setTransactionSuccessful();
-        sqlitedb.endTransaction();
     }
 
+    /**
+     * 结束事物
+     */
+    public void endTransaction() {
+        sqlitedb.endTransaction();
+    }
 
     /**
      * @param user 用户
@@ -541,10 +548,11 @@ public class DBService {
     /**
      * 插入商品信息
      *
-     * @param goods 客户
+     * @param goods  商品信息
+     * @param supply 供应商信息
      * @return
      */
-    public Long insertGoods(Goods goods,Supply supply) {
+    public Long insertGoods(Goods goods, Supply supply) {
         Log.i(TAG, "添加商品:" + goods.toString());
         this.open();
         ContentValues values = new ContentValues();
@@ -556,12 +564,29 @@ public class DBService {
         values.put("goods_num", goods.getGoodsNum());
         values.put("goods_code", goods.getGoodsCode());
         values.put("goods_type", goods.getGoodsType());
+
+        ContentValues valuesSupply = new ContentValues();
+        valuesSupply.put("is_deleted", "N");
+        valuesSupply.put("gmt_create", new Date().getTime());
+        valuesSupply.put("gmt_modified", new Date().getTime());
+        valuesSupply.put("create_id", MApplication.currentLoginUser.getId());
+        valuesSupply.put("goods_name", goods.getGoodsName());
+        valuesSupply.put("goods_code", goods.getGoodsCode());
+        valuesSupply.put("num", goods.getGoodsNum());
+        valuesSupply.put("supply_id", supply.getId());
+        valuesSupply.put("supply_name", supply.getSupplyName());
+        valuesSupply.put("action_type", "0");
         Long i = 0l;
         try {
+            this.beginTransaction();
             i = sqlitedb.replaceOrThrow(DBConstant.TABLE_GOODS, null, values);
+            i = sqlitedb.replaceOrThrow(DBConstant.TABLE_GOODS_LOG, null, valuesSupply);
+            this.commitTransaction();
         } catch (Exception e) {
             Log.e(TAG, "添加客户失败:" + e.toString());
+            return i;
         } finally {
+            this.endTransaction();
             this.close();
         }
         return i;
@@ -608,6 +633,7 @@ public class DBService {
                 String goodsName = cursor.getString(cursor.getColumnIndexOrThrow("goods_name"));
                 int goodsNum = cursor.getInt(cursor.getColumnIndexOrThrow("goods_num"));
                 String type = cursor.getString(cursor.getColumnIndexOrThrow("goods_type"));
+                String goodsCode = cursor.getString(cursor.getColumnIndexOrThrow("goods_code"));
 
                 Goods goods = new Goods();
                 goods.setId(id);
@@ -617,6 +643,7 @@ public class DBService {
                 goods.setGoodsName(goodsName);
                 goods.setGoodsNum(goodsNum);
                 goods.setGoodsType(type);
+                goods.setGoodsCode(goodsCode);
                 goodsList.add(goods);
             }
             cursor.close();
@@ -628,6 +655,7 @@ public class DBService {
         Log.i(TAG, "获取商品列表 result:" + goodsList);
         return goodsList;
     }
+
     /**
      * 根据商品编号获取商品信息
      *
@@ -670,8 +698,9 @@ public class DBService {
         }
         return goods;
     }
+
     /**
-     * 根据商品编号获取商品信息
+     * 根据商品编号/名称 搜索商品信息
      *
      * @param key
      * @return
@@ -722,7 +751,155 @@ public class DBService {
      * @param goods
      * @return
      */
-    public Long upGoods(Goods goods) {
+    public Long upDateGoods(Goods goods) {
+        Log.i(TAG, "更新商品:" + goods.toString());
+        if (goods.getId() == null || goods.getId() < 1) {
+            return 0l;
+        }
+        this.open();
+        ContentValues values = new ContentValues();
+        values.put("_id", goods.getId());
+        values.put("is_deleted", goods.getIsDeleted());
+        values.put("gmt_create", goods.getGmtCreate());
+        values.put("gmt_modified", goods.getGmtModified());
+        values.put("goods_name", goods.getGoodsName());
+        values.put("goods_code", goods.getGoodsCode());
+        values.put("goods_num", goods.getGoodsNum());
+        values.put("goods_type", goods.getGoodsType());
+        Long i = 0l;
+        try {
+            i = sqlitedb.replaceOrThrow(DBConstant.TABLE_GOODS, null, values);
+        } catch (Exception e) {
+            DebugLog.e(TAG, "更新商品信息失败. e:" + e.toString() + " values:" + values.toString());
+        } finally {
+            this.close();
+        }
+        return i;
+    }
+
+
+    /**
+     * 商品入库
+     *
+     * @param goodsCode
+     * @param num
+     * @param supply
+     * @return
+     */
+    public int inGoods(String goodsCode, Integer num, Supply supply) {
+        Log.i(TAG, "商品入库: goodsCode:" + goodsCode + " num:" + num + " supply:" + supply);
+        if (StringUtils.isBlank(goodsCode)) {
+            return 0;
+        }
+        //获取商品当前数量
+        Goods goods = getGoodsByCode(goodsCode);
+        if (goods.getId() == null) {
+            return 0;
+        }
+        //更新商品表
+        Integer currentNum = goods.getGoodsNum();
+        Integer totalNum = currentNum + num;
+        ContentValues values = new ContentValues();
+        values.put("gmt_modified", new Date().getTime());
+        values.put("goods_num", totalNum);
+        String whereClause = "_id=?";
+        String[] whereArgs = {"" + goods.getId()};
+        //插入流水表
+        ContentValues valuesSupply = new ContentValues();
+        valuesSupply.put("is_deleted", "N");
+        valuesSupply.put("gmt_create", new Date().getTime());
+        valuesSupply.put("gmt_modified", new Date().getTime());
+        valuesSupply.put("create_id", MApplication.currentLoginUser.getId());
+        valuesSupply.put("goods_name", goods.getGoodsName());
+        valuesSupply.put("goods_code", goods.getGoodsCode());
+        valuesSupply.put("num", num);
+        valuesSupply.put("supply_id", supply.getId());
+        valuesSupply.put("supply_name", supply.getSupplyName());
+        valuesSupply.put("action_type", "0");
+        this.open();
+        int i = 0;
+        long j = 0;
+        try {
+            this.beginTransaction();
+            i = sqlitedb.update(DBConstant.TABLE_GOODS, values, whereClause, whereArgs);
+            j = sqlitedb.replaceOrThrow(DBConstant.TABLE_GOODS_LOG, null, valuesSupply);
+            this.commitTransaction();
+        } catch (Exception e) {
+            DebugLog.e(TAG, "更新商品信息失败. e:" + e.toString() + " values:" + values.toString());
+        } finally {
+            this.endTransaction();
+            this.close();
+        }
+        return i > 0 && j > 0 ? 1 : 0;
+    }
+
+    /**
+     * 商品出库
+     *
+     * @param goodsCode
+     * @param num
+     * @param customer
+     * @return
+     */
+    public int outGoods(String goodsCode, Integer num, Customer customer) {
+        Log.i(TAG, "商品入库: goodsCode:" + goodsCode + " num:" + num + " customer:" + customer);
+        if (StringUtils.isBlank(goodsCode)) {
+            return 0;
+        }
+
+        //获取商品当前数量
+        Goods goods = getGoodsByCode(goodsCode);
+        if (goods.getId() == null) {
+            return 0;
+        }
+        //更新商品表
+        Integer currentNum = goods.getGoodsNum();
+        if (currentNum < num) {
+            return 0;
+        }
+        Integer totalNum = currentNum - num;
+        ContentValues values = new ContentValues();
+        values.put("gmt_modified", new Date().getTime());
+        values.put("goods_num", totalNum);
+        String whereClause = "_id=?";
+        String[] whereArgs = {"" + goods.getId()};
+        //插入流水表
+        ContentValues valuesSupply = new ContentValues();
+        valuesSupply.put("is_deleted", "N");
+        valuesSupply.put("gmt_create", new Date().getTime());
+        valuesSupply.put("gmt_modified", new Date().getTime());
+        valuesSupply.put("create_id", MApplication.currentLoginUser.getId());
+        valuesSupply.put("goods_name", goods.getGoodsName());
+        valuesSupply.put("goods_code", goods.getGoodsCode());
+        valuesSupply.put("num", num);
+        valuesSupply.put("customer_id", customer.getId());
+        valuesSupply.put("customer_name", customer.getCustomerName());
+        valuesSupply.put("action_type", "1");
+        this.open();
+        int i = 0;
+        long j = 0;
+        try {
+            this.beginTransaction();
+            i = sqlitedb.update(DBConstant.TABLE_GOODS, values, whereClause, whereArgs);
+            j = sqlitedb.replaceOrThrow(DBConstant.TABLE_GOODS_LOG, null, valuesSupply);
+            this.commitTransaction();
+        } catch (Exception e) {
+            DebugLog.e(TAG, "更新商品信息失败. e:" + e.toString() + " values:" + values.toString());
+        } finally {
+            this.endTransaction();
+            this.close();
+        }
+        return i > 0 && j > 0 ? 1 : 0;
+    }
+
+
+    /**
+     * 插入商品流水
+     *
+     * @param goods
+     * @return
+     */
+/*    public Long insertGoodsLog(Su goods) {
         Log.i(TAG, "更新商品:" + goods.toString());
         if (goods.getId() == null || goods.getId() < 1) {
             return 0l;
@@ -746,5 +923,5 @@ public class DBService {
             this.close();
         }
         return i;
-    }
+    }*/
 }
