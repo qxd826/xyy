@@ -458,6 +458,83 @@ public class DBService {
     }
 
     /**
+     * 根据ID获取供应商信息
+     *
+     * @param supplyId
+     * @return
+     */
+    public Supply getSupplyById(int supplyId) {
+        Log.i(TAG, "获取供应商信息 supplyId:" + supplyId);
+        this.open();
+        Supply supply = new Supply();
+        try {
+            String sql = "select * from " + DBConstant.TABLE_SUPPLY + " where is_deleted = 'N' and _id = '" + supplyId + "' limit 1;";
+            Log.i("QXD", sql);
+            Cursor cursor = sqlitedb.rawQuery(sql, null);
+            for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
+                Integer id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
+                String isDeleted = cursor.getString(cursor.getColumnIndexOrThrow("is_deleted"));
+                Long gmtCreate = cursor.getLong(cursor.getColumnIndexOrThrow("gmt_create"));
+                Long gmtModified = cursor.getLong(cursor.getColumnIndexOrThrow("gmt_modified"));
+                String supplyName = cursor.getString(cursor.getColumnIndexOrThrow("supply_name"));
+                String supplyMobile = cursor.getString(cursor.getColumnIndexOrThrow("supply_mobile"));
+                String supplyType = cursor.getString(cursor.getColumnIndexOrThrow("supply_type"));
+
+                supply.setId(id);
+                supply.setIsDeleted(isDeleted);
+                supply.setGmtCreate(gmtCreate);
+                supply.setGmtModified(gmtModified);
+                supply.setSupplyName(supplyName);
+                supply.setSupplyMobile(supplyMobile);
+                supply.setSupplyType(supplyType);
+            }
+            cursor.close();
+        } catch (Exception e) {
+            Log.e(TAG, "获取供应商信息失败:" + e.toString());
+            return null;
+        } finally {
+            this.close();
+        }
+        return supply;
+    }
+    /**
+     * 更新供应商信息
+     *
+     * @param supplyId
+     * @param supplyName
+     * @param supplyMobile
+     * @return
+     */
+    public int updateSupply(int supplyId, String supplyName, String supplyMobile) {
+        Log.i(TAG, "更新客户信息: supplyId:" + supplyId + " supplyName:" + supplyName + " supplyMobile:" + supplyMobile);
+        if (supplyId < 1) {
+            return 0;
+        }
+        ContentValues values = new ContentValues();
+        values.put("gmt_modified", new Date().getTime());
+        if(!StringUtils.isBlank(supplyName)){
+            values.put("supply_name", supplyName);
+        }
+        if(!StringUtils.isBlank(supplyMobile)){
+            values.put("supply_mobile", supplyMobile);
+        }
+        String whereClause = "_id=?";
+        String[] whereArgs = {"" + supplyId};
+
+        this.open();
+        int i = 0;
+        try {
+            i = sqlitedb.update(DBConstant.TABLE_SUPPLY, values, whereClause, whereArgs);
+        } catch (Exception e) {
+            DebugLog.e(TAG, "更新供应商信息失败. e:" + e.toString() + " values:" + values.toString());
+        } finally {
+            this.close();
+        }
+        return i;
+    }
+
+
+    /**
      * 根据供应商姓名/手机号 搜索供应商信息
      *
      * @param key
@@ -659,7 +736,6 @@ public class DBService {
         int i = 0;
         try {
             i = sqlitedb.update(DBConstant.TABLE_CUSTOMER, values, whereClause, whereArgs);
-            this.commitTransaction();
         } catch (Exception e) {
             DebugLog.e(TAG, "更新客户信息失败. e:" + e.toString() + " values:" + values.toString());
         } finally {
@@ -1201,5 +1277,4 @@ public class DBService {
         Log.i(TAG, "获取商品出入库列表 result:" + goodsLogList);
         return goodsLogList;
     }
-
 }

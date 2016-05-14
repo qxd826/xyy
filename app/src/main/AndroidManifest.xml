@@ -131,7 +131,15 @@
         <activity
             android:name=".source.activity.customer.CustomerDetailActivity"
             android:configChanges="keyboardHidden|orientation|locale"
-            android:label="@string/goods_detail"
+            android:label="@string/customer_detail"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden">
+        </activity>
+        <!--供应商详情-->
+        <activity
+            android:name=".source.activity.supply.SupplyDetailActivity"
+            android:configChanges="keyboardHidden|orientation|locale"
+            android:label="@string/customer_detail"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden">
         </activity>

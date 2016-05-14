@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.activity.supply.AddSupplyActivity;
+import com.example.xyy.xyyapplication.source.activity.supply.SupplyDetailActivity;
 import com.example.xyy.xyyapplication.source.adapter.customer.CustomerListAdapter;
 import com.example.xyy.xyyapplication.source.adapter.supply.SupplyListAdapter;
 import com.example.xyy.xyyapplication.source.application.MApplication;
@@ -180,9 +181,9 @@ public class SupplyFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Supply supply = (Supply) supplyList.getAdapter().getItem(position);
-/*                Intent intent = new Intent(getActivity(), GoodsDetailActivity.class);
-                intent.putExtra(Constant.GOODS_CODE, goods.getGoodsCode());
-                startActivity(intent);*/
+                Intent intent = new Intent(getActivity(), SupplyDetailActivity.class);
+                intent.putExtra(Constant.SUPPLY_ID, supply.getId());
+                startActivity(intent);
             }
         });
     }
