@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,7 +67,7 @@ public class SupplyListAdapter extends BaseAdapter {
             mViewHolder.supplyName = (TextView) convertView.findViewById(R.id.supply_name);
             mViewHolder.createTime = (TextView) convertView.findViewById(R.id.create_time);
             mViewHolder.supplyMobile = (TextView) convertView.findViewById(R.id.supply_mobile);
-            mViewHolder.delButton = (Button) convertView.findViewById(R.id.del_button);
+            mViewHolder.delButton = (ImageView) convertView.findViewById(R.id.del_button);
             convertView.setTag(mViewHolder);
         } else {
             mViewHolder = (ViewHolder) convertView.getTag();
@@ -97,7 +98,7 @@ public class SupplyListAdapter extends BaseAdapter {
         public TextView supplyName;
         public TextView createTime;
         public TextView supplyMobile;
-        public Button delButton;
+        public ImageView delButton;
     }
 
     @Override

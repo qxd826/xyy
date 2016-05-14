@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,7 +67,7 @@ public class GoodsListAdapter extends BaseAdapter{
             mViewHolder.goodsName = (TextView) convertView.findViewById(R.id.goods_name);
             mViewHolder.createTime = (TextView) convertView.findViewById(R.id.create_time);
             mViewHolder.goodsNum = (TextView) convertView.findViewById(R.id.goods_num);
-            mViewHolder.delButton = (TextView) convertView.findViewById(R.id.del_button);
+            mViewHolder.delButton = (ImageView) convertView.findViewById(R.id.del_button);
             convertView.setTag(mViewHolder);
         } else {
             mViewHolder = (ViewHolder) convertView.getTag();
@@ -97,7 +98,7 @@ public class GoodsListAdapter extends BaseAdapter{
         public TextView goodsName;
         public TextView createTime;
         public TextView goodsNum;
-        public TextView delButton;
+        public ImageView delButton;
     }
 
     @Override

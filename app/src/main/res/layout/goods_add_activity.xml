@@ -75,7 +75,7 @@
             android:background="@null" />
     </RelativeLayout>
 
-    <View
+<!--    <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginLeft="3dp"
@@ -105,7 +105,7 @@
             android:layout_toRightOf="@+id/add_goods_number_text"
             android:background="@null"
             android:inputType="number" />
-    </RelativeLayout>
+    </RelativeLayout>-->
 
     <View
         android:layout_width="match_parent"
@@ -138,14 +138,14 @@
             android:background="@null"/>
     </RelativeLayout>
 
-    <View
+<!--    <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginLeft="3dp"
         android:layout_marginRight="3dp"
-        android:background="@color/grey_color" />
+        android:background="@color/grey_color" />-->
 
-    <RelativeLayout
+    <!--<RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/white_color">
@@ -168,5 +168,5 @@
             android:layout_toRightOf="@+id/add_goods_supply_text"
             android:spinnerMode="dialog"
             android:background="@null"/>
-    </RelativeLayout>
+    </RelativeLayout>-->
 </LinearLayout>

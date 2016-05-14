@@ -23,6 +23,7 @@
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-hdpi" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/layout/qrcode_activity_title.xml" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/add_goods_icon.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/delete_btn.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/goods_list_bg.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/line_bg.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/mm_title_back_focused.9.png" charset="GBK" />
@@ -32,6 +33,7 @@
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/search_bg.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/search_icon_btn.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/add_goods_icon.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/delete_btn.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/line_bg.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/search_bg.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/search_icon_btn.png" charset="GBK" />

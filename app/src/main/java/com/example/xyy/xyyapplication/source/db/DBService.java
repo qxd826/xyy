@@ -550,10 +550,9 @@ public class DBService {
      * 插入商品信息
      *
      * @param goods  商品信息
-     * @param supply 供应商信息
      * @return
      */
-    public Long insertGoods(Goods goods, Supply supply) {
+    public Long insertGoods(Goods goods) {
         Log.i(TAG, "添加商品:" + goods.toString());
         this.open();
         ContentValues values = new ContentValues();
@@ -566,28 +565,13 @@ public class DBService {
         values.put("goods_code", goods.getGoodsCode());
         values.put("goods_type", goods.getGoodsType());
 
-        ContentValues valuesSupply = new ContentValues();
-        valuesSupply.put("is_deleted", "N");
-        valuesSupply.put("gmt_create", new Date().getTime());
-        valuesSupply.put("gmt_modified", new Date().getTime());
-        valuesSupply.put("create_id", MApplication.currentLoginUser.getId());
-        valuesSupply.put("goods_name", goods.getGoodsName());
-        valuesSupply.put("goods_code", goods.getGoodsCode());
-        valuesSupply.put("num", goods.getGoodsNum());
-        valuesSupply.put("supply_id", supply.getId());
-        valuesSupply.put("supply_name", supply.getSupplyName());
-        valuesSupply.put("action_type", "0");
         Long i = 0l;
         try {
-            this.beginTransaction();
             i = sqlitedb.replaceOrThrow(DBConstant.TABLE_GOODS, null, values);
-            i = sqlitedb.replaceOrThrow(DBConstant.TABLE_GOODS_LOG, null, valuesSupply);
-            this.commitTransaction();
         } catch (Exception e) {
-            Log.e(TAG, "添加客户失败:" + e.toString());
+            Log.e(TAG, "添加商品失败:" + e.toString());
             return i;
         } finally {
-            this.endTransaction();
             this.close();
         }
         return i;
