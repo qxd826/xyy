@@ -547,6 +547,50 @@ public class DBService {
     }
 
     /**
+     * 根据客户姓名/手机号 搜索客户信息
+     *
+     * @param key
+     * @return
+     */
+    public List<Customer> searchCustomer(String key) {
+        Log.i(TAG, "搜索客户列表");
+        this.open();
+        List<Customer> customerLists = new ArrayList<>();
+        try {
+            String sql = "select * from " + DBConstant.TABLE_CUSTOMER +
+                    " where is_deleted = 'N' and (customer_name like '%" + key + "%' or customer_mobile like '%" + key + "%');";
+            Log.i("QXD", sql);
+            Cursor cursor = sqlitedb.rawQuery(sql, null);
+            for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
+                Customer customer = new Customer();
+                Integer id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
+                String isDeleted = cursor.getString(cursor.getColumnIndexOrThrow("is_deleted"));
+                Long gmtCreate = cursor.getLong(cursor.getColumnIndexOrThrow("gmt_create"));
+                Long gmtModified = cursor.getLong(cursor.getColumnIndexOrThrow("gmt_modified"));
+                String customerName = cursor.getString(cursor.getColumnIndexOrThrow("customer_name"));
+                String customerMobile = cursor.getString(cursor.getColumnIndexOrThrow("customer_mobile"));
+                String customerType = cursor.getString(cursor.getColumnIndexOrThrow("customer_type"));
+
+                customer.setId(id);
+                customer.setIsDeleted(isDeleted);
+                customer.setGmtCreate(gmtCreate);
+                customer.setGmtModified(gmtModified);
+                customer.setCustomerName(customerName);
+                customer.setCustomerMobile(customerMobile);
+                customer.setCustomerType(customerType);
+                customerLists.add(customer);
+            }
+            cursor.close();
+        } catch (Exception e) {
+            Log.e(TAG, "搜索客户信息失败:" + e.toString());
+            return null;
+        } finally {
+            this.close();
+        }
+        return customerLists;
+    }
+
+    /**
      * 插入商品信息
      *
      * @param goods  商品信息

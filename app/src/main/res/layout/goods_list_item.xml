@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
+    android:layout_height="50dp"
     android:background="@color/blue_color">
 
     <LinearLayout
@@ -13,7 +13,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="25dp"
             android:orientation="horizontal">
 
             <TextView
@@ -38,7 +38,7 @@
         <TextView
             android:id="@+id/create_time"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="25dp"
             android:gravity="center_vertical|left"
             android:textColor="@color/black_color"
             android:textSize="16sp" />
@@ -49,8 +49,8 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
         android:layout_marginRight="5dp"
         android:padding="5dp"
         android:src="@mipmap/delete_btn" />
