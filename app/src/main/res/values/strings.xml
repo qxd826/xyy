@@ -12,7 +12,8 @@
     <string name="add_customer">添加客户</string>
     <string name="add_goods">添加商品</string>
     <string name="goods_detail">商品详情</string>
-    <string name="goods_in_out__detail">商品出入库详情</string>
+    <string name="customer_detail">客户详情</string>
+    <string name="goods_in_out_detail">商品出入库详情</string>
     <string name="goods_id">商品Id</string>
 
     <string name="hello_world">Hello world!</string>

@@ -124,8 +124,16 @@
         <activity
             android:name=".source.activity.goods.InOutGoodsDetailActivity"
             android:configChanges="keyboardHidden|orientation|locale"
-            android:label="@string/goods_in_out__detail"
+            android:label="@string/goods_in_out_detail"
             android:screenOrientation="portrait">
+        </activity>
+        <!--客户详情-->
+        <activity
+            android:name=".source.activity.customer.CustomerDetailActivity"
+            android:configChanges="keyboardHidden|orientation|locale"
+            android:label="@string/goods_detail"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden">
         </activity>
         <!--qrcode-->
         <activity
@@ -147,6 +155,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 </manifest>

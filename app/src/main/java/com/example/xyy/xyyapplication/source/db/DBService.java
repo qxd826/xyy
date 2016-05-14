@@ -591,6 +591,84 @@ public class DBService {
     }
 
     /**
+     * 根据ID获取客户信息
+     *
+     * @param customerId
+     * @return
+     */
+    public Customer getCustomerById(int customerId) {
+        Log.i(TAG, "获取客户信息 customerId:" + customerId);
+        this.open();
+        Customer customer = new Customer();
+        try {
+            String sql = "select * from " + DBConstant.TABLE_CUSTOMER + " where is_deleted = 'N' and _id = '" + customerId + "' limit 1;";
+            Log.i("QXD", sql);
+            Cursor cursor = sqlitedb.rawQuery(sql, null);
+            for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
+                Integer id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
+                String isDeleted = cursor.getString(cursor.getColumnIndexOrThrow("is_deleted"));
+                Long gmtCreate = cursor.getLong(cursor.getColumnIndexOrThrow("gmt_create"));
+                Long gmtModified = cursor.getLong(cursor.getColumnIndexOrThrow("gmt_modified"));
+                String customerName = cursor.getString(cursor.getColumnIndexOrThrow("customer_name"));
+                String customerMobile = cursor.getString(cursor.getColumnIndexOrThrow("customer_mobile"));
+                String customerType = cursor.getString(cursor.getColumnIndexOrThrow("customer_type"));
+
+                customer.setId(id);
+                customer.setIsDeleted(isDeleted);
+                customer.setGmtCreate(gmtCreate);
+                customer.setGmtModified(gmtModified);
+                customer.setCustomerName(customerName);
+                customer.setCustomerMobile(customerMobile);
+                customer.setCustomerType(customerType);
+            }
+            cursor.close();
+        } catch (Exception e) {
+            Log.e(TAG, "获取客户信息失败:" + e.toString());
+            return null;
+        } finally {
+            this.close();
+        }
+        return customer;
+    }
+
+    /**
+     * 更新客户信息
+     *
+     * @param customerId
+     * @param customerName
+     * @param customerMobile
+     * @return
+     */
+    public int updateCustomer(int customerId, String customerName, String customerMobile) {
+        Log.i(TAG, "更新客户信息: customerId:" + customerId + " customerName:" + customerName + " customerMobile:" + customerMobile);
+        if (customerId < 1) {
+            return 0;
+        }
+        ContentValues values = new ContentValues();
+        values.put("gmt_modified", new Date().getTime());
+        if(!StringUtils.isBlank(customerName)){
+            values.put("customer_name", customerName);
+        }
+        if(!StringUtils.isBlank(customerMobile)){
+            values.put("customer_mobile", customerMobile);
+        }
+        String whereClause = "_id=?";
+        String[] whereArgs = {"" + customerId};
+
+        this.open();
+        int i = 0;
+        try {
+            i = sqlitedb.update(DBConstant.TABLE_CUSTOMER, values, whereClause, whereArgs);
+            this.commitTransaction();
+        } catch (Exception e) {
+            DebugLog.e(TAG, "更新客户信息失败. e:" + e.toString() + " values:" + values.toString());
+        } finally {
+            this.close();
+        }
+        return i;
+    }
+
+    /**
      * 根据客户姓名/手机号 搜索客户信息
      *
      * @param key
@@ -637,7 +715,7 @@ public class DBService {
     /**
      * 插入商品信息
      *
-     * @param goods  商品信息
+     * @param goods 商品信息
      * @return
      */
     public Long insertGoods(Goods goods) {
@@ -1017,35 +1095,111 @@ public class DBService {
         Log.i(TAG, "获取商品出入库列表 result:" + goodsLogList);
         return goodsLogList;
     }
+
     /**
-     * 插入商品流水
+     * 根据客户id获取商品出入库明细列表
      *
-     * @param goods
      * @return
      */
-/*    public Long insertGoodsLog(Su goods) {
-        Log.i(TAG, "更新商品:" + goods.toString());
-        if (goods.getId() == null || goods.getId() < 1) {
-            return 0l;
-        }
+    public List<GoodsLog> getGoodsLogListByCustomerId(int mCustomerId) {
+        Log.i(TAG, "获取商品出入库明细列表");
         this.open();
-        ContentValues values = new ContentValues();
-        values.put("_id", goods.getId());
-        values.put("is_deleted", goods.getIsDeleted());
-        values.put("gmt_create", goods.getGmtCreate());
-        values.put("gmt_modified", goods.getGmtModified());
-        values.put("goods_name", goods.getGoodsName());
-        values.put("goods_code", goods.getGoodsCode());
-        values.put("goods_num", goods.getGoodsNum());
-        values.put("goods_type", goods.getGoodsType());
-        Long i = 0l;
+        List<GoodsLog> goodsLogList = new ArrayList<GoodsLog>();
         try {
-            i = sqlitedb.replaceOrThrow(DBConstant.TABLE_GOODS, null, values);
+            String sql = "select * from " + DBConstant.TABLE_GOODS_LOG + " where is_deleted ='N' and customer_id = '" + mCustomerId + "' order by _id desc";
+            Cursor cursor = sqlitedb.rawQuery(sql, null);
+            for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
+                Integer id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
+                String isDeleted = cursor.getString(cursor.getColumnIndexOrThrow("is_deleted"));
+                Long gmtCreate = cursor.getLong(cursor.getColumnIndexOrThrow("gmt_create"));
+                Long gmtModified = cursor.getLong(cursor.getColumnIndexOrThrow("gmt_modified"));
+                Integer createId = cursor.getInt(cursor.getColumnIndexOrThrow("create_id"));
+                String goodsName = cursor.getString(cursor.getColumnIndexOrThrow("goods_name"));
+                int num = cursor.getInt(cursor.getColumnIndexOrThrow("num"));
+                String goodsCode = cursor.getString(cursor.getColumnIndexOrThrow("goods_code"));
+                int customerId = cursor.getInt(cursor.getColumnIndexOrThrow("customer_id"));
+                String customerName = cursor.getString(cursor.getColumnIndexOrThrow("customer_name"));
+                int supplyId = cursor.getInt(cursor.getColumnIndexOrThrow("supply_id"));
+                String supplyName = cursor.getString(cursor.getColumnIndexOrThrow("supply_name"));
+                String actionType = cursor.getString(cursor.getColumnIndexOrThrow("action_type"));
+
+                GoodsLog goodsLog = new GoodsLog();
+                goodsLog.setId(id);
+                goodsLog.setIsDeleted(isDeleted);
+                goodsLog.setGmtCreate(gmtCreate);
+                goodsLog.setGmtModified(gmtModified);
+                goodsLog.setCreateId(createId);
+                goodsLog.setNum(num);
+                goodsLog.setCustomerId(customerId);
+                goodsLog.setCustomerName(customerName);
+                goodsLog.setSupplyId(supplyId);
+                goodsLog.setSupplyName(supplyName);
+                goodsLog.setActionType(actionType);
+                goodsLog.setGoodsName(goodsName);
+                goodsLog.setGoodsCode(goodsCode);
+                goodsLogList.add(goodsLog);
+            }
+            cursor.close();
         } catch (Exception e) {
-            DebugLog.e(TAG,"更新商品信息失败. e:" + e.toString() + " values:" + values.toString());
+            Log.e(TAG, "获取商品出入库列表失败:" + e.toString());
         } finally {
             this.close();
         }
-        return i;
-    }*/
+        Log.i(TAG, "获取商品出入库列表 result:" + goodsLogList);
+        return goodsLogList;
+    }
+
+    /**
+     * 根据供应商id获取商品出入库明细列表
+     *
+     * @return
+     */
+    public List<GoodsLog> getGoodsLogListBySupplyId(int mSupplyId) {
+        Log.i(TAG, "获取商品出入库明细列表");
+        this.open();
+        List<GoodsLog> goodsLogList = new ArrayList<GoodsLog>();
+        try {
+            String sql = "select * from " + DBConstant.TABLE_GOODS_LOG + " where is_deleted ='N' and supply_id = '" + mSupplyId + "' order by _id desc";
+            Cursor cursor = sqlitedb.rawQuery(sql, null);
+            for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
+                Integer id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
+                String isDeleted = cursor.getString(cursor.getColumnIndexOrThrow("is_deleted"));
+                Long gmtCreate = cursor.getLong(cursor.getColumnIndexOrThrow("gmt_create"));
+                Long gmtModified = cursor.getLong(cursor.getColumnIndexOrThrow("gmt_modified"));
+                Integer createId = cursor.getInt(cursor.getColumnIndexOrThrow("create_id"));
+                String goodsName = cursor.getString(cursor.getColumnIndexOrThrow("goods_name"));
+                int num = cursor.getInt(cursor.getColumnIndexOrThrow("num"));
+                String goodsCode = cursor.getString(cursor.getColumnIndexOrThrow("goods_code"));
+                int customerId = cursor.getInt(cursor.getColumnIndexOrThrow("customer_id"));
+                String customerName = cursor.getString(cursor.getColumnIndexOrThrow("customer_name"));
+                int supplyId = cursor.getInt(cursor.getColumnIndexOrThrow("supply_id"));
+                String supplyName = cursor.getString(cursor.getColumnIndexOrThrow("supply_name"));
+                String actionType = cursor.getString(cursor.getColumnIndexOrThrow("action_type"));
+
+                GoodsLog goodsLog = new GoodsLog();
+                goodsLog.setId(id);
+                goodsLog.setIsDeleted(isDeleted);
+                goodsLog.setGmtCreate(gmtCreate);
+                goodsLog.setGmtModified(gmtModified);
+                goodsLog.setCreateId(createId);
+                goodsLog.setNum(num);
+                goodsLog.setCustomerId(customerId);
+                goodsLog.setCustomerName(customerName);
+                goodsLog.setSupplyId(supplyId);
+                goodsLog.setSupplyName(supplyName);
+                goodsLog.setActionType(actionType);
+                goodsLog.setGoodsName(goodsName);
+                goodsLog.setGoodsCode(goodsCode);
+                goodsLogList.add(goodsLog);
+            }
+            cursor.close();
+        } catch (Exception e) {
+            Log.e(TAG, "获取商品出入库列表失败:" + e.toString());
+        } finally {
+            this.close();
+        }
+        Log.i(TAG, "获取商品出入库列表 result:" + goodsLogList);
+        return goodsLogList;
+    }
+
 }

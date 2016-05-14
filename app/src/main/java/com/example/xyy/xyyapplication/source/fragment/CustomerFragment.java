@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.activity.customer.AddCustomerActivity;
+import com.example.xyy.xyyapplication.source.activity.customer.CustomerDetailActivity;
 import com.example.xyy.xyyapplication.source.activity.goods.GoodsDetailActivity;
 import com.example.xyy.xyyapplication.source.adapter.customer.CustomerListAdapter;
 import com.example.xyy.xyyapplication.source.adapter.goods.GoodsListAdapter;
@@ -183,9 +184,9 @@ public class CustomerFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Customer customer = (Customer) customerList.getAdapter().getItem(position);
-/*                Intent intent = new Intent(getActivity(), GoodsDetailActivity.class);
-                intent.putExtra(Constant.GOODS_CODE, goods.getGoodsCode());
-                startActivity(intent);*/
+                Intent intent = new Intent(getActivity(), CustomerDetailActivity.class);
+                intent.putExtra(Constant.CUSTOMER_ID, customer.getId());
+                startActivity(intent);
             }
         });
     }

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/grey_color"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/blue_color">
+
+        <ImageButton
+            android:id="@+id/customer_detail_back"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/alpha_00"
+            android:padding="10dp"
+            android:src="@mipmap/back_btn" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/alpha_00"
+            android:gravity="center"
+            android:text="客户详情"
+            android:textColor="@color/white_color"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/customer_mobile"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/alpha_00"
+            android:src="@mipmap/mobile"/>
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="@color/grey_color"
+        android:gravity="center_vertical"
+        android:textColor="@color/white_color" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white_color">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:text="姓名"
+            android:textColor="@color/black_color"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/customer_detail_name_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="right|center_vertical"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/black_color"
+            android:textSize="14sp" />
+        <EditText
+            android:id="@+id/customer_detail_name_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="right|center_vertical"
+            android:layout_marginRight="10dp"
+            android:background="@null"
+            android:visibility="gone"
+            android:textColor="@color/black_color"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:background="@color/grey_color" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white_color">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:text="电话"
+            android:textColor="@color/black_color"
+            android:textSize="14sp" />
+        <TextView
+            android:id="@+id/customer_detail_mobile_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="right|center_vertical"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/black_color"
+            android:textSize="14sp"/>
+        <EditText
+            android:id="@+id/customer_detail_mobile_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="right|center_vertical"
+            android:layout_marginRight="10dp"
+            android:background="@null"
+            android:visibility="gone"
+            android:textColor="@color/black_color"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/grey_color"
+        android:gravity="center_vertical"
+        android:textColor="@color/white_color" />
+
+    <LinearLayout
+        android:id="@+id/customer_edit_view"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/customer_edit_btn"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:text="编辑"
+            android:textColor="@color/white_color"
+            android:gravity="center"
+            android:background="@mipmap/bg_title"
+            android:textSize="16sp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/customer_save_view"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:visibility="gone"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/customer_edit_save_btn"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:text="保存"
+            android:textColor="@color/white_color"
+            android:gravity="center"
+            android:background="@mipmap/bg_title"
+            android:textSize="16sp"/>
+        <Button
+            android:id="@+id/customer_edit_cancel_btn"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:text="取消"
+            android:textColor="@color/white_color"
+            android:gravity="center"
+            android:background="@mipmap/bg_title"
+            android:textSize="16sp"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/grey_color"
+        android:gravity="center_vertical" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/white_color"
+        android:gravity="center_vertical" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="@color/grey_color"
+        android:gravity="center_vertical"
+        android:textColor="@color/white_color"
+        android:text="出库明细"/>
+    <ListView
+        android:id="@+id/customer_goods_list"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        />
+</LinearLayout>

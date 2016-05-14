@@ -11,6 +11,8 @@ public class Constant {
     public static final String USER_MOBILE = "user_mobile";
     public static final String GOODS_ID = "goods_id";
     public static final String GOODS_CODE = "goods_code";
+    public static final String CUSTOMER_ID = "customer_id";
+    public static final String SUPPLY_ID = "supply_id";
 
     //INTENT CODE
     public static final int SUCCESS_CODE = 1;
