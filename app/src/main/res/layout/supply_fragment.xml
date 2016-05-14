@@ -32,7 +32,36 @@
             android:textColor="@color/white_color"
             android:textSize="14sp" />
     </RelativeLayout>
-
+    <RelativeLayout
+        android:layout_height="40dp"
+        android:layout_width="match_parent"
+        android:background="@mipmap/search_bg">
+        <ImageButton
+            android:id="@+id/supply_search_clear_btn"
+            android:layout_height="match_parent"
+            android:layout_width="50dp"
+            android:layout_alignParentLeft="true"
+            android:background="@color/alpha_00"
+            android:visibility="gone"
+            android:src="@mipmap/search_clear_btn"/>
+        <EditText
+            android:id="@+id/supply_search_edit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="2dp"
+            android:layout_toRightOf="@+id/supply_search_clear_btn"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="50dp"
+            android:background="@null"
+            android:singleLine="true"/>
+        <ImageButton
+            android:id="@+id/supply_search_btn"
+            android:layout_height="match_parent"
+            android:layout_width="50dp"
+            android:layout_alignParentRight="true"
+            android:background="@color/alpha_00"
+            android:src="@mipmap/search_icon_btn"/>
+    </RelativeLayout>
     <ListView
         android:id="@+id/supply_list"
         android:layout_width="match_parent"

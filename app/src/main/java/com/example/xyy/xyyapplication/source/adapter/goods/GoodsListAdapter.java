@@ -1,6 +1,8 @@
 package com.example.xyy.xyyapplication.source.adapter.goods;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +24,7 @@ import java.util.List;
 /**
  * Created by admin on 16/5/1.
  */
-public class GoodsListAdapter extends BaseAdapter{
+public class GoodsListAdapter extends BaseAdapter {
     private Context mContext;
     private List<Goods> mGoodsList = new ArrayList<Goods>();
     private Boolean mIsAdmin;
@@ -82,12 +84,30 @@ public class GoodsListAdapter extends BaseAdapter{
         mViewHolder.delButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DBService dbService = DBService.getInstance(mContext);
-                if(dbService.delGoodsById(mGoodsList.get(position).getId()) > 0){
-                    Toast.makeText(mContext, "删除成功", Toast.LENGTH_LONG).show();
-                    mGoodsList.remove(position);
-                    notifyDataSetChanged();
-                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setTitle("提示"); //设置标题
+                builder.setMessage("是否确认删除?"); //设置内容
+                builder.setIcon(R.mipmap.ic_launcher);//设置图标，图片id即可
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() { //设置确定按钮
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss(); //关闭dialog
+                        DBService dbService = DBService.getInstance(mContext);
+                        if (dbService.delGoodsById(mGoodsList.get(position).getId()) > 0) {
+                            Toast.makeText(mContext, "删除成功", Toast.LENGTH_LONG).show();
+                            mGoodsList.remove(position);
+                            notifyDataSetChanged();
+                        }
+                    }
+                });
+                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() { //设置取消按钮
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                //参数都设置完成了，创建并显示出来
+                builder.create().show();
             }
         });
         return convertView;
@@ -106,12 +126,12 @@ public class GoodsListAdapter extends BaseAdapter{
         super.notifyDataSetChanged();
     }
 
-    public void setMGoodsList(List<Goods> goodsList){
+    public void setMGoodsList(List<Goods> goodsList) {
         this.mGoodsList = goodsList;
         notifyDataSetChanged();
     }
 
-    public void getMGoodsList(List<Goods> goodsList){
+    public void getMGoodsList(List<Goods> goodsList) {
         this.mGoodsList = goodsList;
         notifyDataSetChanged();
     }

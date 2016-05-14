@@ -458,6 +458,50 @@ public class DBService {
     }
 
     /**
+     * 根据供应商姓名/手机号 搜索供应商信息
+     *
+     * @param key
+     * @return
+     */
+    public List<Supply> searchSupply(String key) {
+        Log.i(TAG, "搜索客户列表");
+        this.open();
+        List<Supply> supplyList = new ArrayList<>();
+        try {
+            String sql = "select * from " + DBConstant.TABLE_SUPPLY +
+                    " where is_deleted = 'N' and (supply_name like '%" + key + "%' or supply_mobile like '%" + key + "%');";
+            Log.i("QXD", sql);
+            Cursor cursor = sqlitedb.rawQuery(sql, null);
+            for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
+                Supply supply = new Supply();
+                Integer id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
+                String isDeleted = cursor.getString(cursor.getColumnIndexOrThrow("is_deleted"));
+                Long gmtCreate = cursor.getLong(cursor.getColumnIndexOrThrow("gmt_create"));
+                Long gmtModified = cursor.getLong(cursor.getColumnIndexOrThrow("gmt_modified"));
+                String supplyName = cursor.getString(cursor.getColumnIndexOrThrow("supply_name"));
+                String supplyMobile = cursor.getString(cursor.getColumnIndexOrThrow("supply_mobile"));
+                String supplyType = cursor.getString(cursor.getColumnIndexOrThrow("supply_type"));
+
+                supply.setId(id);
+                supply.setIsDeleted(isDeleted);
+                supply.setGmtCreate(gmtCreate);
+                supply.setGmtModified(gmtModified);
+                supply.setSupplyName(supplyName);
+                supply.setSupplyMobile(supplyMobile);
+                supply.setSupplyType(supplyType);
+                supplyList.add(supply);
+            }
+            cursor.close();
+        } catch (Exception e) {
+            Log.e(TAG, "搜索客户信息失败:" + e.toString());
+            return null;
+        } finally {
+            this.close();
+        }
+        return supplyList;
+    }
+
+    /**
      * 插入客户信息
      *
      * @param customer 客户
