@@ -22,7 +22,7 @@
         android:layout_alignBottom="@+id/button_back"
         android:layout_centerHorizontal="true"
         android:gravity="center_vertical"
-        android:text="二维码扫描"
+        android:text="条形码扫描"
         android:textColor="@android:color/white"
         android:textSize="18sp" />
 

@@ -25,7 +25,7 @@
             android:layout_height="match_parent"
             android:background="@color/alpha_00"
             android:gravity="center"
-            android:text="客户详情"
+            android:text="供应商详情"
             android:textColor="@color/white_color"
             android:textSize="18sp" />
 
@@ -196,7 +196,7 @@
         android:background="@color/grey_color"
         android:gravity="center_vertical"
         android:textColor="@color/white_color"
-        android:text="出库明细"/>
+        android:text="入库明细"/>
     <ListView
         android:id="@+id/supply_goods_list"
         android:layout_height="match_parent"
