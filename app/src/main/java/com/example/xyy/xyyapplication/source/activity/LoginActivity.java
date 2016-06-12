@@ -1,13 +1,16 @@
 package com.example.xyy.xyyapplication.source.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -19,6 +22,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.activity.userList.AddUserActivity;
 import com.example.xyy.xyyapplication.source.application.MApplication;
+import com.example.xyy.xyyapplication.source.common.DebugLog;
 import com.example.xyy.xyyapplication.source.constant.Constant;
 import com.example.xyy.xyyapplication.source.db.DBService;
 import com.example.xyy.xyyapplication.source.pojo.user.User;
@@ -28,7 +32,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
 import java.util.Date;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -38,11 +41,12 @@ import butterknife.ButterKnife;
  */
 public class LoginActivity extends Activity implements View.OnClickListener {
     private final String TAG = "LoginActivity";
+
     private DBService dbService;
     private RequestQueue mQueue;
 
-
-
+    @Bind(R.id.personal_info)
+    TextView personalInfo;
     @Bind(R.id.login_account)
     EditText loginAccount;
     @Bind(R.id.login_password)
@@ -58,15 +62,21 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.login_activity);
         ButterKnife.bind(this);
         setTitle("登录");
+
+        SharedPreferences sharedPreferences = getSharedPreferences(MApplication.SHARE_PREFERENCE, Context.MODE_PRIVATE);
+        String s = sharedPreferences.getString(MApplication.SHARE_PREFERENCE_IP_KEY,"");
+        MApplication.IP_SERVICE = s;
         if (hasLastLoginUser()) {
-            startMainActivity();
+            if (!StringUtils.isBlank(MApplication.IP_SERVICE)) {
+                startMainActivity();
+            }
         }
         initView();
 
         mQueue = Volley.newRequestQueue(this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET,
-                "http://192.168.1.105:8080/xyy/app/login/loginIn", null,
+                MApplication.IP_SERVICE + "xyy/app/login/loginIn", null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -83,7 +93,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     @Override
     protected void onResume() {
-        if(dbService == null){
+        if (dbService == null) {
             dbService = DBService.getInstance(this);
         }
         super.onResume();
@@ -118,6 +128,10 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 intent.putExtra(Constant.ADD_USER_TYPE, Constant.ADD_ADMIN_USER);
                 startActivityForResult(intent, R.string.add_user);
                 break;
+            case R.id.personal_info:
+                Intent intentIp = new Intent(this, IPSettingActivity.class);
+                startActivity(intentIp);
+                break;
         }
     }
 
@@ -127,6 +141,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         loginAccount.setOnClickListener(this);
         loginPassword.setOnClickListener(this);
         addAdminUser.setOnClickListener(this);
+        personalInfo.setOnClickListener(this);
         if (hasAdminUser()) {
             addAdminUser.setVisibility(View.GONE);
         } else {

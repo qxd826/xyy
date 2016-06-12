@@ -1,6 +1,8 @@
 package com.example.xyy.xyyapplication.source.application;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.example.xyy.xyyapplication.source.pojo.user.User;
 
@@ -18,6 +20,12 @@ public class MApplication extends Application {
     public static Boolean isAdmin = false;
     //数据库锁
     public static Object SQL_LOCK = new Object();
+    //服务器ip地址
+    public static String IP_SERVICE = "http://192.168.1.105:8080/";
+    //服务器地址存放
+    public static String SHARE_PREFERENCE = "SHARE_PREFERENCE";
+    public static String SHARE_PREFERENCE_IP_KEY = "SHARE_PREFERENCE_IP_KEY";
+
 
     @Override
     public void onCreate() {
