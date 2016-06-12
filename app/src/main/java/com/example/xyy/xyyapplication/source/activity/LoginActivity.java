@@ -10,6 +10,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.activity.userList.AddUserActivity;
 import com.example.xyy.xyyapplication.source.application.MApplication;
@@ -19,6 +25,7 @@ import com.example.xyy.xyyapplication.source.pojo.user.User;
 import com.example.xyy.xyyapplication.source.pojo.userLogin.UserLoginLog;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.List;
@@ -32,6 +39,9 @@ import butterknife.ButterKnife;
 public class LoginActivity extends Activity implements View.OnClickListener {
     private final String TAG = "LoginActivity";
     private DBService dbService;
+    private RequestQueue mQueue;
+
+
 
     @Bind(R.id.login_account)
     EditText loginAccount;
@@ -52,6 +62,23 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             startMainActivity();
         }
         initView();
+
+        mQueue = Volley.newRequestQueue(this);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET,
+                "http://192.168.1.105:8080/xyy/app/login/loginIn", null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i(TAG, response.toString());
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, error.getMessage(), error);
+            }
+        });
+        mQueue.add(jsonObjectRequest);
     }
 
     @Override
