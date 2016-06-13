@@ -16,6 +16,7 @@ import com.example.xyy.xyyapplication.source.common.DebugLog;
 import com.example.xyy.xyyapplication.source.constant.Constant;
 import com.example.xyy.xyyapplication.source.db.DBService;
 import com.example.xyy.xyyapplication.source.pojo.user.User;
+import com.example.xyy.xyyapplication.source.pojo.user.UserVO;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -74,7 +75,7 @@ public class UserNameChangeActivity extends Activity implements View.OnClickList
 
     //保存修改后的名字
     private void saveUserName() {
-        User currentUser = ApplicationContextUtil.getCurrentLoginUser();
+        UserVO currentUser = ApplicationContextUtil.getCurrentLoginUser();
         if (currentUser == null || currentUser.getId() == null) {
             DebugLog.e("当前登录用户为空");
             Toast.makeText(this, "当前登录用户为空", Toast.LENGTH_LONG).show();
@@ -87,7 +88,7 @@ public class UserNameChangeActivity extends Activity implements View.OnClickList
         }
         currentUser.setUserName(tempUserName);
         DBService dbService = DBService.getInstance(this);
-        if (dbService.upDateUser(currentUser) > 0) {
+/*        if (dbService.upDateUser(currentUser) > 0) {
             Toast.makeText(this, "修改成功", Toast.LENGTH_LONG).show();
             Intent userNameIntent = new Intent();
             userNameIntent.putExtra(Constant.USER_NAME, tempUserName);
@@ -95,7 +96,7 @@ public class UserNameChangeActivity extends Activity implements View.OnClickList
         } else {
             DebugLog.e("更新用户信息失败 user:" + currentUser.toString());
             Toast.makeText(this, "更新用户信息失败", Toast.LENGTH_LONG).show();
-        }
+        }*/
     }
 
     @Override

@@ -12,6 +12,7 @@ import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.common.ApplicationContextUtil;
 import com.example.xyy.xyyapplication.source.db.DBService;
 import com.example.xyy.xyyapplication.source.pojo.user.User;
+import com.example.xyy.xyyapplication.source.pojo.user.UserVO;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -62,7 +63,7 @@ public class UserPasswordChangeActivity extends Activity implements View.OnClick
     }
 
     private Boolean changePassword() {
-        User currentUser = ApplicationContextUtil.getCurrentLoginUser();
+        UserVO currentUser = ApplicationContextUtil.getCurrentLoginUser();
         if (currentUser == null) {
             Toast.makeText(this, "重新登录", Toast.LENGTH_LONG).show();
             return false;
@@ -81,10 +82,10 @@ public class UserPasswordChangeActivity extends Activity implements View.OnClick
 
         DBService dbService = DBService.getInstance(this);
         currentUser.setPassword(newPasswordOne);
-        if (dbService.upDateUser(currentUser) > 0) {
+/*        if (dbService.upDateUser(currentUser) > 0) {
             Toast.makeText(this, "修改成功", Toast.LENGTH_LONG).show();
             return true;
-        }
+        }*/
         return false;
     }
 }

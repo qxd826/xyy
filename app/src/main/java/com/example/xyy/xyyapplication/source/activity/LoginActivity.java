@@ -1,9 +1,7 @@
 package com.example.xyy.xyyapplication.source.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -22,7 +20,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.activity.userList.AddUserActivity;
 import com.example.xyy.xyyapplication.source.application.MApplication;
-import com.example.xyy.xyyapplication.source.common.DebugLog;
+import com.example.xyy.xyyapplication.source.common.JsonUtil;
 import com.example.xyy.xyyapplication.source.common.Result;
 import com.example.xyy.xyyapplication.source.constant.Constant;
 import com.example.xyy.xyyapplication.source.db.DBService;
@@ -30,11 +28,14 @@ import com.example.xyy.xyyapplication.source.pojo.user.User;
 import com.example.xyy.xyyapplication.source.pojo.user.UserVO;
 import com.example.xyy.xyyapplication.source.pojo.userLogin.UserLoginLog;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -68,16 +69,12 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         setTitle("登录");
         mQueue = Volley.newRequestQueue(this);
 
-        SharedPreferences sharedPreferences = getSharedPreferences(MApplication.SHARE_PREFERENCE, Context.MODE_PRIVATE);
-        String s = sharedPreferences.getString(MApplication.SHARE_PREFERENCE_IP_KEY, "");
-        MApplication.IP_SERVICE = s;
         if (hasLastLoginUser()) {
             if (!StringUtils.isBlank(MApplication.IP_SERVICE)) {
                 startMainActivity();
             }
         }
         initView();
-
     }
 
     @Override
@@ -128,11 +125,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         loginPassword.setOnClickListener(this);
         addAdminUser.setOnClickListener(this);
         personalInfo.setOnClickListener(this);
-        if (hasAdminUser()) {
-            addAdminUser.setVisibility(View.GONE);
-        } else {
-            addAdminUser.setVisibility(View.VISIBLE);
-        }
+        hasAdminUser();
     }
 
     @Override
@@ -159,11 +152,13 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.i(TAG, response.toString());
+                        Log.i(TAG , response.toString());
                         Gson gson = new Gson();
-                        Result<UserVO> result = gson.fromJson(response.toString(), Result.class);
+                        Log.i(TAG , "获取结果");
+                        Result<UserVO> result = gson.fromJson(response.toString(),Result.class);
+                        Log.i(TAG , "获取结果:"+result.toString());
                         if (result.isSuccess()) {
-                            loginUser = (UserVO) result.getData();
+                            loginUser = JsonUtil.fromJson(JsonUtil.toJson(result.getData()),UserVO.class);
                             MApplication.currentLoginUser = loginUser;
                             MApplication.isLogin = true;
                             if (StringUtils.equals(Constant.IS_ADMIN, loginUser.getIsAdmin())) {
@@ -179,8 +174,10 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                             userLoginLog.setPassword(loginUser.getPassword());
                             userLoginLog.setAccount(loginUser.getAccount());
                             dbService.insertUserLoginLog(userLoginLog);
-
+                            Log.i(TAG, "启动主界面");
                             startMainActivity();
+                        }else{
+                            Toast.makeText(LoginActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -208,8 +205,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         if (user == null || StringUtils.isEmpty(user.getAccount())) {
             return false;
         } else {
-            //User loginUser = dbService.getUserByAccount(user.getAccount());
-
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                     Request.Method.GET,
                     MApplication.IP_SERVICE + "xyy/app/user/info?account=" + user.getAccount()
@@ -217,11 +212,12 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            Log.i(TAG, response.toString());
+                            Log.i(TAG + "获取最后的登录用户", response.toString());
                             Gson gson = new Gson();
-                            Result<UserVO> result = gson.fromJson(response.toString(), Result.class);
+                            Result<UserVO> result = gson.fromJson(response.toString(),new TypeToken<Result<UserVO>>() {
+                            }.getType());
                             if (result.isSuccess()) {
-                                loginUser = (UserVO) result.getData();
+                                loginUser = JsonUtil.fromJson(JsonUtil.toJson(result.getData()),UserVO.class);
                                 MApplication.currentLoginUser = loginUser;
                                 MApplication.isLogin = true;
                                 if (StringUtils.equals(Constant.IS_ADMIN, loginUser.getIsAdmin())) {
@@ -229,6 +225,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                                 } else {
                                     MApplication.isAdmin = false;
                                 }
+                            }else{
+                                Toast.makeText(LoginActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
                     }, new Response.ErrorListener() {
@@ -244,13 +242,35 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     }
 
     //是否有管理员账号
-    private Boolean hasAdminUser() {
-        dbService = DBService.getInstance(this);
-        User user = dbService.getAdminUser();
-        if (null != user) {
-            return true;
-        }
-        return false;
+    private void hasAdminUser() {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET,
+                MApplication.IP_SERVICE + "xyy/app/user/isHasAdmin"
+                , null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i(TAG, response.toString());
+                        Gson gson = new Gson();
+                        Result<Boolean> result = gson.fromJson(response.toString(), new TypeToken<Result<Boolean>>() {
+                        }.getType());
+                        if (result.isSuccess()) {
+                            if((Boolean) result.getData()){
+                                addAdminUser.setVisibility(View.GONE);
+                            }else{
+                                addAdminUser.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, error.getMessage(), error);
+                Toast.makeText(LoginActivity.this, "网络连接失败", Toast.LENGTH_SHORT).show();
+                addAdminUser.setVisibility(View.GONE);
+            }
+        });
+        mQueue.add(jsonObjectRequest);
     }
 
     @Override

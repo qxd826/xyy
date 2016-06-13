@@ -17,6 +17,7 @@ import com.example.xyy.xyyapplication.source.common.ApplicationContextUtil;
 import com.example.xyy.xyyapplication.source.common.DebugLog;
 import com.example.xyy.xyyapplication.source.constant.Constant;
 import com.example.xyy.xyyapplication.source.pojo.user.User;
+import com.example.xyy.xyyapplication.source.pojo.user.UserVO;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -75,7 +76,7 @@ public class UserActivity extends Activity implements View.OnClickListener {
     }
 
     private void initView() {
-        User currentUser = ApplicationContextUtil.getCurrentLoginUser();
+        UserVO currentUser = ApplicationContextUtil.getCurrentLoginUser();
         if (null != currentUser) {
             String userName = currentUser.getUserName();
             String mobile = currentUser.getMobile();

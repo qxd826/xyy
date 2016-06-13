@@ -14,8 +14,8 @@ import lombok.EqualsAndHashCode;
 public class UserVO implements Serializable{
     private Integer id;
     private String isDeleted;
-    private Date gmtCreate;
-    private Date gmtModified;
+    private Long gmtCreate;
+    private Long gmtModified;
     private String userName;//用户姓名
     private String account;//登录账户
     private String password;//登录密码

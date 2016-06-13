@@ -32,5 +32,13 @@ public class MApplication extends Application {
     public void onCreate() {
         // TODO Auto-generated method stub
         super.onCreate();
+
+        try{
+            SharedPreferences sharedPreferences = getSharedPreferences(MApplication.SHARE_PREFERENCE, Context.MODE_PRIVATE);
+            String s = sharedPreferences.getString(MApplication.SHARE_PREFERENCE_IP_KEY, "");
+            MApplication.IP_SERVICE = s;
+        }catch (Exception e){
+
+        }
     }
 }
