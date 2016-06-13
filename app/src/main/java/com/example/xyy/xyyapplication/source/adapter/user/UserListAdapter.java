@@ -9,10 +9,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
 import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.common.DateUtil;
 import com.example.xyy.xyyapplication.source.db.DBService;
 import com.example.xyy.xyyapplication.source.pojo.user.User;
+import com.example.xyy.xyyapplication.source.pojo.user.UserVO;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,19 +25,19 @@ import java.util.List;
  */
 public class UserListAdapter extends BaseAdapter {
     private Context mContext;
-    private List<User> mUserList = new ArrayList<User>();
+    private List<UserVO> mUserList = new ArrayList<UserVO>();
     private Boolean mIsAdmin;
 
     public UserListAdapter(Context context) {
         mContext = context;
     }
 
-    public UserListAdapter(Context context, List<User> userList) {
+    public UserListAdapter(Context context, List<UserVO> userList) {
         mContext = context;
         mUserList = userList;
     }
 
-    public UserListAdapter(Context context, List<User> userList, Boolean isAdmin) {
+    public UserListAdapter(Context context, List<UserVO> userList, Boolean isAdmin,RequestQueue mQueue) {
         mContext = context;
         mUserList = userList;
         mIsAdmin = isAdmin;
@@ -112,7 +114,7 @@ public class UserListAdapter extends BaseAdapter {
         super.notifyDataSetChanged();
     }
 
-    public void setMUserList(List<User> userList){
+    public void setMUserList(List<UserVO> userList){
         this.mUserList = userList;
         notifyDataSetChanged();
     }

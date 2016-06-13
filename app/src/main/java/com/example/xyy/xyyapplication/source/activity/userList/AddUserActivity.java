@@ -126,6 +126,7 @@ public class AddUserActivity extends Activity implements View.OnClickListener {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Toast.makeText(AddUserActivity.this, "网络错误", Toast.LENGTH_LONG).show();
                 Log.e("", error.getMessage(), error);
             }
         })
