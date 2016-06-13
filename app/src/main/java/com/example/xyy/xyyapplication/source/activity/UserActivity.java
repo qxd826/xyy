@@ -136,16 +136,12 @@ public class UserActivity extends Activity implements View.OnClickListener {
         switch (requestCode) {
             case R.string.user_name:
                 if (resultCode == 1) {
-                    Bundle bundle = data.getExtras();
-                    String userName = bundle.getString(Constant.USER_NAME);
-                    userNameTextId.setText(userName);
+                    userNameTextId.setText(ApplicationContextUtil.getCurrentLoginUser().getUserName());
                 }
                 break;
             case R.string.user_mobile:
                 if (resultCode == 1) {
-                    Bundle bundle = data.getExtras();
-                    String userMobile = bundle.getString(Constant.USER_MOBILE);
-                    userMobileTextId.setText(userMobile);
+                    userMobileTextId.setText(ApplicationContextUtil.getCurrentLoginUser().getMobile());
                 }
                 break;
         }
