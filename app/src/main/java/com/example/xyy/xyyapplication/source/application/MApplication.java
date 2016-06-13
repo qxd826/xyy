@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.example.xyy.xyyapplication.source.pojo.user.User;
+import com.example.xyy.xyyapplication.source.pojo.user.UserVO;
 
 import lombok.Data;
 
@@ -15,7 +16,7 @@ public class MApplication extends Application {
     //是否有用户登录状态
     public static Boolean isLogin = false;
     //当前登录用户
-    public static User currentLoginUser = null;
+    public static UserVO currentLoginUser = null;
     //当前是否是管理员登录
     public static Boolean isAdmin = false;
     //数据库锁

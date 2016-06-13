@@ -23,10 +23,13 @@ import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.activity.userList.AddUserActivity;
 import com.example.xyy.xyyapplication.source.application.MApplication;
 import com.example.xyy.xyyapplication.source.common.DebugLog;
+import com.example.xyy.xyyapplication.source.common.Result;
 import com.example.xyy.xyyapplication.source.constant.Constant;
 import com.example.xyy.xyyapplication.source.db.DBService;
 import com.example.xyy.xyyapplication.source.pojo.user.User;
+import com.example.xyy.xyyapplication.source.pojo.user.UserVO;
 import com.example.xyy.xyyapplication.source.pojo.userLogin.UserLoginLog;
+import com.google.gson.Gson;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
@@ -44,6 +47,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     private DBService dbService;
     private RequestQueue mQueue;
+    private UserVO loginUser = null;
 
     @Bind(R.id.personal_info)
     TextView personalInfo;
@@ -62,9 +66,10 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.login_activity);
         ButterKnife.bind(this);
         setTitle("登录");
+        mQueue = Volley.newRequestQueue(this);
 
         SharedPreferences sharedPreferences = getSharedPreferences(MApplication.SHARE_PREFERENCE, Context.MODE_PRIVATE);
-        String s = sharedPreferences.getString(MApplication.SHARE_PREFERENCE_IP_KEY,"");
+        String s = sharedPreferences.getString(MApplication.SHARE_PREFERENCE_IP_KEY, "");
         MApplication.IP_SERVICE = s;
         if (hasLastLoginUser()) {
             if (!StringUtils.isBlank(MApplication.IP_SERVICE)) {
@@ -73,22 +78,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         }
         initView();
 
-        mQueue = Volley.newRequestQueue(this);
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.GET,
-                MApplication.IP_SERVICE + "xyy/app/login/loginIn", null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i(TAG, response.toString());
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, error.getMessage(), error);
-            }
-        });
-        mQueue.add(jsonObjectRequest);
     }
 
     @Override
@@ -118,10 +107,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             case R.id.login_button:
                 String account = loginAccount.getText().toString();
                 String password = loginPassword.getText().toString();
-                if (!checkUser(account, password)) {
-                    break;
-                }
-                startMainActivity();
+                checkUser(account, password);
                 break;
             case R.id.add_admin_user:
                 Intent intent = new Intent(this, AddUserActivity.class);
@@ -161,41 +147,50 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     }
 
     //校验用户名密码
-    private Boolean checkUser(String account, String password) {
+    private void checkUser(String account, String password) {
         if (StringUtils.isEmpty(account) || StringUtils.isEmpty(password)) {
             Toast.makeText(this, "用户名或密码为空", Toast.LENGTH_LONG).show();
-            return false;
+            return;
         }
-        dbService = DBService.getInstance(this);
-        User user = dbService.getUserByAccount(account);
-        if (user == null) {
-            Toast.makeText(this, "当前用户不存在", Toast.LENGTH_LONG).show();
-            return false;
-        }
-        String mPassword = user.getPassword();
-        if (!StringUtils.equalsIgnoreCase(password, mPassword)) {
-            Toast.makeText(this, "用户密码错误", Toast.LENGTH_LONG).show();
-            return false;
-        }
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET,
+                MApplication.IP_SERVICE + "xyy/app/login/loginIn?account=" + account + "&password=" + password
+                , null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i(TAG, response.toString());
+                        Gson gson = new Gson();
+                        Result<UserVO> result = gson.fromJson(response.toString(), Result.class);
+                        if (result.isSuccess()) {
+                            loginUser = (UserVO) result.getData();
+                            MApplication.currentLoginUser = loginUser;
+                            MApplication.isLogin = true;
+                            if (StringUtils.equals(Constant.IS_ADMIN, loginUser.getIsAdmin())) {
+                                MApplication.isAdmin = true;
+                            } else {
+                                MApplication.isAdmin = false;
+                            }
+                            //插入登录记录
+                            UserLoginLog userLoginLog = new UserLoginLog();
+                            userLoginLog.setGmtCreate(new Date().getTime());
+                            userLoginLog.setGmtModified(new Date().getTime());
+                            userLoginLog.setIsDeleted("N");
+                            userLoginLog.setPassword(loginUser.getPassword());
+                            userLoginLog.setAccount(loginUser.getAccount());
+                            dbService.insertUserLoginLog(userLoginLog);
 
-        //设置当前登录用户全局值
-        MApplication.currentLoginUser = user;
-        MApplication.isLogin = true;
-        if (StringUtils.equals(Constant.IS_ADMIN, user.getIsAdmin())) {
-            MApplication.isAdmin = true;
-        } else {
-            MApplication.isAdmin = false;
-        }
-
-        //插入登录记录
-        UserLoginLog userLoginLog = new UserLoginLog();
-        userLoginLog.setGmtCreate(new Date().getTime());
-        userLoginLog.setGmtModified(new Date().getTime());
-        userLoginLog.setIsDeleted("N");
-        userLoginLog.setPassword(user.getPassword());
-        userLoginLog.setAccount(user.getAccount());
-        dbService.insertUserLoginLog(userLoginLog);
-        return true;
+                            startMainActivity();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, error.getMessage(), error);
+                Toast.makeText(LoginActivity.this, "网络连接失败", Toast.LENGTH_SHORT).show();
+            }
+        });
+        mQueue.add(jsonObjectRequest);
     }
 
     //跳转主页面
@@ -213,14 +208,37 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         if (user == null || StringUtils.isEmpty(user.getAccount())) {
             return false;
         } else {
-            User loginUser = dbService.getUserByAccount(user.getAccount());
-            MApplication.currentLoginUser = loginUser;
-            MApplication.isLogin = true;
-            if (StringUtils.equals(Constant.IS_ADMIN, loginUser.getIsAdmin())) {
-                MApplication.isAdmin = true;
-            } else {
-                MApplication.isAdmin = false;
-            }
+            //User loginUser = dbService.getUserByAccount(user.getAccount());
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                    Request.Method.GET,
+                    MApplication.IP_SERVICE + "xyy/app/user/info?account=" + user.getAccount()
+                    , null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.i(TAG, response.toString());
+                            Gson gson = new Gson();
+                            Result<UserVO> result = gson.fromJson(response.toString(), Result.class);
+                            if (result.isSuccess()) {
+                                loginUser = (UserVO) result.getData();
+                                MApplication.currentLoginUser = loginUser;
+                                MApplication.isLogin = true;
+                                if (StringUtils.equals(Constant.IS_ADMIN, loginUser.getIsAdmin())) {
+                                    MApplication.isAdmin = true;
+                                } else {
+                                    MApplication.isAdmin = false;
+                                }
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.i(TAG, error.getMessage(), error);
+                    Toast.makeText(LoginActivity.this, "网络连接失败", Toast.LENGTH_SHORT).show();
+                }
+            });
+            mQueue.add(jsonObjectRequest);
         }
         return true;
     }

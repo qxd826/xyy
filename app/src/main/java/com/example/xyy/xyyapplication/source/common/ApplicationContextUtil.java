@@ -5,6 +5,7 @@ import android.app.Activity;
 import com.example.xyy.xyyapplication.source.application.MApplication;
 import com.example.xyy.xyyapplication.source.constant.Constant;
 import com.example.xyy.xyyapplication.source.pojo.user.User;
+import com.example.xyy.xyyapplication.source.pojo.user.UserVO;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -27,7 +28,7 @@ public class ApplicationContextUtil {
     }
 
     //存入当前登录账户
-    public static void setCurrentLoginUser(User user) {
+    public static void setCurrentLoginUser(UserVO user) {
         try {
             MApplication.currentLoginUser = user;
             MApplication.isLogin = true;
@@ -42,7 +43,7 @@ public class ApplicationContextUtil {
     }
 
     //获取当前登录账号
-    public static User getCurrentLoginUser() {
+    public static UserVO getCurrentLoginUser() {
         try {
             return MApplication.currentLoginUser;
         } catch (Exception e) {
