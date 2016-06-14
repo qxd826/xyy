@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.example.xyy.xyyapplication.source.pojo.user.User;
 import com.example.xyy.xyyapplication.source.pojo.user.UserVO;
 
@@ -27,12 +29,13 @@ public class MApplication extends Application {
     public static String SHARE_PREFERENCE = "SHARE_PREFERENCE";
     public static String SHARE_PREFERENCE_IP_KEY = "SHARE_PREFERENCE_IP_KEY";
 
+    public static RequestQueue mQueue;
 
     @Override
     public void onCreate() {
         // TODO Auto-generated method stub
         super.onCreate();
-
+        mQueue = Volley.newRequestQueue(this);
         try{
             SharedPreferences sharedPreferences = getSharedPreferences(MApplication.SHARE_PREFERENCE, Context.MODE_PRIVATE);
             String s = sharedPreferences.getString(MApplication.SHARE_PREFERENCE_IP_KEY, "");

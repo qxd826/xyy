@@ -13,6 +13,7 @@ import com.example.xyy.xyyapplication.source.common.DateUtil;
 import com.example.xyy.xyyapplication.source.db.DBService;
 import com.example.xyy.xyyapplication.source.pojo.goods.Goods;
 import com.example.xyy.xyyapplication.source.pojo.goods.GoodsLog;
+import com.example.xyy.xyyapplication.source.pojo.goods.GoodsLogVO;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,14 +23,14 @@ import java.util.List;
  * Created by QXD on 2016/5/14.
  */
 public class GoodsInOutAdapter extends BaseAdapter {
-    private List<GoodsLog> mGoodsLogList = new ArrayList<>();
+    private List<GoodsLogVO> mGoodsLogList = new ArrayList<>();
     private Context mContext;
 
     public GoodsInOutAdapter(Context context) {
         mContext = context;
     }
 
-    public GoodsInOutAdapter(Context context, List<GoodsLog> goodsLogList) {
+    public GoodsInOutAdapter(Context context, List<GoodsLogVO> goodsLogList) {
         mContext = context;
         mGoodsLogList = goodsLogList;
     }
@@ -69,12 +70,12 @@ public class GoodsInOutAdapter extends BaseAdapter {
             mViewHolder.inOutItemType.setText("出库");
             mViewHolder.inOutItemType.setTextColor(mContext.getResources().getColor(R.color.red_color));
             mViewHolder.inOutItemName.setText(mGoodsLogList.get(position).getCustomerName());
-            mViewHolder.inOutItemNum.setText("-"+mGoodsLogList.get(position).getNum());
+            mViewHolder.inOutItemNum.setText("-"+mGoodsLogList.get(position).getGoodsNum());
         }else{
             mViewHolder.inOutItemType.setText("入库");
             mViewHolder.inOutItemType.setTextColor(mContext.getResources().getColor(R.color.green_color));
             mViewHolder.inOutItemName.setText(mGoodsLogList.get(position).getSupplyName());
-            mViewHolder.inOutItemNum.setText("+"+mGoodsLogList.get(position).getNum());
+            mViewHolder.inOutItemNum.setText("+"+mGoodsLogList.get(position).getGoodsNum());
         }
         Date createDate = new Date();
         createDate.setTime(mGoodsLogList.get(position).getGmtCreate());
@@ -90,7 +91,7 @@ public class GoodsInOutAdapter extends BaseAdapter {
         public TextView inOutItemTime;
     }
 
-    public void setMGoodsLogList(List<GoodsLog> goodsLogList){
+    public void setMGoodsLogList(List<GoodsLogVO> goodsLogList){
         this.mGoodsLogList = goodsLogList;
         super.notifyDataSetChanged();
     }

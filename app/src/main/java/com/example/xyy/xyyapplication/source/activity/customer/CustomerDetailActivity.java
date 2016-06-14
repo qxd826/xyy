@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -16,17 +17,33 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.adapter.goods.GoodsInOutAdapter;
+import com.example.xyy.xyyapplication.source.application.MApplication;
 import com.example.xyy.xyyapplication.source.common.DebugLog;
+import com.example.xyy.xyyapplication.source.common.JsonUtil;
+import com.example.xyy.xyyapplication.source.common.Result;
 import com.example.xyy.xyyapplication.source.constant.Constant;
 import com.example.xyy.xyyapplication.source.db.DBService;
 import com.example.xyy.xyyapplication.source.pojo.customer.Customer;
+import com.example.xyy.xyyapplication.source.pojo.customer.CustomerVO;
 import com.example.xyy.xyyapplication.source.pojo.goods.GoodsLog;
+import com.example.xyy.xyyapplication.source.pojo.goods.GoodsLogVO;
+import com.example.xyy.xyyapplication.source.pojo.supply.Supply;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -36,8 +53,9 @@ import butterknife.ButterKnife;
  */
 public class CustomerDetailActivity extends Activity implements View.OnClickListener {
     private final String TAG = "CustomerDetailActivity";
-    private int mCustomerId = 0;
-    private Customer mCustomer = null;
+    private long mCustomerId = 0;
+    private CustomerVO mCustomer = null;
+    List<GoodsLogVO> goodsLogList = new ArrayList<>();
 
     @Bind(R.id.customer_detail_back)
     ImageButton customerDetailBack;
@@ -71,7 +89,7 @@ public class CustomerDetailActivity extends Activity implements View.OnClickList
         setContentView(R.layout.customer_detail);
         ButterKnife.bind(this);
 
-        int customerId = getIntent().getIntExtra(Constant.CUSTOMER_ID, 0);
+        long customerId = getIntent().getLongExtra(Constant.CUSTOMER_ID, 0);
         DebugLog.i(TAG, "customerId:" + customerId);
         if (customerId > 0) {
             mCustomerId = customerId;
@@ -90,17 +108,80 @@ public class CustomerDetailActivity extends Activity implements View.OnClickList
         customerEditBtn.setOnClickListener(this);
         customerEditSaveBtn.setOnClickListener(this);
         customerEditCancelBtn.setOnClickListener(this);
+        GoodsInOutAdapter goodsInOutAdapter = new GoodsInOutAdapter(this,goodsLogList);
+        customerGoodsList.setAdapter(goodsInOutAdapter);
 
         if (mCustomerId > 0) {
-            DBService dbService = DBService.getInstance(this);
-            mCustomer = dbService.getCustomerById(mCustomerId);
-            customerDetailNameText.setText(mCustomer.getCustomerName());
-            customerDetailMobileText.setText(mCustomer.getCustomerMobile());
-
-            List<GoodsLog> goodsLogList = dbService.getGoodsLogListByCustomerId(mCustomerId);
-            GoodsInOutAdapter goodsInOutAdapter = new GoodsInOutAdapter(this,goodsLogList);
-            customerGoodsList.setAdapter(goodsInOutAdapter);
+            initCustomer(mCustomerId);
+            initInOutDetail(mCustomerId);
         }
+    }
+
+    //初始化客户详情信息
+    private void initCustomer(Long customerId) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET,
+                MApplication.IP_SERVICE + "xyy/app/customer/info?customerId=" + customerId
+                , null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i(TAG, response.toString());
+                        Gson gson = new Gson();
+                        Log.i(TAG, "获取结果");
+                        Result result = gson.fromJson(response.toString(), Result.class);
+                        Log.i(TAG, "获取结果:" + result.toString());
+                        if (result.isSuccess()) {
+                            mCustomer = JsonUtil.fromJson(JsonUtil.toJson(result.getData()), CustomerVO.class);
+                            if (mCustomer.getId() != null) {
+                                customerDetailNameText.setText(mCustomer.getCustomerName());
+                                customerDetailMobileText.setText(mCustomer.getCustomerMobile());
+                            }
+                        } else {
+                            Toast.makeText(CustomerDetailActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, error.getMessage(), error);
+                Toast.makeText(CustomerDetailActivity.this, "网络连接失败", Toast.LENGTH_SHORT).show();
+            }
+        });
+        MApplication.mQueue.add(jsonObjectRequest);
+    }
+
+    //初始化客户出库信息
+    private void initInOutDetail(Long customerId) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET,
+                MApplication.IP_SERVICE + "xyy/app/customer/inOutDetail?customerId=" + customerId
+                , null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i(TAG, response.toString());
+                        Gson gson = new Gson();
+                        Log.i(TAG, "获取结果");
+                        Result result = gson.fromJson(response.toString(), Result.class);
+                        Log.i(TAG, "获取结果:" + result.toString());
+                        if (result.isSuccess()) {
+                            goodsLogList = JsonUtil.fromJson(JsonUtil.toJson(result.getData()), new TypeToken<List<GoodsLogVO>>() {
+                            }.getType());
+                        } else {
+                            Toast.makeText(CustomerDetailActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                        //刷新供应商入库明细
+                        reFreshList();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, error.getMessage(), error);
+                Toast.makeText(CustomerDetailActivity.this, "网络连接失败", Toast.LENGTH_SHORT).show();
+            }
+        });
+        MApplication.mQueue.add(jsonObjectRequest);
     }
 
     @Override
@@ -149,14 +230,45 @@ public class CustomerDetailActivity extends Activity implements View.OnClickList
                 if (mCustomerId < 1) {
                     Toast.makeText(this, "客户信息为空", Toast.LENGTH_SHORT).show();
                 }
-                DBService dbService = DBService.getInstance(this);
-                if (dbService.updateCustomer(mCustomerId, customerName, customerMobile) > 0) {
-                    Toast.makeText(this, "更新成功", Toast.LENGTH_SHORT).show();
-                    mCustomer.setCustomerName(customerName);
-                    mCustomer.setCustomerMobile(customerMobile);
-                }else{
-                    Toast.makeText(this, "更新失败", Toast.LENGTH_SHORT).show();
-                }
+
+                Map<String,Object> paramMap = new HashMap<>();
+                paramMap.put("id",mCustomerId);
+                paramMap.put("customerMobile", customerMobile);
+                paramMap.put("customerName", customerName);
+
+                JSONObject jsonObject = new JSONObject(paramMap);
+                JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST,
+                        MApplication.IP_SERVICE + "xyy/app/customer/edit", jsonObject,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                Log.d("修改客户", "response -> " + response.toString());
+                                Gson gson = new Gson();
+                                Result result = gson.fromJson(response.toString(), Result.class);
+                                if(result.isSuccess()){
+                                    Toast.makeText(CustomerDetailActivity.this, "更新成功", Toast.LENGTH_LONG).show();
+                                    finish();
+                                }else {
+                                    Toast.makeText(CustomerDetailActivity.this, result.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(CustomerDetailActivity.this, "网络错误", Toast.LENGTH_LONG).show();
+                        Log.e("", error.getMessage(), error);
+                    }
+                })
+                {
+                    @Override
+                    public Map<String, String> getHeaders() {
+                        HashMap<String, String> headers = new HashMap<String, String>();
+                        headers.put("Accept", "application/json");
+                        headers.put("Content-Type", "application/json; charset=UTF-8");
+                        return headers;
+                    }
+                };
+                MApplication.mQueue.add(jsonRequest);
                 closeEditView();
                 customerDetailMobileText.setText(mCustomer.getCustomerMobile());
                 customerDetailNameText.setText(mCustomer.getCustomerName());
@@ -184,5 +296,9 @@ public class CustomerDetailActivity extends Activity implements View.OnClickList
         customerDetailNameText.setVisibility(View.VISIBLE);
         customerEditView.setVisibility(View.VISIBLE);
         customerSaveView.setVisibility(View.GONE);
+    }
+    private void reFreshList(){
+        GoodsInOutAdapter goodsInOutAdapter = (GoodsInOutAdapter)customerGoodsList.getAdapter();
+        goodsInOutAdapter.setMGoodsLogList(goodsLogList);
     }
 }

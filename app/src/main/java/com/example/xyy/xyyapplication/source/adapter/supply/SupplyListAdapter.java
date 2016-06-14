@@ -3,6 +3,7 @@ package com.example.xyy.xyyapplication.source.adapter.supply;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +13,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.xyy.xyyapplication.R;
+import com.example.xyy.xyyapplication.source.application.MApplication;
 import com.example.xyy.xyyapplication.source.common.DateUtil;
+import com.example.xyy.xyyapplication.source.common.Result;
 import com.example.xyy.xyyapplication.source.db.DBService;
 import com.example.xyy.xyyapplication.source.pojo.supply.Supply;
+import com.example.xyy.xyyapplication.source.pojo.supply.SupplyVO;
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,20 +36,22 @@ import java.util.List;
  * Created by admin on 16/5/1.
  */
 public class SupplyListAdapter extends BaseAdapter {
+    private final String TAG = "SupplyListAdapter";
+
     private Context mContext;
-    private List<Supply> mSupplyList = new ArrayList<Supply>();
+    private List<SupplyVO> mSupplyList = new ArrayList<SupplyVO>();
     private Boolean mIsAdmin;
 
     public SupplyListAdapter(Context context) {
         mContext = context;
     }
 
-    public SupplyListAdapter(Context context, List<Supply> userList) {
+    public SupplyListAdapter(Context context, List<SupplyVO> userList) {
         mContext = context;
         mSupplyList = userList;
     }
 
-    public SupplyListAdapter(Context context, List<Supply> userList, Boolean isAdmin) {
+    public SupplyListAdapter(Context context, List<SupplyVO> userList, Boolean isAdmin) {
         mContext = context;
         mSupplyList = userList;
         mIsAdmin = isAdmin;
@@ -92,12 +105,34 @@ public class SupplyListAdapter extends BaseAdapter {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss(); //关闭dialog
-                        DBService dbService = DBService.getInstance(mContext);
-                        if (dbService.delSupplyById(mSupplyList.get(position).getId()) > 0) {
-                            Toast.makeText(mContext, "删除成功", Toast.LENGTH_LONG).show();
-                            mSupplyList.remove(position);
-                            notifyDataSetChanged();
-                        }
+                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                                Request.Method.GET,
+                                MApplication.IP_SERVICE + "xyy/app/supply/del?supplyId=" + mSupplyList.get(position).getId()
+                                , null,
+                                new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        Log.i(TAG, response.toString());
+                                        Gson gson = new Gson();
+                                        Log.i(TAG, "获取结果");
+                                        Result result = gson.fromJson(response.toString(), Result.class);
+                                        Log.i(TAG, "获取结果:" + result.toString());
+                                        if (result.isSuccess()) {
+                                            Toast.makeText(mContext, "删除成功", Toast.LENGTH_SHORT).show();
+                                            mSupplyList.remove(position);
+                                            notifyDataSetChanged();
+                                        } else {
+                                            Toast.makeText(mContext, result.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.i(TAG, error.getMessage(), error);
+                                Toast.makeText(mContext, "网络连接失败", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        MApplication.mQueue.add(jsonObjectRequest);
                     }
                 });
                 builder.setNegativeButton("取消", new DialogInterface.OnClickListener() { //设置取消按钮
@@ -126,7 +161,7 @@ public class SupplyListAdapter extends BaseAdapter {
         super.notifyDataSetChanged();
     }
 
-    public void setMSupplyList(List<Supply> supplyList) {
+    public void setMSupplyList(List<SupplyVO> supplyList) {
         this.mSupplyList = supplyList;
         notifyDataSetChanged();
     }

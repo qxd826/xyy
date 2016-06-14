@@ -17,7 +17,12 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.activity.supply.AddSupplyActivity;
 import com.example.xyy.xyyapplication.source.activity.supply.SupplyDetailActivity;
@@ -25,10 +30,18 @@ import com.example.xyy.xyyapplication.source.adapter.customer.CustomerListAdapte
 import com.example.xyy.xyyapplication.source.adapter.supply.SupplyListAdapter;
 import com.example.xyy.xyyapplication.source.application.MApplication;
 import com.example.xyy.xyyapplication.source.common.DebugLog;
+import com.example.xyy.xyyapplication.source.common.JsonUtil;
+import com.example.xyy.xyyapplication.source.common.Result;
 import com.example.xyy.xyyapplication.source.constant.Constant;
 import com.example.xyy.xyyapplication.source.db.DBService;
 import com.example.xyy.xyyapplication.source.pojo.customer.Customer;
+import com.example.xyy.xyyapplication.source.pojo.goods.GoodsVO;
 import com.example.xyy.xyyapplication.source.pojo.supply.Supply;
+import com.example.xyy.xyyapplication.source.pojo.supply.SupplyVO;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +66,8 @@ public class SupplyFragment extends Fragment {
     EditText supplySearchEdit;
     @Bind(R.id.supply_search_btn)
     ImageButton supplySearchBtn;
+
+    private List<SupplyVO> mSupplyList = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,6 +95,12 @@ public class SupplyFragment extends Fragment {
         Log.i(TAG, "SupplyFragment-----onResume");
         super.onResume();
         supplySearchEdit.clearFocus();
+        SupplyListAdapter supplyListAdapter = new SupplyListAdapter(getContext(), mSupplyList, MApplication.isAdmin);
+        try {
+            supplyList.setAdapter(supplyListAdapter);
+        } catch (Exception e) {
+            DebugLog.e(e.toString());
+        }
         initSupplyList();
     }
 
@@ -123,20 +144,14 @@ public class SupplyFragment extends Fragment {
                 ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
                         .hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
                                 InputMethodManager.HIDE_NOT_ALWAYS);
-                DBService dbService = DBService.getInstance(getContext());
-                List<Supply> supplyListData = dbService.searchSupply(supplySearchEdit.getText().toString());
-                if (supplyListData == null) {
-                    supplyListData = new ArrayList<Supply>();
-                }
-                SupplyListAdapter mAdapter = (SupplyListAdapter) supplyList.getAdapter();
-                mAdapter.setMSupplyList(supplyListData);
+                searchGoodsList(supplySearchEdit.getText().toString());
             }
         });
         supplySearchClearBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 supplySearchEdit.setText("");
-                reFreshList();
+                initSupplyList();
             }
         });
         supplySearchEdit.addTextChangedListener(new TextWatcher() {
@@ -180,7 +195,7 @@ public class SupplyFragment extends Fragment {
         supplyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Supply supply = (Supply) supplyList.getAdapter().getItem(position);
+                SupplyVO supply = (SupplyVO) supplyList.getAdapter().getItem(position);
                 Intent intent = new Intent(getActivity(), SupplyDetailActivity.class);
                 intent.putExtra(Constant.SUPPLY_ID, supply.getId());
                 startActivity(intent);
@@ -188,20 +203,74 @@ public class SupplyFragment extends Fragment {
         });
     }
 
+    //初始化供应商列表
     private void initSupplyList() {
-        DBService dbService = DBService.getInstance(getContext());
-        List<Supply> mSupplyList = dbService.getSupplyList("1");
-        SupplyListAdapter supplyListAdapter = new SupplyListAdapter(getContext(), mSupplyList, MApplication.isAdmin);
-        try {
-            supplyList.setAdapter(supplyListAdapter);
-        } catch (Exception e) {
-            DebugLog.e(e.toString());
-        }
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET,
+                MApplication.IP_SERVICE + "xyy/app/supply/list"
+                , null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i(TAG, response.toString());
+                        Gson gson = new Gson();
+                        Log.i(TAG, "获取结果");
+                        Result result = gson.fromJson(response.toString(), Result.class);
+                        Log.i(TAG, "获取结果:" + result.toString());
+                        if (result.isSuccess()) {
+                            mSupplyList = JsonUtil.fromJson(JsonUtil.toJson(result.getData()), new TypeToken<List<SupplyVO>>() {
+                            }.getType());
+                        } else {
+                            Toast.makeText(getContext(), result.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                        //刷新供应商列表
+                        reFreshList();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, error.getMessage(), error);
+                Toast.makeText(getContext(), "网络连接失败", Toast.LENGTH_SHORT).show();
+            }
+        });
+        MApplication.mQueue.add(jsonObjectRequest);
     }
 
+    //搜索供应商列表
+    private void searchGoodsList(String searchCon) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET,
+                MApplication.IP_SERVICE + "xyy/app/supply/search?searchCon="+searchCon
+                , null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i(TAG, response.toString());
+                        Gson gson = new Gson();
+                        Log.i(TAG, "获取结果");
+                        Result result = gson.fromJson(response.toString(), Result.class);
+                        Log.i(TAG, "获取结果:" + result.toString());
+                        if (result.isSuccess()) {
+                            mSupplyList = JsonUtil.fromJson(JsonUtil.toJson(result.getData()), new TypeToken<List<SupplyVO>>() {
+                            }.getType());
+                        } else {
+                            Toast.makeText(getContext(), result.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                        //刷新商品列表
+                        reFreshList();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, error.getMessage(), error);
+                Toast.makeText(getContext(), "网络连接失败", Toast.LENGTH_SHORT).show();
+            }
+        });
+        MApplication.mQueue.add(jsonObjectRequest);
+    }
+
+
     public void reFreshList() {
-        DBService dbService = DBService.getInstance(getContext());
-        List<Supply> mSupplyList = dbService.getSupplyList("1");
         SupplyListAdapter mAdapter = (SupplyListAdapter) supplyList.getAdapter();
         mAdapter.setMSupplyList(mSupplyList);
     }
@@ -210,7 +279,7 @@ public class SupplyFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case Constant.ADD_SUPPLY_CODE:
-                reFreshList();
+                initSupplyList();
                 break;
         }
     }

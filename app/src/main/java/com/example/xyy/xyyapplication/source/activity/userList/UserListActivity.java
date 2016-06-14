@@ -142,6 +142,7 @@ public class UserListActivity extends Activity implements View.OnClickListener {
                         } else {
                             Toast.makeText(UserListActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
                         }
+                        //刷新用户列表
                         refreshList();
                     }
                 }, new Response.ErrorListener() {

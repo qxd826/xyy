@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.pojo.customer.Customer;
+import com.example.xyy.xyyapplication.source.pojo.customer.CustomerVO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,14 +18,14 @@ import java.util.List;
  * Created by QXD on 2016/5/14.
  */
 public class CustomerSpinnerAdapter extends BaseAdapter {
-    private List<Customer> mCustomerList = new ArrayList<Customer>();
+    private List<CustomerVO> mCustomerList = new ArrayList<CustomerVO>();
     private Context mContext;
 
     public CustomerSpinnerAdapter(Context context) {
         mContext = context;
     }
 
-    public CustomerSpinnerAdapter(Context context, List<Customer> customerList) {
+    public CustomerSpinnerAdapter(Context context, List<CustomerVO> customerList) {
         mContext = context;
         mCustomerList = customerList;
     }
@@ -63,12 +64,12 @@ public class CustomerSpinnerAdapter extends BaseAdapter {
     private final class ViewHolder {
         public TextView customerName;
     }
-    public void setMSupplyList(List<Customer> customerList){
+    public void setMCustomerList(List<CustomerVO> customerList){
         this.mCustomerList = customerList;
         super.notifyDataSetChanged();
     }
 
-    public List<Customer> getSupplyList(){
+    public List<CustomerVO> getCustomerList(){
         return mCustomerList;
     }
 }

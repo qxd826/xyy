@@ -3,6 +3,7 @@ package com.example.xyy.xyyapplication.source.adapter.goods;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +13,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.xyy.xyyapplication.R;
+import com.example.xyy.xyyapplication.source.application.MApplication;
 import com.example.xyy.xyyapplication.source.common.DateUtil;
+import com.example.xyy.xyyapplication.source.common.Result;
 import com.example.xyy.xyyapplication.source.db.DBService;
 import com.example.xyy.xyyapplication.source.pojo.goods.Goods;
+import com.example.xyy.xyyapplication.source.pojo.goods.GoodsVO;
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,33 +36,34 @@ import java.util.List;
  * Created by admin on 16/5/1.
  */
 public class GoodsListAdapter extends BaseAdapter {
+    private final String TAG = "GoodsListAdapter";
     private Context mContext;
-    private List<Goods> mGoodsList = new ArrayList<Goods>();
+    private List<GoodsVO> mGoodsVOList = new ArrayList<GoodsVO>();
     private Boolean mIsAdmin;
 
     public GoodsListAdapter(Context context) {
         mContext = context;
     }
 
-    public GoodsListAdapter(Context context, List<Goods> goodsList) {
+    public GoodsListAdapter(Context context, List<GoodsVO> goodsList) {
         mContext = context;
-        mGoodsList = goodsList;
+        mGoodsVOList = goodsList;
     }
 
-    public GoodsListAdapter(Context context, List<Goods> goodsList, Boolean isAdmin) {
+    public GoodsListAdapter(Context context, List<GoodsVO> goodsList, Boolean isAdmin) {
         mContext = context;
-        mGoodsList = goodsList;
+        mGoodsVOList = goodsList;
         mIsAdmin = isAdmin;
     }
 
     @Override
     public int getCount() {
-        return mGoodsList.size();
+        return mGoodsVOList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mGoodsList.get(position);
+        return mGoodsVOList.get(position);
     }
 
     @Override
@@ -75,10 +87,10 @@ public class GoodsListAdapter extends BaseAdapter {
             mViewHolder = (ViewHolder) convertView.getTag();
         }
 
-        mViewHolder.goodsName.setText(mGoodsList.get(position).getGoodsName());
-        mViewHolder.goodsNum.setText(String.valueOf(mGoodsList.get(position).getGoodsNum()));
+        mViewHolder.goodsName.setText(mGoodsVOList.get(position).getGoodsName());
+        mViewHolder.goodsNum.setText(String.valueOf(mGoodsVOList.get(position).getGoodsNum()));
         Date createDate = new Date();
-        createDate.setTime(mGoodsList.get(position).getGmtCreate());
+        createDate.setTime(mGoodsVOList.get(position).getGmtCreate());
         mViewHolder.createTime.setText(DateUtil.convertDateToYMDHM(createDate));
 
         mViewHolder.delButton.setOnClickListener(new View.OnClickListener() {
@@ -92,12 +104,34 @@ public class GoodsListAdapter extends BaseAdapter {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss(); //关闭dialog
-                        DBService dbService = DBService.getInstance(mContext);
-                        if (dbService.delGoodsById(mGoodsList.get(position).getId()) > 0) {
-                            Toast.makeText(mContext, "删除成功", Toast.LENGTH_LONG).show();
-                            mGoodsList.remove(position);
-                            notifyDataSetChanged();
-                        }
+                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                                Request.Method.GET,
+                                MApplication.IP_SERVICE + "xyy/app/goods/del?goodsId=" + mGoodsVOList.get(position).getId()
+                                , null,
+                                new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        Log.i(TAG, response.toString());
+                                        Gson gson = new Gson();
+                                        Log.i(TAG, "获取结果");
+                                        Result result = gson.fromJson(response.toString(), Result.class);
+                                        Log.i(TAG, "获取结果:" + result.toString());
+                                        if (result.isSuccess()) {
+                                            Toast.makeText(mContext, "删除成功", Toast.LENGTH_SHORT).show();
+                                            mGoodsVOList.remove(position);
+                                            notifyDataSetChanged();
+                                        } else {
+                                            Toast.makeText(mContext, result.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.i(TAG, error.getMessage(), error);
+                                Toast.makeText(mContext, "网络连接失败", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        MApplication.mQueue.add(jsonObjectRequest);
                     }
                 });
                 builder.setNegativeButton("取消", new DialogInterface.OnClickListener() { //设置取消按钮
@@ -126,13 +160,13 @@ public class GoodsListAdapter extends BaseAdapter {
         super.notifyDataSetChanged();
     }
 
-    public void setMGoodsList(List<Goods> goodsList) {
-        this.mGoodsList = goodsList;
+    public void setMGoodsList(List<GoodsVO> goodsList) {
+        this.mGoodsVOList = goodsList;
         notifyDataSetChanged();
     }
 
-    public void getMGoodsList(List<Goods> goodsList) {
-        this.mGoodsList = goodsList;
+    public void getMGoodsList(List<GoodsVO> goodsList) {
+        this.mGoodsVOList = goodsList;
         notifyDataSetChanged();
     }
 }

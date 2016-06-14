@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.fragment.CustomerFragment;
 import com.example.xyy.xyyapplication.source.fragment.GoodsFragment;

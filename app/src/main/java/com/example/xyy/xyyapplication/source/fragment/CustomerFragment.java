@@ -17,7 +17,12 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.activity.customer.AddCustomerActivity;
 import com.example.xyy.xyyapplication.source.activity.customer.CustomerDetailActivity;
@@ -26,10 +31,18 @@ import com.example.xyy.xyyapplication.source.adapter.customer.CustomerListAdapte
 import com.example.xyy.xyyapplication.source.adapter.goods.GoodsListAdapter;
 import com.example.xyy.xyyapplication.source.application.MApplication;
 import com.example.xyy.xyyapplication.source.common.DebugLog;
+import com.example.xyy.xyyapplication.source.common.JsonUtil;
+import com.example.xyy.xyyapplication.source.common.Result;
 import com.example.xyy.xyyapplication.source.constant.Constant;
 import com.example.xyy.xyyapplication.source.db.DBService;
 import com.example.xyy.xyyapplication.source.pojo.customer.Customer;
+import com.example.xyy.xyyapplication.source.pojo.customer.CustomerVO;
 import com.example.xyy.xyyapplication.source.pojo.goods.Goods;
+import com.example.xyy.xyyapplication.source.pojo.supply.Supply;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +54,6 @@ import butterknife.ButterKnife;
  * Created by admin on 16/4/28.
  */
 public class CustomerFragment extends Fragment {
-
     private static final String TAG = "CustomerFragment";
     @Bind(R.id.customer_title)
     TextView customerTitle;
@@ -55,6 +67,8 @@ public class CustomerFragment extends Fragment {
     EditText customerSearchEdit;
     @Bind(R.id.customer_search_btn)
     ImageButton customerSearchBtn;
+
+    List<CustomerVO> mCustomerList = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,6 +96,8 @@ public class CustomerFragment extends Fragment {
         Log.i(TAG, "CustomerFragment-----onResume");
         super.onResume();
         customerSearchEdit.clearFocus();
+        CustomerListAdapter customerListAdapter = new CustomerListAdapter(getContext(), mCustomerList, MApplication.isAdmin);
+        customerList.setAdapter(customerListAdapter);
         initCustomerList();
     }
 
@@ -126,20 +142,14 @@ public class CustomerFragment extends Fragment {
                 ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
                         .hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
                                 InputMethodManager.HIDE_NOT_ALWAYS);
-                DBService dbService = DBService.getInstance(getContext());
-                List<Customer> customerListData = dbService.searchCustomer(customerSearchEdit.getText().toString());
-                if (customerListData == null) {
-                    customerListData = new ArrayList<Customer>();
-                }
-                CustomerListAdapter mAdapter = (CustomerListAdapter) customerList.getAdapter();
-                mAdapter.setMCustomerList(customerListData);
+                searchCustomerList(customerSearchEdit.getText().toString());
             }
         });
         customerSearchClearBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 customerSearchEdit.setText("");
-                reFreshList();
+                initCustomerList();
             }
         });
         customerSearchEdit.addTextChangedListener(new TextWatcher() {
@@ -183,7 +193,7 @@ public class CustomerFragment extends Fragment {
         customerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Customer customer = (Customer) customerList.getAdapter().getItem(position);
+                CustomerVO customer = (CustomerVO) customerList.getAdapter().getItem(position);
                 Intent intent = new Intent(getActivity(), CustomerDetailActivity.class);
                 intent.putExtra(Constant.CUSTOMER_ID, customer.getId());
                 startActivity(intent);
@@ -191,16 +201,73 @@ public class CustomerFragment extends Fragment {
         });
     }
 
+    //初始化获取客户列表
     private void initCustomerList() {
-        DBService dbService = DBService.getInstance(getContext());
-        List<Customer> mCustomerList = dbService.getCustomerList("1");
-        CustomerListAdapter customerListAdapter = new CustomerListAdapter(getContext(), mCustomerList, MApplication.isAdmin);
-        customerList.setAdapter(customerListAdapter);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET,
+                MApplication.IP_SERVICE + "xyy/app/customer/list"
+                , null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i(TAG, response.toString());
+                        Gson gson = new Gson();
+                        Log.i(TAG, "获取结果");
+                        Result result = gson.fromJson(response.toString(), Result.class);
+                        Log.i(TAG, "获取结果:" + result.toString());
+                        if (result.isSuccess()) {
+                            mCustomerList = JsonUtil.fromJson(JsonUtil.toJson(result.getData()), new TypeToken<List<CustomerVO>>() {
+                            }.getType());
+                        } else {
+                            Toast.makeText(getContext(), result.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                        //刷新供应商列表
+                        reFreshList();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, error.getMessage(), error);
+                Toast.makeText(getContext(), "网络连接失败", Toast.LENGTH_SHORT).show();
+            }
+        });
+        MApplication.mQueue.add(jsonObjectRequest);
+    }
+
+    //搜索客户列表
+    private void searchCustomerList(String searchCon){
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET,
+                MApplication.IP_SERVICE + "xyy/app/customer/search?searchCon="+searchCon
+                , null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i(TAG, response.toString());
+                        Gson gson = new Gson();
+                        Log.i(TAG, "获取结果");
+                        Result result = gson.fromJson(response.toString(), Result.class);
+                        Log.i(TAG, "获取结果:" + result.toString());
+                        if (result.isSuccess()) {
+                            mCustomerList = JsonUtil.fromJson(JsonUtil.toJson(result.getData()), new TypeToken<List<CustomerVO>>() {
+                            }.getType());
+                        } else {
+                            Toast.makeText(getContext(), result.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                        //刷新商品列表
+                        reFreshList();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, error.getMessage(), error);
+                Toast.makeText(getContext(), "网络连接失败", Toast.LENGTH_SHORT).show();
+            }
+        });
+        MApplication.mQueue.add(jsonObjectRequest);
     }
 
     public void reFreshList() {
-        DBService dbService = DBService.getInstance(getContext());
-        List<Customer> mCustomerList = dbService.getCustomerList("1");
         CustomerListAdapter mAdapter = (CustomerListAdapter) customerList.getAdapter();
         mAdapter.setMCustomerList(mCustomerList);
     }
@@ -209,7 +276,7 @@ public class CustomerFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case Constant.ADD_CUSTOMER_CODE:
-                reFreshList();
+                initCustomerList();
                 break;
         }
     }

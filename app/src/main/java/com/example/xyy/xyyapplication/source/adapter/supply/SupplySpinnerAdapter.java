@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.pojo.supply.Supply;
+import com.example.xyy.xyyapplication.source.pojo.supply.SupplyVO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,14 +18,14 @@ import java.util.List;
  * Created by QXD on 2016/5/14.
  */
 public class SupplySpinnerAdapter extends BaseAdapter {
-    private List<Supply> mSupplyList = new ArrayList<Supply>();
+    private List<SupplyVO> mSupplyList = new ArrayList<SupplyVO>();
     private Context mContext;
 
     public SupplySpinnerAdapter(Context context) {
         mContext = context;
     }
 
-    public SupplySpinnerAdapter(Context context, List<Supply> supplyList) {
+    public SupplySpinnerAdapter(Context context, List<SupplyVO> supplyList) {
         mContext = context;
         mSupplyList = supplyList;
     }
@@ -63,12 +64,12 @@ public class SupplySpinnerAdapter extends BaseAdapter {
     private final class ViewHolder {
         public TextView supplyName;
     }
-    public void setMSupplyList(List<Supply> supplyList){
+    public void setMSupplyList(List<SupplyVO> supplyList){
         this.mSupplyList = supplyList;
         super.notifyDataSetChanged();
     }
 
-    public List<Supply> getSupplyList(){
+    public List<SupplyVO> getSupplyList(){
         return mSupplyList;
     }
 }

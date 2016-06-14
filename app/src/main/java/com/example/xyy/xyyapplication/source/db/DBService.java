@@ -384,7 +384,6 @@ public class DBService {
         values.put("gmt_modified", supply.getGmtModified());
         values.put("supply_name", supply.getSupplyName());
         values.put("supply_mobile", supply.getSupplyMobile());
-        values.put("supply_type", supply.getSupplyType());
         Long i = 0l;
         try {
             i = sqlitedb.replaceOrThrow(DBConstant.TABLE_SUPPLY, null, values);
@@ -445,7 +444,6 @@ public class DBService {
                 supply.setGmtModified(gmtModified);
                 supply.setSupplyName(supplyName);
                 supply.setSupplyMobile(supplyMobile);
-                supply.setSupplyType(type);
                 supplyList.add(supply);
             }
             cursor.close();
@@ -486,7 +484,6 @@ public class DBService {
                 supply.setGmtModified(gmtModified);
                 supply.setSupplyName(supplyName);
                 supply.setSupplyMobile(supplyMobile);
-                supply.setSupplyType(supplyType);
             }
             cursor.close();
         } catch (Exception e) {
@@ -565,7 +562,6 @@ public class DBService {
                 supply.setGmtModified(gmtModified);
                 supply.setSupplyName(supplyName);
                 supply.setSupplyMobile(supplyMobile);
-                supply.setSupplyType(supplyType);
                 supplyList.add(supply);
             }
             cursor.close();
@@ -594,7 +590,6 @@ public class DBService {
         values.put("gmt_modified", customer.getGmtModified());
         values.put("customer_name", customer.getCustomerName());
         values.put("customer_mobile", customer.getCustomerMobile());
-        values.put("customer_type", customer.getCustomerType());
         Long i = 0l;
         try {
             i = sqlitedb.replaceOrThrow(DBConstant.TABLE_CUSTOMER, null, values);
@@ -655,7 +650,6 @@ public class DBService {
                 customer.setGmtModified(gmtModified);
                 customer.setCustomerName(customerName);
                 customer.setCustomerMobile(customerMobile);
-                customer.setCustomerType(type);
                 customerList.add(customer);
             }
             cursor.close();
@@ -696,7 +690,6 @@ public class DBService {
                 customer.setGmtModified(gmtModified);
                 customer.setCustomerName(customerName);
                 customer.setCustomerMobile(customerMobile);
-                customer.setCustomerType(customerType);
             }
             cursor.close();
         } catch (Exception e) {
@@ -775,7 +768,6 @@ public class DBService {
                 customer.setGmtModified(gmtModified);
                 customer.setCustomerName(customerName);
                 customer.setCustomerMobile(customerMobile);
-                customer.setCustomerType(customerType);
                 customerLists.add(customer);
             }
             cursor.close();

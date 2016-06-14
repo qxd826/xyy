@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -16,17 +17,33 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.adapter.goods.GoodsInOutAdapter;
+import com.example.xyy.xyyapplication.source.application.MApplication;
 import com.example.xyy.xyyapplication.source.common.DebugLog;
+import com.example.xyy.xyyapplication.source.common.JsonUtil;
+import com.example.xyy.xyyapplication.source.common.Result;
 import com.example.xyy.xyyapplication.source.constant.Constant;
 import com.example.xyy.xyyapplication.source.db.DBService;
 import com.example.xyy.xyyapplication.source.pojo.goods.GoodsLog;
+import com.example.xyy.xyyapplication.source.pojo.goods.GoodsLogVO;
+import com.example.xyy.xyyapplication.source.pojo.goods.GoodsVO;
 import com.example.xyy.xyyapplication.source.pojo.supply.Supply;
+import com.example.xyy.xyyapplication.source.pojo.supply.SupplyVO;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -36,8 +53,9 @@ import butterknife.ButterKnife;
  */
 public class SupplyDetailActivity extends Activity implements View.OnClickListener {
     private final String TAG = "SupplyDetailActivity";
-    private int mSupplyId = 0;
-    private Supply mSupply = null;
+    private Long mSupplyId = 0l;
+    private SupplyVO mSupply = null;
+    List<GoodsLogVO> goodsLogList = new ArrayList<>();
 
     @Bind(R.id.supply_detail_back)
     ImageButton supplyDetailBack;
@@ -71,7 +89,7 @@ public class SupplyDetailActivity extends Activity implements View.OnClickListen
         setContentView(R.layout.supply_detail);
         ButterKnife.bind(this);
 
-        int supplyId = getIntent().getIntExtra(Constant.SUPPLY_ID, 0);
+        long supplyId = getIntent().getLongExtra(Constant.SUPPLY_ID, 0);
         DebugLog.i(TAG, "supplyId:" + supplyId);
         if (supplyId > 0) {
             mSupplyId = supplyId;
@@ -90,17 +108,80 @@ public class SupplyDetailActivity extends Activity implements View.OnClickListen
         supplyEditBtn.setOnClickListener(this);
         supplyEditSaveBtn.setOnClickListener(this);
         supplyEditCancelBtn.setOnClickListener(this);
+        GoodsInOutAdapter goodsInOutAdapter = new GoodsInOutAdapter(this, goodsLogList);
+        supplyGoodsList.setAdapter(goodsInOutAdapter);
 
         if (mSupplyId > 0) {
-            DBService dbService = DBService.getInstance(this);
-            mSupply = dbService.getSupplyById(mSupplyId);
-            supplyDetailNameText.setText(mSupply.getSupplyName());
-            supplyDetailMobileText.setText(mSupply.getSupplyMobile());
-
-            List<GoodsLog> goodsLogList = dbService.getGoodsLogListBySupplyId(mSupplyId);
-            GoodsInOutAdapter goodsInOutAdapter = new GoodsInOutAdapter(this,goodsLogList);
-            supplyGoodsList.setAdapter(goodsInOutAdapter);
+            initSupply(mSupplyId);
+            initInOutDetail(mSupplyId);
         }
+    }
+
+    //初始化供应商详情信息
+    private void initSupply(Long supplyId) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET,
+                MApplication.IP_SERVICE + "xyy/app/supply/info?supplyId=" + supplyId
+                , null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i(TAG, response.toString());
+                        Gson gson = new Gson();
+                        Log.i(TAG, "获取结果");
+                        Result result = gson.fromJson(response.toString(), Result.class);
+                        Log.i(TAG, "获取结果:" + result.toString());
+                        if (result.isSuccess()) {
+                            mSupply = JsonUtil.fromJson(JsonUtil.toJson(result.getData()), SupplyVO.class);
+                            if (mSupply.getId() != null) {
+                                supplyDetailNameText.setText(mSupply.getSupplyName());
+                                supplyDetailMobileText.setText(mSupply.getSupplyMobile());
+                            }
+                        } else {
+                            Toast.makeText(SupplyDetailActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, error.getMessage(), error);
+                Toast.makeText(SupplyDetailActivity.this, "网络连接失败", Toast.LENGTH_SHORT).show();
+            }
+        });
+        MApplication.mQueue.add(jsonObjectRequest);
+    }
+
+    //初始化供应商入库信息
+    private void initInOutDetail(Long supplyId) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET,
+                MApplication.IP_SERVICE + "xyy/app/supply/inOutDetail?supplyId=" + supplyId
+                , null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i(TAG, response.toString());
+                        Gson gson = new Gson();
+                        Log.i(TAG, "获取结果");
+                        Result result = gson.fromJson(response.toString(), Result.class);
+                        Log.i(TAG, "获取结果:" + result.toString());
+                        if (result.isSuccess()) {
+                            goodsLogList = JsonUtil.fromJson(JsonUtil.toJson(result.getData()), new TypeToken<List<GoodsLogVO>>() {
+                            }.getType());
+                        } else {
+                            Toast.makeText(SupplyDetailActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                        //刷新供应商入库明细
+                        reFreshList();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, error.getMessage(), error);
+                Toast.makeText(SupplyDetailActivity.this, "网络连接失败", Toast.LENGTH_SHORT).show();
+            }
+        });
+        MApplication.mQueue.add(jsonObjectRequest);
     }
 
     @Override
@@ -111,10 +192,10 @@ public class SupplyDetailActivity extends Activity implements View.OnClickListen
                 break;
             case R.id.supply_mobile:
                 String mobile = mSupply.getSupplyMobile();
-                if(!StringUtils.isBlank(mobile)){
+                if (!StringUtils.isBlank(mobile)) {
                     Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mobile));
                     startActivity(intent);
-                }else{
+                } else {
                     Toast.makeText(this, "当前供应商电话为空", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -149,14 +230,44 @@ public class SupplyDetailActivity extends Activity implements View.OnClickListen
                 if (mSupplyId < 1) {
                     Toast.makeText(this, "供应商信息为空", Toast.LENGTH_SHORT).show();
                 }
-                DBService dbService = DBService.getInstance(this);
-                if (dbService.updateSupply(mSupplyId, supplyName, supplyMobile) > 0) {
-                    Toast.makeText(this, "更新成功", Toast.LENGTH_SHORT).show();
-                    mSupply.setSupplyName(supplyName);
-                    mSupply.setSupplyMobile(supplyMobile);
-                }else{
-                    Toast.makeText(this, "更新失败", Toast.LENGTH_SHORT).show();
-                }
+                Map<String,Object> paramMap = new HashMap<>();
+                paramMap.put("id",mSupplyId);
+                paramMap.put("supplyMobile", supplyMobile);
+                paramMap.put("supplyName", supplyName);
+
+                JSONObject jsonObject = new JSONObject(paramMap);
+                JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST,
+                        MApplication.IP_SERVICE + "xyy/app/supply/edit", jsonObject,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                Log.d("添加用户", "response -> " + response.toString());
+                                Gson gson = new Gson();
+                                Result result = gson.fromJson(response.toString(), Result.class);
+                                if(result.isSuccess()){
+                                    Toast.makeText(SupplyDetailActivity.this, "更新成功", Toast.LENGTH_LONG).show();
+                                    finish();
+                                }else {
+                                    Toast.makeText(SupplyDetailActivity.this, result.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(SupplyDetailActivity.this, "网络错误", Toast.LENGTH_LONG).show();
+                        Log.e("", error.getMessage(), error);
+                    }
+                })
+                {
+                    @Override
+                    public Map<String, String> getHeaders() {
+                        HashMap<String, String> headers = new HashMap<String, String>();
+                        headers.put("Accept", "application/json");
+                        headers.put("Content-Type", "application/json; charset=UTF-8");
+                        return headers;
+                    }
+                };
+                MApplication.mQueue.add(jsonRequest);
                 closeEditView();
                 supplyDetailMobileText.setText(mSupply.getSupplyMobile());
                 supplyDetailNameText.setText(mSupply.getSupplyName());
@@ -166,6 +277,7 @@ public class SupplyDetailActivity extends Activity implements View.OnClickListen
                 break;
         }
     }
+
     private void closeEditView() {
         supplyDetailNameEdit.clearFocus();
         supplyDetailMobileEdit.clearFocus();
@@ -184,5 +296,10 @@ public class SupplyDetailActivity extends Activity implements View.OnClickListen
         supplyDetailNameText.setVisibility(View.VISIBLE);
         supplyEditView.setVisibility(View.VISIBLE);
         supplySaveView.setVisibility(View.GONE);
+    }
+
+    private void reFreshList(){
+        GoodsInOutAdapter goodsInOutAdapter = (GoodsInOutAdapter)supplyGoodsList.getAdapter();
+        goodsInOutAdapter.setMGoodsLogList(goodsLogList);
     }
 }
