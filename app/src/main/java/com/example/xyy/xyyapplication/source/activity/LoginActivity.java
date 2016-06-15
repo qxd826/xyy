@@ -1,7 +1,9 @@
 package com.example.xyy.xyyapplication.source.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -20,6 +22,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.xyy.xyyapplication.R;
 import com.example.xyy.xyyapplication.source.activity.userList.AddUserActivity;
 import com.example.xyy.xyyapplication.source.application.MApplication;
+import com.example.xyy.xyyapplication.source.common.DebugLog;
 import com.example.xyy.xyyapplication.source.common.JsonUtil;
 import com.example.xyy.xyyapplication.source.common.Result;
 import com.example.xyy.xyyapplication.source.constant.Constant;
@@ -49,6 +52,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     private DBService dbService;
     private RequestQueue mQueue;
     private UserVO loginUser = null;
+    private String lastLoginAccount = null;
 
     @Bind(R.id.personal_info)
     TextView personalInfo;
@@ -71,7 +75,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
         if (hasLastLoginUser()) {
             if (!StringUtils.isBlank(MApplication.IP_SERVICE)) {
-                startMainActivity();
+                hasAdminUser();
+                getLastLoginUser(lastLoginAccount);
             }
         }
         initView();
@@ -125,7 +130,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         loginPassword.setOnClickListener(this);
         addAdminUser.setOnClickListener(this);
         personalInfo.setOnClickListener(this);
-        hasAdminUser();
     }
 
     @Override
@@ -198,45 +202,51 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         onDestroy();
     }
 
+    //获取最后的登录用户信息
+    private void getLastLoginUser(String account){
+        if(null == account){
+            return;
+        }
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET,
+                MApplication.IP_SERVICE + "xyy/app/user/info?account=" + account
+                , null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i(TAG + "获取最后的登录用户", response.toString());
+                        Gson gson = new Gson();
+                        Result result = gson.fromJson(response.toString(),Result.class);
+                        if (result.isSuccess()) {
+                            loginUser = JsonUtil.fromJson(JsonUtil.toJson(result.getData()),UserVO.class);
+                            MApplication.currentLoginUser = loginUser;
+                            MApplication.isLogin = true;
+                            if (StringUtils.equals(Constant.IS_ADMIN, loginUser.getIsAdmin())) {
+                                MApplication.isAdmin = true;
+                            } else {
+                                MApplication.isAdmin = false;
+                            }
+                            startMainActivity();
+                        }else{
+                            Toast.makeText(LoginActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, error.getMessage(), error);
+                Toast.makeText(LoginActivity.this, "网络连接失败", Toast.LENGTH_SHORT).show();
+            }
+        });
+        mQueue.add(jsonObjectRequest);
+    }
+
     //获取最后的登录用户
     private Boolean hasLastLoginUser() {
         dbService = DBService.getInstance(this);
         User user = dbService.getLastLoginUser();
         if (user == null || StringUtils.isEmpty(user.getAccount())) {
             return false;
-        } else {
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                    Request.Method.GET,
-                    MApplication.IP_SERVICE + "xyy/app/user/info?account=" + user.getAccount()
-                    , null,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            Log.i(TAG + "获取最后的登录用户", response.toString());
-                            Gson gson = new Gson();
-                            Result<UserVO> result = gson.fromJson(response.toString(),new TypeToken<Result<UserVO>>() {
-                            }.getType());
-                            if (result.isSuccess()) {
-                                loginUser = JsonUtil.fromJson(JsonUtil.toJson(result.getData()),UserVO.class);
-                                MApplication.currentLoginUser = loginUser;
-                                MApplication.isLogin = true;
-                                if (StringUtils.equals(Constant.IS_ADMIN, loginUser.getIsAdmin())) {
-                                    MApplication.isAdmin = true;
-                                } else {
-                                    MApplication.isAdmin = false;
-                                }
-                            }else{
-                                Toast.makeText(LoginActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.i(TAG, error.getMessage(), error);
-                    Toast.makeText(LoginActivity.this, "网络连接失败", Toast.LENGTH_SHORT).show();
-                }
-            });
-            mQueue.add(jsonObjectRequest);
         }
         return true;
     }
@@ -267,7 +277,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             public void onErrorResponse(VolleyError error) {
                 Log.i(TAG, error.getMessage(), error);
                 Toast.makeText(LoginActivity.this, "网络连接失败", Toast.LENGTH_SHORT).show();
-                addAdminUser.setVisibility(View.GONE);
+                if(null != addAdminUser){
+                    addAdminUser.setVisibility(View.GONE);
+                }
             }
         });
         mQueue.add(jsonObjectRequest);

@@ -6,8 +6,11 @@ import android.content.SharedPreferences;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.example.xyy.xyyapplication.source.common.DebugLog;
 import com.example.xyy.xyyapplication.source.pojo.user.User;
 import com.example.xyy.xyyapplication.source.pojo.user.UserVO;
+
+import org.apache.commons.lang3.StringUtils;
 
 import lombok.Data;
 
@@ -39,9 +42,11 @@ public class MApplication extends Application {
         try{
             SharedPreferences sharedPreferences = getSharedPreferences(MApplication.SHARE_PREFERENCE, Context.MODE_PRIVATE);
             String s = sharedPreferences.getString(MApplication.SHARE_PREFERENCE_IP_KEY, "");
-            MApplication.IP_SERVICE = s;
+            if(!StringUtils.isBlank(s)){
+                MApplication.IP_SERVICE = s;
+            }
         }catch (Exception e){
-
+            DebugLog.e("qxd", e.toString());
         }
     }
 }

@@ -46,7 +46,6 @@ public class IPSettingActivity extends Activity implements View.OnClickListener 
     private void initView() {
         ipSettingBack.setOnClickListener(this);
         ipSettingButton.setOnClickListener(this);
-
         ipSettingEdit.setText(MApplication.IP_SERVICE);
     }
 
@@ -58,13 +57,10 @@ public class IPSettingActivity extends Activity implements View.OnClickListener 
                 break;
             case R.id.ip_setting_button:
                 try {
-                    DebugLog.i("11111111111111111111111111111111");
                     SharedPreferences sharedPreferences = getSharedPreferences(MApplication.SHARE_PREFERENCE, Context.MODE_PRIVATE);
                     sharedPreferences.edit().putString(MApplication.SHARE_PREFERENCE_IP_KEY, ipSettingEdit.getText().toString()).commit();
                     MApplication.IP_SERVICE = ipSettingEdit.getText().toString();
-                    DebugLog.i("222222222222222222222222222222222" );
                 } catch (Exception e) {
-                    DebugLog.i("33333333333333333333333333333333");
                     DebugLog.e("qxd", e.toString());
                 }
                 finish();
