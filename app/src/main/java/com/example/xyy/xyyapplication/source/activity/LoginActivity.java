@@ -74,6 +74,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         mQueue = Volley.newRequestQueue(this);
 
         if (hasLastLoginUser()) {
+            Log.i("","11111111111111111111111111");
             if (!StringUtils.isBlank(MApplication.IP_SERVICE)) {
                 hasAdminUser();
                 getLastLoginUser(lastLoginAccount);
@@ -248,6 +249,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         if (user == null || StringUtils.isEmpty(user.getAccount())) {
             return false;
         }
+        lastLoginAccount = user.getAccount();
         return true;
     }
 
